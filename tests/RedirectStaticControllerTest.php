@@ -13,17 +13,17 @@ declare(strict_types=1);
 
 namespace Chevere\Tests;
 
-use Chevere\Http\HttpRedirectStaticController;
+use Chevere\Http\RedirectStaticController;
 use Chevere\Throwable\Exceptions\InvalidArgumentException;
 use Chevere\Throwable\Exceptions\LogicException;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 
-final class HttpRedirectStaticControllerTest extends TestCase
+final class RedirectStaticControllerTest extends TestCase
 {
     public function testDefault(): void
     {
-        $controller = new HttpRedirectStaticController();
+        $controller = new RedirectStaticController();
         $this->assertSame(302, $controller->status());
         $this->expectException(LogicException::class);
         $controller->uri();
@@ -31,7 +31,7 @@ final class HttpRedirectStaticControllerTest extends TestCase
 
     public function testWithUri(): void
     {
-        $controller = new HttpRedirectStaticController();
+        $controller = new RedirectStaticController();
         $uri = new Uri('https://chevere.org');
         $controllerWithUri = $controller->withUri($uri);
         $this->assertSame(
@@ -49,7 +49,7 @@ final class HttpRedirectStaticControllerTest extends TestCase
     public function testWithStatus(): void
     {
         $status = 301;
-        $controller = new HttpRedirectStaticController();
+        $controller = new RedirectStaticController();
         $controllerWitStatus = $controller->withStatus($status);
         $this->assertNotSame($controller, $controllerWitStatus);
         $this->assertNotEquals($controller, $controllerWitStatus);

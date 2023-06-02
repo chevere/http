@@ -27,7 +27,7 @@ use Chevere\Http\Traits\Successful\StatusResetContentTrait;
 use Chevere\Tests\_resources\TestHttpController;
 use PHPUnit\Framework\TestCase;
 
-final class HttpControllerTraitsTest extends TestCase
+final class ControllerTraitsTest extends TestCase
 {
     public function testStatusAcceptedTrait(): void
     {

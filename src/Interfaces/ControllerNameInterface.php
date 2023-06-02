@@ -18,7 +18,7 @@ use Stringable;
 /**
  * Describes the component in charge of doing.
  */
-interface HttpControllerNameInterface extends Stringable
+interface ControllerNameInterface extends Stringable
 {
     /**
      * @return class-string HttpControllerInterface

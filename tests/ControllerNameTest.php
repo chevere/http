@@ -13,31 +13,31 @@ declare(strict_types=1);
 
 namespace Chevere\Tests;
 
-use Chevere\Http\HttpControllerName;
+use Chevere\Http\ControllerName;
 use Chevere\Tests\_resources\TestController;
 use Chevere\Tests\_resources\TestHttpController;
 use Chevere\Throwable\Errors\TypeError;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
-final class HttpControllerNameTest extends TestCase
+final class ControllerNameTest extends TestCase
 {
     public function testInvalid(): void
     {
         $this->expectException(Throwable::class);
-        new HttpControllerName('');
+        new ControllerName('');
     }
 
     public function testControllerNotHttp(): void
     {
         $this->expectException(TypeError::class);
-        new HttpControllerName(TestController::class);
+        new ControllerName(TestController::class);
     }
 
     public function testConstruct(): void
     {
         $name = TestHttpController::class;
-        $controllerName = new HttpControllerName($name);
+        $controllerName = new ControllerName($name);
         $this->assertSame($name, $controllerName->__toString());
     }
 }

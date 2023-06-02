@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\_resources;
 
-use Chevere\Http\HttpRedirectController;
+use Chevere\Http\RedirectController;
 
-final class TestHttpRedirectController extends HttpRedirectController
+final class TestHttpRedirectController extends RedirectController
 {
 }

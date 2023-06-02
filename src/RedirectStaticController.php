@@ -11,13 +11,16 @@
 
 declare(strict_types=1);
 
-namespace Chevere\Http\Exceptions;
+namespace Chevere\Http;
 
-use Chevere\Throwable\Exception;
-
-/**
- * Exception thrown at HttpControllerInterface layer.
- */
-final class HttpControllerException extends Exception
+class RedirectStaticController extends RedirectController
 {
+    /**
+     * @return array<string, mixed>
+     * @codeCoverageIgnore
+     */
+    public function run(): array
+    {
+        return $this->data();
+    }
 }

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
-use Chevere\Http\Interfaces\HttpRedirectControllerInterface;
+use Chevere\Http\Interfaces\RedirectControllerInterface;
 use function Chevere\Message\message;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\integer;
@@ -23,7 +23,7 @@ use Chevere\Throwable\Exceptions\InvalidArgumentException;
 use Chevere\Throwable\Exceptions\LogicException;
 use Psr\Http\Message\UriInterface;
 
-abstract class HttpRedirectController extends Controller implements HttpRedirectControllerInterface
+abstract class RedirectController extends Controller implements RedirectControllerInterface
 {
     private ?UriInterface $uri;
 

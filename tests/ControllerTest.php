@@ -19,7 +19,7 @@ use Chevere\Throwable\Errors\ArgumentCountError;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-final class HttpControllerTest extends TestCase
+final class ControllerTest extends TestCase
 {
     public function testDefaults(): void
     {

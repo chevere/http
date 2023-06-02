@@ -18,7 +18,7 @@ use Psr\Http\Message\UriInterface;
 /**
  * Describes the component in charge of defining a HTTP Redirect Controller.
  */
-interface HttpRedirectControllerInterface extends ControllerInterface
+interface RedirectControllerInterface extends ControllerInterface
 {
     public const STATUSES = [
         300,
