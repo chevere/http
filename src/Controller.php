@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
-use Chevere\Controller\Controller;
-use Chevere\Http\Interfaces\HttpControllerInterface;
+use Chevere\Controller\Controller as BaseController;
+use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Http\Traits\Successful\StatusOkTrait;
 use Chevere\Parameter\Arguments;
 use function Chevere\Parameter\arrayp;
@@ -27,7 +27,7 @@ use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use Chevere\Parameter\Interfaces\FileParameterInterface;
 use function Chevere\Parameter\string;
 
-abstract class HttpController extends Controller implements HttpControllerInterface
+abstract class Controller extends BaseController implements ControllerInterface
 {
     use StatusOkTrait;
 

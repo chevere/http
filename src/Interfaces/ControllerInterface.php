@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Chevere\Http\Interfaces;
 
-use Chevere\Controller\Interfaces\ControllerInterface;
+use Chevere\Controller\Interfaces\ControllerInterface as BaseControllerInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 
 /**
  * Describes the component in charge of defining an Http Controller which adds methods for handling HTTP requests.
  */
-interface HttpControllerInterface extends ControllerInterface
+interface ControllerInterface extends BaseControllerInterface
 {
     public static function statusSuccess(): int;
 

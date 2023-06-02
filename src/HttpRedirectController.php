@@ -23,7 +23,7 @@ use Chevere\Throwable\Exceptions\InvalidArgumentException;
 use Chevere\Throwable\Exceptions\LogicException;
 use Psr\Http\Message\UriInterface;
 
-abstract class HttpRedirectController extends HttpController implements HttpRedirectControllerInterface
+abstract class HttpRedirectController extends Controller implements HttpRedirectControllerInterface
 {
     private ?UriInterface $uri;
 

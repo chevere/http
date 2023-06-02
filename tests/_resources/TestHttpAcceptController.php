@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\_resources;
 
-use Chevere\Http\HttpController;
+use Chevere\Http\Controller;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\file;
@@ -21,7 +21,7 @@ use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use function Chevere\Parameter\string;
 
-final class TestHttpAcceptController extends HttpController
+final class TestHttpAcceptController extends Controller
 {
     public static function acceptQuery(): ArrayStringParameterInterface
     {

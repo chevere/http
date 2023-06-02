@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Http;
 
 use function Chevere\Common\assertClassName;
-use Chevere\Http\Interfaces\HttpControllerInterface;
+use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Http\Interfaces\HttpControllerNameInterface;
 
 final class HttpControllerName implements HttpControllerNameInterface
@@ -22,7 +22,7 @@ final class HttpControllerName implements HttpControllerNameInterface
     public function __construct(
         private string $name
     ) {
-        assertClassName(HttpControllerInterface::class, $name);
+        assertClassName(ControllerInterface::class, $name);
     }
 
     public function __toString(): string
