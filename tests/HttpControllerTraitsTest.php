@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\Traits\ResponseHtmlTrait;
-use Chevere\Http\Traits\ServerError\StatusInternalServerErrorTrait;
 use Chevere\Http\Traits\Successful\StatusAcceptedTrait;
 use Chevere\Http\Traits\Successful\StatusAlreadyReportedTrait;
 use Chevere\Http\Traits\Successful\StatusCreatedTrait;
@@ -60,16 +59,6 @@ final class HttpControllerTraitsTest extends TestCase
             use StatusIMUsedTrait;
         };
         $this->assertSame(226, $class->statusSuccess());
-    }
-
-    public function testStatusInternalServerErrorTrait(): void
-    {
-        $class = new class() extends TestHttpController {
-            use StatusInternalServerErrorTrait;
-            use StatusNoContentTrait;
-        };
-        $this->assertSame(500, $class->statusError());
-        $this->assertSame(204, $class->statusSuccess());
     }
 
     public function testStatusMultiStatusTrait(): void

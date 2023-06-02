@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\_resources;
 
-use Chevere\Http\Interfaces\MiddlewareErrorInterface;
-use Chevere\Http\Traits\ClientError\StatusBadRequestTrait;
 use Chevere\Http\Traits\MiddlewareTrait;
+use Psr\Http\Server\MiddlewareInterface;
 
-final class MiddlewareAltTest implements MiddlewareErrorInterface
+final class MiddlewareAltTest implements MiddlewareInterface
 {
-    use StatusBadRequestTrait;
     use MiddlewareTrait;
 }

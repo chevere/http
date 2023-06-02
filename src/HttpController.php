@@ -15,7 +15,6 @@ namespace Chevere\Http;
 
 use Chevere\Controller\Controller;
 use Chevere\Http\Interfaces\HttpControllerInterface;
-use Chevere\Http\Traits\ClientError\StatusNotFoundTrait;
 use Chevere\Http\Traits\Successful\StatusOkTrait;
 use Chevere\Parameter\Arguments;
 use function Chevere\Parameter\arrayp;
@@ -27,12 +26,10 @@ use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use Chevere\Parameter\Interfaces\FileParameterInterface;
 use function Chevere\Parameter\string;
-use function Chevere\Parameter\union;
 
 abstract class HttpController extends Controller implements HttpControllerInterface
 {
     use StatusOkTrait;
-    use StatusNotFoundTrait;
 
     /**
      * @var array<int|string, string>
@@ -75,7 +72,7 @@ abstract class HttpController extends Controller implements HttpControllerInterf
     final public static function acceptError(): ArrayTypeParameterInterface
     {
         return arrayp(
-            code: union(integer(), string()),
+            code: integer(),
             message: string(),
         );
     }
