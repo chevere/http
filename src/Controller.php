@@ -15,7 +15,6 @@ namespace Chevere\Http;
 
 use Chevere\Controller\Controller as BaseController;
 use Chevere\Http\Interfaces\ControllerInterface;
-use Chevere\Http\Traits\Successful\StatusOkTrait;
 use Chevere\Parameter\Arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
@@ -29,8 +28,6 @@ use function Chevere\Parameter\string;
 
 abstract class Controller extends BaseController implements ControllerInterface
 {
-    use StatusOkTrait;
-
     /**
      * @var array<int|string, string>
      */

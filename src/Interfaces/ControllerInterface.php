@@ -22,8 +22,6 @@ use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
  */
 interface ControllerInterface extends BaseControllerInterface
 {
-    public static function statusSuccess(): int;
-
     /**
      * Defines the query accepted.
      */
