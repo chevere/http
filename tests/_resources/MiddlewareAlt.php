@@ -13,10 +13,6 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\_resources;
 
-use Chevere\Http\Traits\MiddlewareTrait;
-use Psr\Http\Server\MiddlewareInterface;
-
-final class MiddlewareAlt implements MiddlewareInterface
+final class MiddlewareAlt extends Middleware
 {
-    use MiddlewareTrait;
 }
