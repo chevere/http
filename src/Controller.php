@@ -57,14 +57,6 @@ abstract class Controller extends BaseController implements ControllerInterface
         return arrayp();
     }
 
-    public static function responseHeaders(): array
-    {
-        return [
-            'Content-Disposition' => 'inline',
-            'Content-Type' => 'application/json',
-        ];
-    }
-
     final public function withQuery(array $query): static
     {
         $new = clone $this;

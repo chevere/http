@@ -11,15 +11,18 @@
 
 declare(strict_types=1);
 
-namespace Chevere\Http\Traits;
+namespace Chevere\Http\Attributes;
 
-trait ResponseHtmlTrait
+use Attribute;
+
+#[Attribute]
+class Headers
 {
-    public static function responseHeaders(): array
-    {
-        $headers = parent::responseHeaders();
-        $headers['Content-Type'] = 'text/html; charset=utf-8';
-
-        return $headers;
+    /**
+     * @param array<string, string> $headers
+     */
+    public function __construct(
+        public readonly array $headers
+    ) {
     }
 }

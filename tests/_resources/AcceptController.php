@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\_resources;
 
-use Chevere\Http\Attributes\Accept;
+use Chevere\Http\Attributes\Headers;
 use Chevere\Http\Controller;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
@@ -22,57 +22,33 @@ use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use function Chevere\Parameter\string;
 
-#[
-    Accept(
-        query: arrayp(
-            ...[
-                'bar.bar' => string('/^[1-9]+$/'),
-            ]
-        ),
-        body: arrayp(
-            ...[
-                'bar.bar' => string('/^[1-9]+$/'),
-            ]
-        ),
-        files: arrayp(
-            ...[
-                'MyFile!' => file(
-                    type: string('/^text\/plain$/')
-                ),
-            ]
-        )
-    )
-]
+#[Headers([
+    'test' => 'header',
+])]
 final class AcceptController extends Controller
 {
-    // public static function acceptQuery(): ArrayStringParameterInterface
-    // {
-    //     return arrayString(
-    //         ...[
-    //             'foo-foo' => string('/^[a-z]+$/'),
-    //         ]
-    //     );
-    // }
+    public static function acceptQuery(): ArrayStringParameterInterface
+    {
+        return arrayString(
+            foo: string('/^[a-z]+$/')
+        );
+    }
 
-    // public static function acceptBody(): ArrayTypeParameterInterface
-    // {
-    //     return arrayp(
-    //         ...[
-    //             'bar.bar' => string('/^[1-9]+$/'),
-    //         ]
-    //     );
-    // }
+    public static function acceptBody(): ArrayTypeParameterInterface
+    {
+        return arrayp(
+            bar: string('/^[1-9]+$/')
+        );
+    }
 
-    // public static function acceptFiles(): ArrayTypeParameterInterface
-    // {
-    //     return arrayp(
-    //         ...[
-    //             'MyFile!' => file(
-    //                 type: string('/^text\/plain$/')
-    //             ),
-    //         ]
-    //     );
-    // }
+    public static function acceptFiles(): ArrayTypeParameterInterface
+    {
+        return arrayp(
+            MyFile: file(
+                type: string('/^text\/plain$/')
+            )
+        );
+    }
 
     public function run(): array
     {

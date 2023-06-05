@@ -38,11 +38,6 @@ interface ControllerInterface extends BaseControllerInterface
     public static function acceptFiles(): ArrayTypeParameterInterface;
 
     /**
-     * @return array<string, string>
-     */
-    public static function responseHeaders(): array;
-
-    /**
      * @param array<int|string, string> $query
      */
     public function withQuery(array $query): static;

@@ -27,13 +27,6 @@ final class ControllerTest extends TestCase
         $this->assertCount(0, $controller->acceptQuery()->parameters());
         $this->assertCount(0, $controller->acceptBody()->parameters());
         $this->assertCount(0, $controller->acceptFiles()->parameters());
-        $this->assertSame(
-            [
-                'Content-Disposition' => 'inline',
-                'Content-Type' => 'application/json',
-            ],
-            $controller->responseHeaders()
-        );
     }
 
     public function testAcceptGetParameters(): void
@@ -41,14 +34,14 @@ final class ControllerTest extends TestCase
         $controller = new AcceptController();
         $this->assertSame([], $controller->query());
         $controllerWith = $controller->withQuery([
-            'foo-foo' => 'abc',
+            'foo' => 'abc',
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('abc', $controllerWith->query()['foo-foo']);
+        $this->assertSame('abc', $controllerWith->query()['foo']);
         $this->expectException(InvalidArgumentException::class);
         $controller->withQuery([
-            'foo-foo' => '123',
+            'foo' => '123',
         ]);
     }
 
@@ -57,14 +50,14 @@ final class ControllerTest extends TestCase
         $controller = new AcceptController();
         $this->assertSame([], $controller->body());
         $controllerWith = $controller->withBody([
-            'bar.bar' => '123',
+            'bar' => '123',
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('123', $controllerWith->body()['bar.bar']);
+        $this->assertSame('123', $controllerWith->body()['bar']);
         $this->expectException(InvalidArgumentException::class);
         $controller->withBody([
-            'bar.bar' => 'abc',
+            'bar' => 'abc',
         ]);
     }
 
@@ -80,14 +73,14 @@ final class ControllerTest extends TestCase
         ];
         $this->assertSame([], $controller->files());
         $controllerWith = $controller->withFiles([
-            'MyFile!' => $file,
+            'MyFile' => $file,
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame($file, $controllerWith->files()['MyFile!']);
+        $this->assertSame($file, $controllerWith->files()['MyFile']);
         $this->expectException(ArgumentCountError::class);
         $controller->withFiles([
-            'MyFile!' => [],
+            'MyFile' => [],
         ]);
     }
 }
