@@ -23,9 +23,7 @@ use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use function Chevere\Parameter\string;
 
-#[Headers([
-    'test' => 'header',
-])]
+#[Headers('test: header')]
 #[Status(200, 400)]
 final class AcceptController extends Controller
 {

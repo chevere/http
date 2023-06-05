@@ -41,9 +41,10 @@ final class ControllerTest extends TestCase
     public function testHeadersAttribute(): void
     {
         $headers = classHeaders(AcceptController::class);
-        $this->assertSame([
-            'test' => 'header',
-        ], $headers->array);
+        $this->assertSame(
+            ['test: header'],
+            $headers->lines
+        );
     }
 
     public function testAcceptGetParameters(): void
