@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use function Chevere\Http\classHeaders;
-use function Chevere\Http\classStatuses;
+use function Chevere\Http\classStatus;
 use Chevere\Tests\_resources\AcceptController;
 use Chevere\Tests\_resources\NullController;
 use Chevere\Throwable\Errors\ArgumentCountError;
@@ -31,11 +31,11 @@ final class ControllerTest extends TestCase
         $this->assertCount(0, $controller->acceptFiles()->parameters());
     }
 
-    public function testStatusesAttribute(): void
+    public function testStatusAttribute(): void
     {
-        $statuses = classStatuses(AcceptController::class);
-        $this->assertSame(200, $statuses->primary);
-        $this->assertSame([400], $statuses->other);
+        $status = classStatus(AcceptController::class);
+        $this->assertSame(200, $status->primary);
+        $this->assertSame([400], $status->other);
     }
 
     public function testHeadersAttribute(): void

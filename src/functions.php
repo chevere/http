@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Http;
 
 use Chevere\Http\Attributes\Headers;
-use Chevere\Http\Attributes\Statuses;
+use Chevere\Http\Attributes\Status;
 use Chevere\Http\Interfaces\MiddlewaresInterface;
 use ReflectionClass;
 
@@ -46,8 +46,8 @@ function classHeaders(string $className): Headers
     return classAttribute($className, Headers::class);
 }
 
-function classStatuses(string $className): Statuses
+function classStatus(string $className): Status
 {
     // @phpstan-ignore-next-line
-    return classAttribute($className, Statuses::class);
+    return classAttribute($className, Status::class);
 }

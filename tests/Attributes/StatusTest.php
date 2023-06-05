@@ -13,43 +13,43 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\Attributes;
 
-use Chevere\Http\Attributes\Statuses;
+use Chevere\Http\Attributes\Status;
 use PHPUnit\Framework\TestCase;
 
-final class StatusesTest extends TestCase
+final class StatusTest extends TestCase
 {
     public function testDefault(): void
     {
-        $default = new Statuses();
+        $default = new Status();
         $this->assertSame(200, $default->primary);
         $this->assertSame([], $default->other);
     }
 
     public function testPrimary(): void
     {
-        $primary = new Statuses(200);
+        $primary = new Status(200);
         $this->assertSame(200, $primary->primary);
         $this->assertSame([], $primary->other);
     }
 
     public function testPrimaryOverride(): void
     {
-        $statuses = new Statuses(200, 200);
-        $this->assertSame(200, $statuses->primary);
-        $this->assertSame([], $statuses->other);
+        $status = new Status(200, 200);
+        $this->assertSame(200, $status->primary);
+        $this->assertSame([], $status->other);
     }
 
     public function testOther(): void
     {
-        $statuses = new Statuses(201, 400);
-        $this->assertSame(201, $statuses->primary);
-        $this->assertSame([400], $statuses->other);
+        $status = new Status(201, 400);
+        $this->assertSame(201, $status->primary);
+        $this->assertSame([400], $status->other);
     }
 
     public function testOtherOverride(): void
     {
-        $statuses = new Statuses(200, 400, 400);
-        $this->assertSame(200, $statuses->primary);
-        $this->assertSame([400], $statuses->other);
+        $status = new Status(200, 400, 400);
+        $this->assertSame(200, $status->primary);
+        $this->assertSame([400], $status->other);
     }
 }

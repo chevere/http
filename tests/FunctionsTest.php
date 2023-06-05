@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\Attributes\Headers;
-use Chevere\Http\Attributes\Statuses;
+use Chevere\Http\Attributes\Status;
 use function Chevere\Http\classHeaders;
-use function Chevere\Http\classStatuses;
+use function Chevere\Http\classStatus;
 use Chevere\Http\MiddlewareName;
 use function Chevere\Http\middlewares;
 use Chevere\Http\Middlewares;
@@ -42,10 +42,10 @@ final class FunctionsTest extends TestCase
         $this->assertEquals($attribute, $headers);
     }
 
-    public function testClassStatuses(): void
+    public function testClassStatus(): void
     {
-        $statuses = classStatuses(NullController::class);
-        $attribute = new Statuses();
-        $this->assertEquals($attribute, $statuses);
+        $status = classStatus(NullController::class);
+        $attribute = new Status();
+        $this->assertEquals($attribute, $status);
     }
 }

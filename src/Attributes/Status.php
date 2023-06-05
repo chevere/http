@@ -16,7 +16,7 @@ namespace Chevere\Http\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-class Statuses
+class Status
 {
     /**
      * @var array<int>
