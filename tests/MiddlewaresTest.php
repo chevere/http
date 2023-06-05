@@ -16,8 +16,8 @@ namespace Chevere\Tests;
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
 use Chevere\Http\MiddlewareName;
 use Chevere\Http\Middlewares;
-use Chevere\Tests\_resources\MiddlewareAltTest;
-use Chevere\Tests\_resources\MiddlewareTest;
+use Chevere\Tests\_resources\Middleware;
+use Chevere\Tests\_resources\MiddlewareAlt;
 use PHPUnit\Framework\TestCase;
 
 final class MiddlewaresTest extends TestCase
@@ -30,7 +30,7 @@ final class MiddlewaresTest extends TestCase
 
     public function testConstruct(): void
     {
-        $middleware = MiddlewareTest::class;
+        $middleware = Middleware::class;
         $name = new MiddlewareName($middleware);
         $middlewares = new Middlewares($name);
         $this->assertCount(1, $middlewares);
@@ -43,8 +43,8 @@ final class MiddlewaresTest extends TestCase
 
     public function testWithAppend(): void
     {
-        $middlewareTest = new MiddlewareName(MiddlewareTest::class);
-        $middlewareAlt = new MiddlewareName(MiddlewareAltTest::class);
+        $middlewareTest = new MiddlewareName(Middleware::class);
+        $middlewareAlt = new MiddlewareName(MiddlewareAlt::class);
         $middlewares = new Middlewares($middlewareTest);
         $httpMiddlewareWith = $middlewares->withAppend($middlewareAlt);
         $this->assertNotSame($middlewares, $httpMiddlewareWith);
@@ -62,8 +62,8 @@ final class MiddlewaresTest extends TestCase
 
     public function testWithPrepend(): void
     {
-        $middlewareTest = new MiddlewareName(MiddlewareTest::class);
-        $middlewareAlt = new MiddlewareName(MiddlewareAltTest::class);
+        $middlewareTest = new MiddlewareName(Middleware::class);
+        $middlewareAlt = new MiddlewareName(MiddlewareAlt::class);
         $httpMiddleware = new Middlewares($middlewareTest);
         $httpMiddlewareWith = $httpMiddleware->withPrepend($middlewareAlt);
         $this->assertNotSame($httpMiddleware, $httpMiddlewareWith);

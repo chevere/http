@@ -38,11 +38,6 @@ interface ControllerInterface extends BaseControllerInterface
     public static function acceptFiles(): ArrayTypeParameterInterface;
 
     /**
-     * Defines the expected error parameter for failed requests.
-     */
-    public static function acceptError(): ArrayTypeParameterInterface;
-
-    /**
      * @return array<string, string>
      */
     public static function responseHeaders(): array;

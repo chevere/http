@@ -16,7 +16,7 @@ namespace Chevere\Tests\_resources;
 use Chevere\Http\Traits\MiddlewareTrait;
 use Psr\Http\Server\MiddlewareInterface;
 
-final class MiddlewareTest implements MiddlewareInterface
+final class Middleware implements MiddlewareInterface
 {
     use MiddlewareTrait;
 }

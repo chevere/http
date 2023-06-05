@@ -20,7 +20,6 @@ use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\assertArray;
 use function Chevere\Parameter\assertArrayString;
-use function Chevere\Parameter\integer;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use Chevere\Parameter\Interfaces\FileParameterInterface;
@@ -64,14 +63,6 @@ abstract class Controller extends BaseController implements ControllerInterface
             'Content-Disposition' => 'inline',
             'Content-Type' => 'application/json',
         ];
-    }
-
-    final public static function acceptError(): ArrayTypeParameterInterface
-    {
-        return arrayp(
-            code: integer(),
-            message: string(),
-        );
     }
 
     final public function withQuery(array $query): static

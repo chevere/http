@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Chevere\Tests;
 
-use Chevere\Tests\_resources\TestHttpAcceptController;
-use Chevere\Tests\_resources\TestHttpController;
+use Chevere\Tests\_resources\AcceptController;
+use Chevere\Tests\_resources\NullController;
 use Chevere\Throwable\Errors\ArgumentCountError;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -23,7 +23,7 @@ final class ControllerTest extends TestCase
 {
     public function testDefaults(): void
     {
-        $controller = new TestHttpController();
+        $controller = new NullController();
         $this->assertCount(0, $controller->acceptQuery()->parameters());
         $this->assertCount(0, $controller->acceptBody()->parameters());
         $this->assertCount(0, $controller->acceptFiles()->parameters());
@@ -34,15 +34,11 @@ final class ControllerTest extends TestCase
             ],
             $controller->responseHeaders()
         );
-        $this->assertSame(
-            ['code', 'message'],
-            $controller->acceptError()->parameters()->keys()
-        );
     }
 
     public function testAcceptGetParameters(): void
     {
-        $controller = new TestHttpAcceptController();
+        $controller = new AcceptController();
         $this->assertSame([], $controller->query());
         $controllerWith = $controller->withQuery([
             'foo-foo' => 'abc',
@@ -58,7 +54,7 @@ final class ControllerTest extends TestCase
 
     public function testAcceptPostParameters(): void
     {
-        $controller = new TestHttpAcceptController();
+        $controller = new AcceptController();
         $this->assertSame([], $controller->body());
         $controllerWith = $controller->withBody([
             'bar.bar' => '123',
@@ -74,7 +70,7 @@ final class ControllerTest extends TestCase
 
     public function testAcceptFileParameters(): void
     {
-        $controller = new TestHttpAcceptController();
+        $controller = new AcceptController();
         $file = [
             'type' => 'text/plain',
             'tmp_name' => '/tmp/file.yx5kVl',

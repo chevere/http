@@ -13,12 +13,10 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\_resources;
 
-use Chevere\Controller\Controller;
+use Chevere\Http\Traits\MiddlewareTrait;
+use Psr\Http\Server\MiddlewareInterface;
 
-class TestController extends Controller
+final class MiddlewareAlt implements MiddlewareInterface
 {
-    public function run(): array
-    {
-        return [];
-    }
+    use MiddlewareTrait;
 }

@@ -13,8 +13,12 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\_resources;
 
-use Chevere\Http\RedirectController;
+use Chevere\Controller\Controller;
 
-final class TestHttpRedirectController extends RedirectController
+class WrongController extends Controller
 {
+    public function run(): array
+    {
+        return [];
+    }
 }

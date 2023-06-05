@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\MiddlewareName;
-use Chevere\Tests\_resources\MiddlewareTest;
+use Chevere\Tests\_resources\Middleware;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
@@ -28,7 +28,7 @@ final class MiddlewareNameTest extends TestCase
 
     public function testConstruct(): void
     {
-        $middleware = MiddlewareTest::class;
+        $middleware = Middleware::class;
         $name = new MiddlewareName($middleware);
         $this->assertSame($middleware, $name->__toString());
     }

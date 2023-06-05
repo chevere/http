@@ -11,12 +11,14 @@
 
 declare(strict_types=1);
 
-namespace Chevere\Tests\_resources;
+namespace Chevere\Http\Attributes;
 
-use Chevere\Http\Traits\MiddlewareTrait;
-use Psr\Http\Server\MiddlewareInterface;
+use Attribute;
 
-final class MiddlewareAltTest implements MiddlewareInterface
+#[Attribute]
+class Accept
 {
-    use MiddlewareTrait;
+    public function __construct()
+    {
+    }
 }

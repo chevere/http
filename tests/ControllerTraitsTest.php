@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\Traits\ResponseHtmlTrait;
-use Chevere\Tests\_resources\TestHttpController;
+use Chevere\Tests\_resources\NullController;
 use PHPUnit\Framework\TestCase;
 
 final class ControllerTraitsTest extends TestCase
 {
     public function testResponseHtmlTrait(): void
     {
-        $class = new class() extends TestHttpController {
+        $class = new class() extends NullController {
             use ResponseHtmlTrait;
         };
         $this->assertSame(

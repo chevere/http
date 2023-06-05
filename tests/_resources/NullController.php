@@ -15,7 +15,7 @@ namespace Chevere\Tests\_resources;
 
 use Chevere\Http\Controller;
 
-class TestHttpController extends Controller
+class NullController extends Controller
 {
     public function run(): array
     {
