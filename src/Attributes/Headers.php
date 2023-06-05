@@ -21,13 +21,13 @@ use Chevere\Throwable\Errors\TypeError;
 class Headers
 {
     /**
-     * @param array<string, string> $headers
+     * @param array<string, string> $array
      */
     public function __construct(
-        public readonly array $headers
+        public readonly array $array = []
     ) {
         $position = 0;
-        foreach ($headers as $key => $value) {
+        foreach ($array as $key => $value) {
             $index = (string) $position;
             if (! is_string($key)) {
                 throw new TypeError(

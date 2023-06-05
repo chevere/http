@@ -26,7 +26,7 @@ use function Chevere\Parameter\string;
 #[Headers([
     'test' => 'header',
 ])]
-#[Statuses(200, 404)]
+#[Statuses(200, 400)]
 final class AcceptController extends Controller
 {
     public static function acceptQuery(): ArrayStringParameterInterface

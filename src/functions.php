@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
+use Chevere\Http\Attributes\Headers;
 use Chevere\Http\Attributes\Statuses;
 use Chevere\Http\Interfaces\MiddlewaresInterface;
 use ReflectionClass;
@@ -27,14 +28,26 @@ function middlewares(string ...$middleware): MiddlewaresInterface
     return new Middlewares(...$middlewares);
 }
 
-function classStatuses(string $className): Statuses
+function classAttribute(string $className, string $attribute): object
 {
     // @phpstan-ignore-next-line
     $reflection = new ReflectionClass($className);
-    $attributes = $reflection->getAttributes(Statuses::class);
+    $attributes = $reflection->getAttributes($attribute);
     if ($attributes === []) {
-        return new Statuses(200);
+        return new $attribute();
     }
-    /** @var Statuses */
+
     return $attributes[0]->newInstance();
+}
+
+function classHeaders(string $className): Headers
+{
+    // @phpstan-ignore-next-line
+    return classAttribute($className, Headers::class);
+}
+
+function classStatuses(string $className): Statuses
+{
+    // @phpstan-ignore-next-line
+    return classAttribute($className, Statuses::class);
 }

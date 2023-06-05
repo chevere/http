@@ -18,14 +18,21 @@ use PHPUnit\Framework\TestCase;
 
 final class StatusesTest extends TestCase
 {
-    public function testSuccess(): void
+    public function testDefault(): void
     {
-        $statuses = new Statuses(200);
-        $this->assertSame(200, $statuses->primary);
-        $this->assertSame([], $statuses->other);
+        $default = new Statuses();
+        $this->assertSame(200, $default->primary);
+        $this->assertSame([], $default->other);
     }
 
-    public function testSuccessOverride(): void
+    public function testPrimary(): void
+    {
+        $primary = new Statuses(200);
+        $this->assertSame(200, $primary->primary);
+        $this->assertSame([], $primary->other);
+    }
+
+    public function testPrimaryOverride(): void
     {
         $statuses = new Statuses(200, 200);
         $this->assertSame(200, $statuses->primary);

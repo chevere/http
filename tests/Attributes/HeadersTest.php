@@ -22,7 +22,7 @@ final class HeadersTest extends TestCase
     public function testEmpty(): void
     {
         $headers = new Headers([]);
-        $this->assertSame([], $headers->headers);
+        $this->assertSame([], $headers->array);
     }
 
     public function testInvalidKey(): void

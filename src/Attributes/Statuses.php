@@ -24,7 +24,7 @@ class Statuses
     public readonly array $other;
 
     public function __construct(
-        public readonly int $primary,
+        public readonly int $primary = 200,
         int ...$other
     ) {
         $other = array_unique($other);

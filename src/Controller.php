@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Chevere\Http;
 
 use Chevere\Controller\Controller as BaseController;
-use Chevere\Http\Attributes\Statuses;
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Parameter\Arguments;
 use function Chevere\Parameter\arrayp;
@@ -24,9 +23,7 @@ use function Chevere\Parameter\assertArrayString;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use Chevere\Parameter\Interfaces\FileParameterInterface;
-use function Chevere\Parameter\string;
 
-#[Statuses(200)]
 abstract class Controller extends BaseController implements ControllerInterface
 {
     /**
