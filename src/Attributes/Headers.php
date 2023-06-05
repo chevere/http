@@ -17,7 +17,7 @@ use Attribute;
 use function Chevere\Message\message;
 use Chevere\Throwable\Errors\TypeError;
 
-#[Attribute]
+#[Attribute(Attribute::TARGET_CLASS)]
 class Headers
 {
     /**

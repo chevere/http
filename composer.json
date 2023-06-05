@@ -15,6 +15,7 @@
         "chevere/chevere": "^3.0.x-dev"
     },
     "require-dev": {
+        "chevere/var-dump": "^0.8.x-dev",
         "phpstan/phpstan": "^1.9",
         "phpunit/phpunit": "^9.5",
         "symplify/easy-coding-standard": "^11.1"

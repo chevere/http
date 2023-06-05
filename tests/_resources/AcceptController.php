@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Tests\_resources;
 
 use Chevere\Http\Attributes\Headers;
+use Chevere\Http\Attributes\Statuses;
 use Chevere\Http\Controller;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
@@ -25,6 +26,7 @@ use function Chevere\Parameter\string;
 #[Headers([
     'test' => 'header',
 ])]
+#[Statuses(200, 404)]
 final class AcceptController extends Controller
 {
     public static function acceptQuery(): ArrayStringParameterInterface
