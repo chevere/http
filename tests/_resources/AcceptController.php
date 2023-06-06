@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\_resources;
 
-use Chevere\Http\Attributes\Headers;
+use Chevere\Http\Attributes\Header;
 use Chevere\Http\Attributes\Status;
 use Chevere\Http\Controller;
 use function Chevere\Parameter\arrayp;
@@ -23,7 +23,10 @@ use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use function Chevere\Parameter\string;
 
-#[Headers('test: header')]
+#[
+    Header('Content-Disposition', 'attachment'),
+    Header('Content-Type', 'application/json')
+]
 #[Status(200, 400)]
 final class AcceptController extends Controller
 {

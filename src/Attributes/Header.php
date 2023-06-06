@@ -15,17 +15,15 @@ namespace Chevere\Http\Attributes;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_CLASS)]
-class Headers
+#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
+class Header
 {
-    /**
-     * @var array<string>
-     */
-    public readonly array $lines;
+    public readonly string $line;
 
     public function __construct(
-        string ...$line
+        public readonly string $name,
+        public readonly string $value
     ) {
-        $this->lines = $line;
+        $this->line = $this->name . ': ' . $this->value;
     }
 }

@@ -42,8 +42,8 @@ final class ControllerTest extends TestCase
     {
         $headers = classHeaders(AcceptController::class);
         $this->assertSame(
-            ['test: header'],
-            $headers->lines
+            'Content-Disposition: attachment',
+            $headers[0]->line
         );
     }
 
