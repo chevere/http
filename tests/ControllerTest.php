@@ -42,8 +42,11 @@ final class ControllerTest extends TestCase
     {
         $headers = classHeaders(AcceptController::class);
         $this->assertSame(
-            'Content-Disposition: attachment',
-            $headers[0]->line
+            [
+                'Content-Disposition' => 'attachment',
+                'Content-Type' => 'application/json',
+            ],
+            $headers->toArray()
         );
     }
 

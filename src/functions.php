@@ -60,13 +60,12 @@ function classAttribute(string $className, string $attribute): object
     return $attributes[0]->newInstance();
 }
 
-/**
- * @return array<Header>
- */
-function classHeaders(string $className): array
+function classHeaders(string $className): Headers
 {
-    // @phpstan-ignore-next-line
-    return classAttributes($className, Header::class);
+    /** @var array<Header> */
+    $attributes = classAttributes($className, Header::class);
+
+    return new Headers(...$attributes);
 }
 
 function classStatus(string $className): Status

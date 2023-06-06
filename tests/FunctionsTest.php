@@ -38,15 +38,14 @@ final class FunctionsTest extends TestCase
     public function testClassHeaders(): void
     {
         $headers = classHeaders(NullController::class);
-        $this->assertSame([], $headers);
+        $this->assertCount(0, $headers);
         $headers = classHeaders(AcceptController::class);
         $this->assertSame(
-            'Content-Disposition: attachment',
-            $headers[0]->line
-        );
-        $this->assertSame(
-            'Content-Type: application/json',
-            $headers[1]->line
+            [
+                'Content-Disposition' => 'attachment',
+                'Content-Type' => 'application/json',
+            ],
+            $headers->toArray()
         );
     }
 
