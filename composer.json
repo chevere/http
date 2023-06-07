@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "chevere/chevere": "^3.0"
+        "chevere/chevere": "^3.0",
+        "psr/http-server-middleware": "^1"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.9",
