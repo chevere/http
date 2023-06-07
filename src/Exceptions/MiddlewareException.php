@@ -16,8 +16,8 @@ namespace Chevere\Http\Exceptions;
 use Chevere\Throwable\Exception;
 
 /**
- * Exception thrown at Controller layer.
+ * Exception thrown at Middleware layer.
  */
-final class ControllerException extends Exception
+final class MiddlewareException extends Exception
 {
 }
