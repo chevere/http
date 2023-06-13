@@ -19,6 +19,8 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/chevere/http/badge)](https://www.codefactor.io/repository/github/chevere/http)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b956754f8ff04aaa9ca24a6e4cc21661)](https://www.codacy.com/gh/chevere/http/dashboard)
 
+![Http](.github/banner/http-logo.svg)
+
 ## Documentation
 
 Documentation is available at [chevere.org](https://chevere.org/).
