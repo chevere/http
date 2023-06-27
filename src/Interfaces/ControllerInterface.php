@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Http\Interfaces;
 
 use Chevere\Controller\Interfaces\ControllerInterface as BaseControllerInterface;
+use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 
@@ -52,18 +53,12 @@ interface ControllerInterface extends BaseControllerInterface
      */
     public function withFiles(array $files): static;
 
-    /**
-     * @return array<int|string, string>
-     */
-    public function query(): array;
+    public function query(): ?ArgumentsInterface;
+
+    public function body(): ?ArgumentsInterface;
 
     /**
-     * @return array<int|string, mixed>
-     */
-    public function body(): array;
-
-    /**
-     * @return array<int|string, array<string, int|string>>
+     * @return array<ArgumentsInterface>
      */
     public function files(): array;
 }

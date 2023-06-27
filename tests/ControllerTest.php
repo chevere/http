@@ -23,6 +23,23 @@ use PHPUnit\Framework\TestCase;
 
 final class ControllerTest extends TestCase
 {
+    public function nullMethodCallProvider(): array
+    {
+        return [
+            ['query'],
+            ['body'],
+        ];
+    }
+
+    /**
+     * @dataProvider nullMethodCallProvider
+     */
+    public function testNullMethodCall(string $method): void
+    {
+        $controller = new NullController();
+        $this->assertNull($controller->{$method}());
+    }
+
     public function testDefaults(): void
     {
         $controller = new NullController();
@@ -50,32 +67,30 @@ final class ControllerTest extends TestCase
         );
     }
 
-    public function testAcceptGetParameters(): void
+    public function testAcceptQueryParameters(): void
     {
         $controller = new AcceptController();
-        $this->assertSame([], $controller->query());
         $controllerWith = $controller->withQuery([
             'foo' => 'abc',
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('abc', $controllerWith->query()['foo']);
+        $this->assertSame('abc', $controllerWith->query()->getString('foo'));
         $this->expectException(InvalidArgumentException::class);
         $controller->withQuery([
             'foo' => '123',
         ]);
     }
 
-    public function testAcceptPostParameters(): void
+    public function testAcceptBodyParameters(): void
     {
         $controller = new AcceptController();
-        $this->assertSame([], $controller->body());
         $controllerWith = $controller->withBody([
             'bar' => '123',
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('123', $controllerWith->body()['bar']);
+        $this->assertSame('123', $controllerWith->body()->getString('bar'));
         $this->expectException(InvalidArgumentException::class);
         $controller->withBody([
             'bar' => 'abc',
@@ -98,7 +113,8 @@ final class ControllerTest extends TestCase
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame($file, $controllerWith->files()['MyFile']);
+        $myFile = $controllerWith->files()['MyFile'];
+        $this->assertSame($file, $myFile->toArray());
         $this->expectException(ArgumentCountError::class);
         $controller->withFiles([
             'MyFile' => [],
