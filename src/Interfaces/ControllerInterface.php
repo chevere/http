@@ -53,9 +53,9 @@ interface ControllerInterface extends BaseControllerInterface
      */
     public function withFiles(array $files): static;
 
-    public function query(): ?ArgumentsInterface;
+    public function query(): ArgumentsInterface;
 
-    public function body(): ?ArgumentsInterface;
+    public function body(): ArgumentsInterface;
 
     /**
      * @return array<ArgumentsInterface>

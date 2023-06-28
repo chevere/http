@@ -19,6 +19,8 @@ use Chevere\Parameter\Arguments;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
+use function Chevere\Parameter\parameters;
+
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
@@ -83,14 +85,16 @@ abstract class Controller extends BaseController implements ControllerInterface
         return $new;
     }
 
-    final public function query(): ?ArgumentsInterface
+    final public function query(): ArgumentsInterface
     {
-        return $this->query;
+        return $this->query
+            ??= arguments(static::acceptQuery()->parameters(), []);
     }
 
-    final public function body(): ?ArgumentsInterface
+    final public function body(): ArgumentsInterface
     {
-        return $this->body;
+        return $this->body
+            ??= arguments(static::acceptBody()->parameters(), []);
     }
 
     final public function files(): array

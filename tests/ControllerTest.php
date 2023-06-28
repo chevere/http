@@ -16,6 +16,7 @@ namespace Chevere\Tests;
 use function Chevere\Http\classHeaders;
 use function Chevere\Http\classStatus;
 use Chevere\Tests\_resources\AcceptController;
+use Chevere\Tests\_resources\AcceptOptionalController;
 use Chevere\Tests\_resources\NullController;
 use Chevere\Throwable\Errors\ArgumentCountError;
 use InvalidArgumentException;
@@ -23,29 +24,14 @@ use PHPUnit\Framework\TestCase;
 
 final class ControllerTest extends TestCase
 {
-    public function nullMethodCallProvider(): array
-    {
-        return [
-            ['query'],
-            ['body'],
-        ];
-    }
-
-    /**
-     * @dataProvider nullMethodCallProvider
-     */
-    public function testNullMethodCall(string $method): void
-    {
-        $controller = new NullController();
-        $this->assertNull($controller->{$method}());
-    }
-
     public function testDefaults(): void
     {
         $controller = new NullController();
         $this->assertCount(0, $controller->acceptQuery()->parameters());
         $this->assertCount(0, $controller->acceptBody()->parameters());
         $this->assertCount(0, $controller->acceptFiles()->parameters());
+        $this->assertCount(0, $controller->query()->parameters());
+        $this->assertCount(0, $controller->body()->parameters());
     }
 
     public function testStatusAttribute(): void
@@ -75,11 +61,25 @@ final class ControllerTest extends TestCase
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('abc', $controllerWith->query()->getString('foo'));
+        $this->assertSame('abc', $controllerWith->query()->cast('foo')->string());
         $this->expectException(InvalidArgumentException::class);
         $controller->withQuery([
             'foo' => '123',
         ]);
+    }
+
+    public function testAcceptQueryParametersOptional(): void
+    {
+        $controller = new AcceptOptionalController();
+        $this->assertSame([
+            'foo' => null,
+        ], $controller->query()->toArray());
+        $controllerWith = $controller->withQuery([
+            'foo' => 'abc',
+        ]);
+        $this->assertNotSame($controller, $controllerWith);
+        $this->assertNotEquals($controller, $controllerWith);
+        $this->assertSame('abc', $controllerWith->query()->castOptional('foo')->string());
     }
 
     public function testAcceptBodyParameters(): void
@@ -90,11 +90,25 @@ final class ControllerTest extends TestCase
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('123', $controllerWith->body()->getString('bar'));
+        $this->assertSame('123', $controllerWith->body()->cast('bar')->string());
         $this->expectException(InvalidArgumentException::class);
         $controller->withBody([
             'bar' => 'abc',
         ]);
+    }
+
+    public function testAcceptBodyParametersOptional(): void
+    {
+        $controller = new AcceptOptionalController();
+        $this->assertSame([
+            'bar' => null,
+        ], $controller->body()->toArray());
+        $controllerWith = $controller->withBody([
+            'bar' => '123',
+        ]);
+        $this->assertNotSame($controller, $controllerWith);
+        $this->assertNotEquals($controller, $controllerWith);
+        $this->assertSame('123', $controllerWith->body()->castOptional('bar')->string());
     }
 
     public function testAcceptFileParameters(): void
