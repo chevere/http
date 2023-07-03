@@ -20,12 +20,12 @@ use Chevere\DataStructure\Traits\MapTrait;
 use Chevere\Http\Attributes\Header;
 
 /**
- * @implements MappedInterface<Header>
+ * @implements MappedInterface<string>
  */
 final class Headers implements MappedInterface, ToArrayInterface
 {
     /**
-     * @template-use MapTrait<Header>
+     * @template-use MapTrait<string>
      */
     use MapTrait;
 
