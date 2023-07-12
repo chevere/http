@@ -71,9 +71,7 @@ final class ControllerTest extends TestCase
     public function testAcceptQueryParametersOptional(): void
     {
         $controller = new AcceptOptionalController();
-        $this->assertSame([
-            'foo' => null,
-        ], $controller->query()->toArray());
+        $this->assertSame([], $controller->query()->toArray());
         $controllerWith = $controller->withQuery([
             'foo' => 'abc',
         ]);
@@ -100,9 +98,7 @@ final class ControllerTest extends TestCase
     public function testAcceptBodyParametersOptional(): void
     {
         $controller = new AcceptOptionalController();
-        $this->assertSame([
-            'bar' => null,
-        ], $controller->body()->toArray());
+        $this->assertSame([], $controller->body()->toArray());
         $controllerWith = $controller->withBody([
             'bar' => '123',
         ]);
