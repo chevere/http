@@ -37,6 +37,9 @@ final class Headers implements MappedInterface, ToArrayInterface
         }
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toArray(): array
     {
         return $this->map->toArray();
