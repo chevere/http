@@ -14,9 +14,14 @@ declare(strict_types=1);
 namespace Chevere\Http\Attributes;
 
 use Attribute;
+use Iterator;
+use IteratorAggregate;
 
+/**
+ * @implements IteratorAggregate<int>
+ */
 #[Attribute(Attribute::TARGET_CLASS)]
-class Status
+class Status implements IteratorAggregate
 {
     /**
      * @var array<int>
@@ -33,5 +38,24 @@ class Status
             unset($other[$search]);
         }
         $this->other = $other;
+    }
+
+    /**
+     * @return Iterator<int>
+     */
+    public function getIterator(): Iterator
+    {
+        yield $this->primary;
+        foreach ($this->other as $status) {
+            yield $status;
+        }
+    }
+
+    /**
+     * @return array<int>
+     */
+    public function toArray(): array
+    {
+        return iterator_to_array($this->getIterator());
     }
 }

@@ -20,16 +20,18 @@ final class StatusTest extends TestCase
 {
     public function testDefault(): void
     {
-        $default = new Status();
-        $this->assertSame(200, $default->primary);
-        $this->assertSame([], $default->other);
+        $status = new Status();
+        $this->assertSame(200, $status->primary);
+        $this->assertSame([], $status->other);
+        $this->assertSame([200], $status->toArray());
     }
 
     public function testPrimary(): void
     {
-        $primary = new Status(200);
-        $this->assertSame(200, $primary->primary);
-        $this->assertSame([], $primary->other);
+        $status = new Status(200);
+        $this->assertSame(200, $status->primary);
+        $this->assertSame([], $status->other);
+        $this->assertSame([200], $status->toArray());
     }
 
     public function testPrimaryOverride(): void
@@ -37,6 +39,7 @@ final class StatusTest extends TestCase
         $status = new Status(200, 200);
         $this->assertSame(200, $status->primary);
         $this->assertSame([], $status->other);
+        $this->assertSame([200], $status->toArray());
     }
 
     public function testOther(): void
@@ -44,6 +47,7 @@ final class StatusTest extends TestCase
         $status = new Status(201, 400);
         $this->assertSame(201, $status->primary);
         $this->assertSame([400], $status->other);
+        $this->assertSame([201, 400], $status->toArray());
     }
 
     public function testOtherOverride(): void
@@ -51,5 +55,6 @@ final class StatusTest extends TestCase
         $status = new Status(200, 400, 400);
         $this->assertSame(200, $status->primary);
         $this->assertSame([400], $status->other);
+        $this->assertSame([200, 400], $status->toArray());
     }
 }
