@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Chevere\Http;
 
 use Chevere\Http\Interfaces\RedirectControllerInterface;
-use function Chevere\Message\message;
-use function Chevere\Parameter\arrayp;
-use function Chevere\Parameter\integer;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
-use function Chevere\Parameter\object;
 use Chevere\Throwable\Exceptions\InvalidArgumentException;
 use Chevere\Throwable\Exceptions\LogicException;
 use Psr\Http\Message\UriInterface;
+use function Chevere\Message\message;
+use function Chevere\Parameter\arrayp;
+use function Chevere\Parameter\integer;
+use function Chevere\Parameter\object;
 
 abstract class RedirectController extends Controller implements RedirectControllerInterface
 {

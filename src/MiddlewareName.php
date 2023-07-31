@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
-use function Chevere\Common\assertClassName;
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use function Chevere\Common\assertClassName;
 
 final class MiddlewareName implements MiddlewareNameInterface
 {
