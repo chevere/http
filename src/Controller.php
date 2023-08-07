@@ -99,4 +99,11 @@ abstract class Controller extends BaseController implements ControllerInterface
     {
         return $this->files;
     }
+
+    protected function assertRuntime(): void
+    {
+        $this->query();
+        $this->body();
+        $this->files();
+    }
 }
