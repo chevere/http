@@ -26,14 +26,14 @@ use function Chevere\Parameter\arrayString;
 
 abstract class Controller extends BaseController implements ControllerInterface
 {
-    protected ?ArgumentsInterface $query = null;
+    private ?ArgumentsInterface $query = null;
 
-    protected ?ArgumentsInterface $body = null;
+    private ?ArgumentsInterface $body = null;
 
     /**
      * @var array<ArgumentsInterface>
      */
-    protected array $files = [];
+    private array $files = [];
 
     public static function acceptQuery(): ArrayStringParameterInterface
     {
