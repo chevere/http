@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Chevere\Tests;
 
-use function Chevere\Http\classHeaders;
-use function Chevere\Http\classStatus;
 use Chevere\Tests\_resources\AcceptController;
 use Chevere\Tests\_resources\AcceptOptionalController;
 use Chevere\Tests\_resources\NullController;
 use Chevere\Throwable\Errors\ArgumentCountError;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use function Chevere\Http\getHeaders;
+use function Chevere\Http\getStatus;
 
 final class ControllerTest extends TestCase
 {
@@ -36,14 +36,14 @@ final class ControllerTest extends TestCase
 
     public function testStatusAttribute(): void
     {
-        $status = classStatus(AcceptController::class);
+        $status = getStatus(AcceptController::class);
         $this->assertSame(200, $status->primary);
         $this->assertSame([400], $status->other);
     }
 
     public function testHeadersAttribute(): void
     {
-        $headers = classHeaders(AcceptController::class);
+        $headers = getHeaders(AcceptController::class);
         $this->assertSame(
             [
                 'Content-Disposition' => 'attachment',

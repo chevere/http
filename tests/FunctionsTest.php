@@ -14,15 +14,15 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\Attributes\Status;
-use function Chevere\Http\classHeaders;
-use function Chevere\Http\classStatus;
 use Chevere\Http\MiddlewareName;
-use function Chevere\Http\middlewares;
 use Chevere\Http\Middlewares;
 use Chevere\Tests\_resources\AcceptController;
 use Chevere\Tests\_resources\Middleware;
 use Chevere\Tests\_resources\NullController;
 use PHPUnit\Framework\TestCase;
+use function Chevere\Http\getHeaders;
+use function Chevere\Http\getStatus;
+use function Chevere\Http\middlewares;
 
 final class FunctionsTest extends TestCase
 {
@@ -37,9 +37,9 @@ final class FunctionsTest extends TestCase
 
     public function testClassHeaders(): void
     {
-        $headers = classHeaders(NullController::class);
+        $headers = getHeaders(NullController::class);
         $this->assertCount(0, $headers);
-        $headers = classHeaders(AcceptController::class);
+        $headers = getHeaders(AcceptController::class);
         $this->assertSame(
             [
                 'Content-Disposition' => 'attachment',
@@ -51,10 +51,10 @@ final class FunctionsTest extends TestCase
 
     public function testClassStatus(): void
     {
-        $status = classStatus(NullController::class);
+        $status = getStatus(NullController::class);
         $attribute = new Status();
         $this->assertEquals($attribute, $status);
-        $status = classStatus(AcceptController::class);
+        $status = getStatus(AcceptController::class);
         $this->assertSame(200, $status->primary);
         $this->assertSame([400], $status->other);
     }

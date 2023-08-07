@@ -13,10 +13,18 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
+use Attribute;
 use Chevere\Http\Attributes\Header;
 use Chevere\Http\Attributes\Status;
 use Chevere\Http\Interfaces\MiddlewaresInterface;
+use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionClassConstant;
+use ReflectionFunction;
+use ReflectionMethod;
+use ReflectionParameter;
+use ReflectionProperty;
+use function Chevere\Attribute\getAttribute;
 
 function middlewares(string ...$middleware): MiddlewaresInterface
 {
@@ -29,47 +37,43 @@ function middlewares(string ...$middleware): MiddlewaresInterface
 }
 
 /**
- * @return array<object>
+ * @return array<int, object>
+ * @phpstan-ignore-next-line
  */
-function classAttributes(string $className, string $attribute): array
-{
-    // @phpstan-ignore-next-line
-    $reflection = new ReflectionClass($className);
+function getAttributes(
+    ReflectionClass|ReflectionFunction|ReflectionMethod|ReflectionProperty|ReflectionParameter|ReflectionClassConstant $reflection,
+    string $attribute
+): array {
     $attributes = $reflection->getAttributes($attribute);
     $return = [];
     if ($attributes === []) {
         return $return;
     }
+    /**
+     * @var ReflectionAttribute<Attribute> $attribute
+     */
     foreach ($attributes as $attribute) {
-        // $attribute->getArguments();
         $return[] = $attribute->newInstance();
     }
 
     return $return;
 }
 
-function classAttribute(string $className, string $attribute): object
+function getHeaders(string $className): Headers
 {
+    $attributes = getAttributes(
+        // @phpstan-ignore-next-line
+        new ReflectionClass($className),
+        Header::class
+    );
     // @phpstan-ignore-next-line
-    $reflection = new ReflectionClass($className);
-    $attributes = $reflection->getAttributes($attribute);
-    if ($attributes === []) {
-        return new $attribute();
-    }
-
-    return $attributes[0]->newInstance();
-}
-
-function classHeaders(string $className): Headers
-{
-    /** @var array<Header> */
-    $attributes = classAttributes($className, Header::class);
-
     return new Headers(...$attributes);
 }
 
-function classStatus(string $className): Status
+function getStatus(string $className): Status
 {
     // @phpstan-ignore-next-line
-    return classAttribute($className, Status::class);
+    $reflection = new ReflectionClass($className);
+    // @phpstan-ignore-next-line
+    return getAttribute($reflection, Status::class);
 }
