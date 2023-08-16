@@ -11,8 +11,16 @@
 
 declare(strict_types=1);
 
-namespace Chevere\Tests\_resources;
+namespace Chevere\Http;
 
-final class MiddlewareAlt extends Middleware
+class Header
 {
+    public readonly string $line;
+
+    public function __construct(
+        public readonly string $name,
+        public readonly string $value
+    ) {
+        $this->line = $this->name . ': ' . $this->value;
+    }
 }

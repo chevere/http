@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\MiddlewareName;
-use Chevere\Tests\_resources\Middleware;
+use Chevere\Tests\src\Middleware;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 

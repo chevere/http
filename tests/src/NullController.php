@@ -11,11 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Chevere\Tests\_resources;
+namespace Chevere\Tests\src;
 
-use Chevere\Controller\Controller;
+use Chevere\Http\Controller;
 
-class WrongController extends Controller
+class NullController extends Controller
 {
     public function run(): array
     {

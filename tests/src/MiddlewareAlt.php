@@ -11,14 +11,8 @@
 
 declare(strict_types=1);
 
-namespace Chevere\Tests\_resources;
+namespace Chevere\Tests\src;
 
-use Chevere\Http\Controller;
-
-class NullController extends Controller
+final class MiddlewareAlt extends Middleware
 {
-    public function run(): array
-    {
-        return [];
-    }
 }

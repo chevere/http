@@ -11,9 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Chevere\Tests\Attributes;
+namespace Chevere\Tests;
 
-use Chevere\Http\Attributes\Status;
+use Chevere\Http\Status;
 use PHPUnit\Framework\TestCase;
 
 final class StatusTest extends TestCase

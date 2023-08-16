@@ -11,9 +11,9 @@
 
 declare(strict_types=1);
 
-namespace Chevere\Tests\Attributes;
+namespace Chevere\Tests;
 
-use Chevere\Http\Attributes\Header;
+use Chevere\Http\Header;
 use PHPUnit\Framework\TestCase;
 
 final class HeaderTest extends TestCase

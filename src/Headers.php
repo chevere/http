@@ -17,31 +17,45 @@ use Chevere\Common\Interfaces\ToArrayInterface;
 use Chevere\DataStructure\Interfaces\MappedInterface;
 use Chevere\DataStructure\Map;
 use Chevere\DataStructure\Traits\MapTrait;
-use Chevere\Http\Attributes\Header;
 
 /**
- * @implements MappedInterface<string>
+ * @implements MappedInterface<Header>
  */
 final class Headers implements MappedInterface, ToArrayInterface
 {
     /**
-     * @template-use MapTrait<string>
+     * @template-use MapTrait<Header>
      */
     use MapTrait;
+
+    /**
+     * @var Map<string>
+     */
+    private Map $export;
 
     public function __construct(Header ...$header)
     {
         $this->map = new Map();
+        $this->export = new Map();
         foreach ($header as $header) {
-            $this->map = $this->map->withPut($header->name, $header->value);
+            $this->map = $this->map->withPut($header->name, $header);
+            $this->export = $this->export->withPut($header->name, $header->value);
         }
+    }
+
+    /**
+     * @return array<string, Header>
+     */
+    public function toArray(): array
+    {
+        return $this->map->toArray();
     }
 
     /**
      * @return array<string, string>
      */
-    public function toArray(): array
+    public function toExport(): array
     {
-        return $this->map->toArray();
+        return $this->export->toArray();
     }
 }

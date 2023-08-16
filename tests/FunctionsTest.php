@@ -13,15 +13,16 @@ declare(strict_types=1);
 
 namespace Chevere\Tests;
 
-use Chevere\Http\Attributes\Status;
+use Chevere\Http\Header;
 use Chevere\Http\MiddlewareName;
 use Chevere\Http\Middlewares;
-use Chevere\Tests\_resources\AcceptController;
-use Chevere\Tests\_resources\Middleware;
-use Chevere\Tests\_resources\NullController;
+use Chevere\Http\Status;
+use Chevere\Tests\src\AcceptController;
+use Chevere\Tests\src\Middleware;
+use Chevere\Tests\src\NullController;
 use PHPUnit\Framework\TestCase;
-use function Chevere\Http\getHeaders;
-use function Chevere\Http\getStatus;
+use function Chevere\Http\getRequest;
+use function Chevere\Http\getResponse;
 use function Chevere\Http\middlewares;
 
 final class FunctionsTest extends TestCase
@@ -35,27 +36,44 @@ final class FunctionsTest extends TestCase
         $this->assertEquals($new, $middlewares);
     }
 
-    public function testClassHeaders(): void
+    public function testGetRequest(): void
     {
-        $headers = getHeaders(NullController::class);
-        $this->assertCount(0, $headers);
-        $headers = getHeaders(AcceptController::class);
-        $this->assertSame(
+        $request = getRequest(NullController::class);
+        $this->assertCount(0, $request->headers());
+        $request = getRequest(AcceptController::class);
+        $header = new Header('foo', 'bar');
+        $this->assertEquals(
             [
-                'Content-Disposition' => 'attachment',
-                'Content-Type' => 'application/json',
+                $header->name => $header,
             ],
-            $headers->toArray()
+            $request->headers()->toArray()
         );
     }
 
-    public function testClassStatus(): void
+    public function testGetResponse(): void
     {
-        $status = getStatus(NullController::class);
+        $response = getResponse(NullController::class);
         $attribute = new Status();
-        $this->assertEquals($attribute, $status);
-        $status = getStatus(AcceptController::class);
-        $this->assertSame(200, $status->primary);
-        $this->assertSame([400], $status->other);
+        $this->assertEquals($attribute, $response->status);
+        $this->assertCount(0, $response->headers());
+        $response = getResponse(AcceptController::class);
+        $this->assertSame(200, $response->status->primary);
+        $this->assertSame([400], $response->status->other);
+        $contentDisposition = new Header('Content-Disposition', 'attachment');
+        $contentType = new Header('Content-Type', 'application/json');
+        $this->assertEquals(
+            [
+                $contentDisposition->name => $contentDisposition,
+                $contentType->name => $contentType,
+            ],
+            $response->headers()->toArray()
+        );
+        $this->assertSame(
+            [
+                $contentDisposition->name => $contentDisposition->value,
+                $contentType->name => $contentType->value,
+            ],
+            $response->headers()->toExport()
+        );
     }
 }

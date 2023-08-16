@@ -11,16 +11,14 @@
 
 declare(strict_types=1);
 
-namespace Chevere\Http\Attributes;
+namespace Chevere\Http;
 
-use Attribute;
 use Iterator;
 use IteratorAggregate;
 
 /**
  * @implements IteratorAggregate<int>
  */
-#[Attribute(Attribute::TARGET_CLASS)]
 class Status implements IteratorAggregate
 {
     /**

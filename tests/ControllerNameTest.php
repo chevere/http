@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\ControllerName;
-use Chevere\Tests\_resources\NullController;
-use Chevere\Tests\_resources\WrongController;
+use Chevere\Tests\src\NullController;
+use Chevere\Tests\src\WrongController;
 use Chevere\Throwable\Errors\TypeError;
 use PHPUnit\Framework\TestCase;
 use Throwable;

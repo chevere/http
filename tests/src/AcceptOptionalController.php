@@ -11,42 +11,43 @@
 
 declare(strict_types=1);
 
-namespace Chevere\Tests\_resources;
+namespace Chevere\Tests\src;
 
-use Chevere\Http\Attributes\Header;
-use Chevere\Http\Attributes\Status;
+use Chevere\Http\Attributes\Response;
 use Chevere\Http\Controller;
+use Chevere\Http\Header;
+use Chevere\Http\Status;
+use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
+use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\file;
-use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
-use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use function Chevere\Parameter\string;
 
-#[
-    Header('Content-Disposition', 'attachment'),
-    Header('Content-Type', 'application/json')
-]
-#[Status(200, 400)]
-final class AcceptController extends Controller
+#[Response(
+    new Status(200, 400),
+    new Header('Content-Disposition', 'attachment'),
+    new Header('Content-Type', 'application/json')
+)]
+final class AcceptOptionalController extends Controller
 {
     public static function acceptQuery(): ArrayStringParameterInterface
     {
-        return arrayString(
+        return arrayString()->withOptional(
             foo: string('/^[a-z]+$/')
         );
     }
 
     public static function acceptBody(): ArrayTypeParameterInterface
     {
-        return arrayp(
+        return arrayp()->withOptional(
             bar: string('/^[1-9]+$/')
         );
     }
 
     public static function acceptFiles(): ArrayTypeParameterInterface
     {
-        return arrayp(
+        return arrayp()->withOptional(
             MyFile: file(
                 type: string('/^text\/plain$/')
             )

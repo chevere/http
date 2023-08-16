@@ -14,16 +14,22 @@ declare(strict_types=1);
 namespace Chevere\Http\Attributes;
 
 use Attribute;
+use Chevere\Http\Header;
+use Chevere\Http\Headers;
 
-#[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
-class Header
+#[Attribute(Attribute::TARGET_CLASS)]
+final class Request
 {
-    public readonly string $line;
+    private Headers $headers;
 
     public function __construct(
-        public readonly string $name,
-        public readonly string $value
+        Header ...$attribute,
     ) {
-        $this->line = $this->name . ': ' . $this->value;
+        $this->headers = new Headers(...$attribute);
+    }
+
+    public function headers(): Headers
+    {
+        return $this->headers;
     }
 }

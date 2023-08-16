@@ -16,8 +16,8 @@ namespace Chevere\Tests;
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
 use Chevere\Http\MiddlewareName;
 use Chevere\Http\Middlewares;
-use Chevere\Tests\_resources\Middleware;
-use Chevere\Tests\_resources\MiddlewareAlt;
+use Chevere\Tests\src\Middleware;
+use Chevere\Tests\src\MiddlewareAlt;
 use PHPUnit\Framework\TestCase;
 
 final class MiddlewaresTest extends TestCase
