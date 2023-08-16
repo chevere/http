@@ -13,49 +13,44 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
-use Chevere\Common\Interfaces\ToArrayInterface;
-use Chevere\DataStructure\Interfaces\MappedInterface;
-use Chevere\DataStructure\Map;
-use Chevere\DataStructure\Traits\MapTrait;
+use Chevere\DataStructure\Interfaces\VectoredInterface;
+use Chevere\DataStructure\Interfaces\VectorInterface;
+use Chevere\DataStructure\Traits\VectorTrait;
+use Chevere\DataStructure\Vector;
 
 /**
- * @implements MappedInterface<Header>
+ * @implements VectoredInterface<Header>
  */
-final class Headers implements MappedInterface, ToArrayInterface
+final class Headers implements VectoredInterface
 {
     /**
-     * @template-use MapTrait<Header>
+     * @template-use VectorTrait<Header>
      */
-    use MapTrait;
-
-    /**
-     * @var Map<string>
-     */
-    private Map $export;
+    use VectorTrait;
 
     public function __construct(Header ...$header)
     {
-        $this->map = new Map();
-        $this->export = new Map();
-        foreach ($header as $header) {
-            $this->map = $this->map->withPut($header->name, $header);
-            $this->export = $this->export->withPut($header->name, $header->value);
-        }
+        $this->vector = new Vector(...$header);
     }
 
     /**
-     * @return array<string, Header>
+     * @return array<string>
      */
     public function toArray(): array
     {
-        return $this->map->toArray();
+        $return = [];
+        foreach ($this->getIterator() as $header) {
+            $return[] = $header->line;
+        }
+
+        return $return;
     }
 
     /**
-     * @return array<string, string>
+     * @return VectorInterface<Headers>
      */
-    public function toExport(): array
+    public function vector(): VectorInterface
     {
-        return $this->export->toArray();
+        return $this->vector;
     }
 }

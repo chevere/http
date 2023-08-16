@@ -31,7 +31,8 @@ use function Chevere\Parameter\string;
 #[Response(
     new Status(200, 400),
     new Header('Content-Disposition', 'attachment'),
-    new Header('Content-Type', 'application/json')
+    new Header('Content-Type', 'text/html; charset=UTF-8'),
+    new Header('Content-Type', 'multipart/form-data; boundary=something'),
 )]
 final class AcceptController extends Controller
 {

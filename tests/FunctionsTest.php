@@ -44,7 +44,7 @@ final class FunctionsTest extends TestCase
         $header = new Header('foo', 'bar');
         $this->assertEquals(
             [
-                $header->name => $header,
+                $header->line,
             ],
             $request->headers->toArray()
         );
@@ -60,20 +60,15 @@ final class FunctionsTest extends TestCase
         $this->assertSame(200, $response->status->primary);
         $this->assertSame([400], $response->status->other);
         $contentDisposition = new Header('Content-Disposition', 'attachment');
-        $contentType = new Header('Content-Type', 'application/json');
+        $contentType = new Header('Content-Type', 'text/html; charset=UTF-8');
+        $contentType2 = new Header('Content-Type', 'multipart/form-data; boundary=something');
         $this->assertEquals(
             [
-                $contentDisposition->name => $contentDisposition,
-                $contentType->name => $contentType,
+                $contentDisposition->line,
+                $contentType->line,
+                $contentType2->line,
             ],
             $response->headers->toArray()
-        );
-        $this->assertSame(
-            [
-                $contentDisposition->name => $contentDisposition->value,
-                $contentType->name => $contentType->value,
-            ],
-            $response->headers->toExport()
         );
     }
 }

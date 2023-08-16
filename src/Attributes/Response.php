@@ -41,8 +41,8 @@ final class Response implements IteratorAggregate
     public function getIterator(): Iterator
     {
         yield 'status' => $this->status;
-        foreach ($this->headers as $name => $header) {
-            yield $name => $header;
+        foreach ($this->headers as $header) {
+            yield $header->name => $header;
         }
     }
 
