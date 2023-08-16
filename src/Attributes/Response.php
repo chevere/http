@@ -26,18 +26,13 @@ use IteratorAggregate;
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Response implements IteratorAggregate
 {
-    private Headers $headers;
+    public readonly Headers $headers;
 
     public function __construct(
         public readonly Status $status = new Status(200),
         Header ...$header,
     ) {
         $this->headers = new Headers(...$header);
-    }
-
-    public function headers(): Headers
-    {
-        return $this->headers;
     }
 
     /**

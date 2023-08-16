@@ -39,14 +39,14 @@ final class FunctionsTest extends TestCase
     public function testGetRequest(): void
     {
         $request = getRequest(NullController::class);
-        $this->assertCount(0, $request->headers());
+        $this->assertCount(0, $request->headers);
         $request = getRequest(AcceptController::class);
         $header = new Header('foo', 'bar');
         $this->assertEquals(
             [
                 $header->name => $header,
             ],
-            $request->headers()->toArray()
+            $request->headers->toArray()
         );
     }
 
@@ -55,7 +55,7 @@ final class FunctionsTest extends TestCase
         $response = getResponse(NullController::class);
         $attribute = new Status();
         $this->assertEquals($attribute, $response->status);
-        $this->assertCount(0, $response->headers());
+        $this->assertCount(0, $response->headers);
         $response = getResponse(AcceptController::class);
         $this->assertSame(200, $response->status->primary);
         $this->assertSame([400], $response->status->other);
@@ -66,14 +66,14 @@ final class FunctionsTest extends TestCase
                 $contentDisposition->name => $contentDisposition,
                 $contentType->name => $contentType,
             ],
-            $response->headers()->toArray()
+            $response->headers->toArray()
         );
         $this->assertSame(
             [
                 $contentDisposition->name => $contentDisposition->value,
                 $contentType->name => $contentType->value,
             ],
-            $response->headers()->toExport()
+            $response->headers->toExport()
         );
     }
 }

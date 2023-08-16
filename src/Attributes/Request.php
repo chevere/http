@@ -20,16 +20,11 @@ use Chevere\Http\Headers;
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Request
 {
-    private Headers $headers;
+    public readonly Headers $headers;
 
     public function __construct(
         Header ...$attribute,
     ) {
         $this->headers = new Headers(...$attribute);
-    }
-
-    public function headers(): Headers
-    {
-        return $this->headers;
     }
 }
