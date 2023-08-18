@@ -21,9 +21,9 @@ use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\Middleware;
 use Chevere\Tests\src\NullController;
 use PHPUnit\Framework\TestCase;
-use function Chevere\Http\attributeRequest;
-use function Chevere\Http\attributeResponse;
 use function Chevere\Http\middlewares;
+use function Chevere\Http\requestAttribute;
+use function Chevere\Http\responseAttribute;
 
 final class FunctionsTest extends TestCase
 {
@@ -38,9 +38,9 @@ final class FunctionsTest extends TestCase
 
     public function testGetRequest(): void
     {
-        $request = attributeRequest(NullController::class);
+        $request = requestAttribute(NullController::class);
         $this->assertCount(0, $request->headers);
-        $request = attributeRequest(AcceptController::class);
+        $request = requestAttribute(AcceptController::class);
         $header = new Header('foo', 'bar');
         $this->assertEquals(
             [
@@ -52,11 +52,11 @@ final class FunctionsTest extends TestCase
 
     public function testGetResponse(): void
     {
-        $response = attributeResponse(NullController::class);
+        $response = responseAttribute(NullController::class);
         $attribute = new Status();
         $this->assertEquals($attribute, $response->status);
         $this->assertCount(0, $response->headers);
-        $response = attributeResponse(AcceptController::class);
+        $response = responseAttribute(AcceptController::class);
         $this->assertSame(200, $response->status->primary);
         $this->assertSame([400], $response->status->other);
         $contentDisposition = new Header('Content-Disposition', 'attachment');

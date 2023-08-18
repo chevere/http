@@ -29,7 +29,7 @@ function middlewares(string ...$middleware): MiddlewaresInterface
     return new Middlewares(...$middlewares);
 }
 
-function attributeRequest(string $className): Request
+function requestAttribute(string $className): Request
 {
     // @phpstan-ignore-next-line
     $reflection = new ReflectionClass($className);
@@ -37,7 +37,7 @@ function attributeRequest(string $className): Request
     return getAttribute($reflection, Request::class);
 }
 
-function attributeResponse(string $className): Response
+function responseAttribute(string $className): Response
 {
     // @phpstan-ignore-next-line
     $reflection = new ReflectionClass($className);
