@@ -23,9 +23,6 @@ use Chevere\DataStructure\Vector;
  */
 final class Headers implements VectoredInterface
 {
-    /**
-     * @template-use VectorTrait<Header>
-     */
     use VectorTrait;
 
     public function __construct(Header ...$header)
