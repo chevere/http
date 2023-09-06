@@ -18,8 +18,8 @@ use Chevere\Http\Attributes\Response;
 use Chevere\Http\Controller;
 use Chevere\Http\Header;
 use Chevere\Http\Status;
+use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
-use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\file;
@@ -43,14 +43,14 @@ final class AcceptController extends Controller
         );
     }
 
-    public static function acceptBody(): ArrayTypeParameterInterface
+    public static function acceptBody(): ArrayParameterInterface
     {
         return arrayp(
             bar: string('/^[1-9]+$/')
         );
     }
 
-    public static function acceptFiles(): ArrayTypeParameterInterface
+    public static function acceptFiles(): ArrayParameterInterface
     {
         return arrayp(
             MyFile: file(

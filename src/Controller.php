@@ -17,8 +17,8 @@ use Chevere\Controller\Controller as BaseController;
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Parameter\Arguments;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
+use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
-use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
 use Chevere\Parameter\Interfaces\FileParameterInterface;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
@@ -40,12 +40,12 @@ abstract class Controller extends BaseController implements ControllerInterface
         return arrayString();
     }
 
-    public static function acceptBody(): ArrayTypeParameterInterface
+    public static function acceptBody(): ArrayParameterInterface
     {
         return arrayp();
     }
 
-    public static function acceptFiles(): ArrayTypeParameterInterface
+    public static function acceptFiles(): ArrayParameterInterface
     {
         return arrayp();
     }
