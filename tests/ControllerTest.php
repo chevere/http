@@ -40,7 +40,7 @@ final class ControllerTest extends TestCase
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('abc', $controllerWith->query()->cast('foo')->string());
+        $this->assertSame('abc', $controllerWith->query()->required('foo')->string());
         $this->expectException(InvalidArgumentException::class);
         $controller->withQuery([
             'foo' => '123',
@@ -56,7 +56,7 @@ final class ControllerTest extends TestCase
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('abc', $controllerWith->query()->castOptional('foo')->string());
+        $this->assertSame('abc', $controllerWith->query()->optional('foo')->string());
     }
 
     public function testAcceptBodyParameters(): void
@@ -67,7 +67,7 @@ final class ControllerTest extends TestCase
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('123', $controllerWith->body()->cast('bar')->string());
+        $this->assertSame('123', $controllerWith->body()->required('bar')->string());
         $this->expectException(InvalidArgumentException::class);
         $controller->withBody([
             'bar' => 'abc',
@@ -83,7 +83,7 @@ final class ControllerTest extends TestCase
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('123', $controllerWith->body()->castOptional('bar')->string());
+        $this->assertSame('123', $controllerWith->body()->optional('bar')->string());
     }
 
     public function testAcceptFileParameters(): void
