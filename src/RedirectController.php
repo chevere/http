@@ -20,7 +20,7 @@ use Chevere\Throwable\Exceptions\LogicException;
 use Psr\Http\Message\UriInterface;
 use function Chevere\Message\message;
 use function Chevere\Parameter\arrayp;
-use function Chevere\Parameter\integer;
+use function Chevere\Parameter\int;
 use function Chevere\Parameter\object;
 
 abstract class RedirectController extends Controller implements RedirectControllerInterface
@@ -36,7 +36,7 @@ abstract class RedirectController extends Controller implements RedirectControll
     {
         return arrayp(
             uri: object(UriInterface::class),
-            status: integer()
+            status: int()
                 ->withAccept(...static::STATUSES),
         );
     }
