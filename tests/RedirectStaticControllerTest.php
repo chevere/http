@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\RedirectStaticController;
-use Chevere\Throwable\Exceptions\InvalidArgumentException;
-use Chevere\Throwable\Exceptions\LogicException;
+use InvalidArgumentException;
+use LogicException;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 

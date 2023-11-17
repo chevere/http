@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Chevere\Tests;
 
+use ArgumentCountError;
 use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptOptionalController;
 use Chevere\Tests\src\NullController;
-use Chevere\Throwable\Errors\ArgumentCountError;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -90,11 +90,11 @@ final class ControllerTest extends TestCase
     {
         $controller = new AcceptController();
         $file = [
+            'error' => UPLOAD_ERR_OK,
+            'name' => 'readme.txt',
+            'size' => 1313,
             'type' => 'text/plain',
             'tmp_name' => '/tmp/file.yx5kVl',
-            'size' => 1313,
-            'name' => 'readme.txt',
-            'error' => UPLOAD_ERR_OK,
         ];
         $this->assertSame([], $controller->files());
         $controllerWith = $controller->withFiles([

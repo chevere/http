@@ -15,8 +15,8 @@ namespace Chevere\Http;
 
 use Chevere\Http\Interfaces\RedirectControllerInterface;
 use Chevere\Parameter\Interfaces\ArrayTypeParameterInterface;
-use Chevere\Throwable\Exceptions\InvalidArgumentException;
-use Chevere\Throwable\Exceptions\LogicException;
+use InvalidArgumentException;
+use LogicException;
 use Psr\Http\Message\UriInterface;
 use function Chevere\Message\message;
 use function Chevere\Parameter\arrayp;
@@ -36,8 +36,7 @@ abstract class RedirectController extends Controller implements RedirectControll
     {
         return arrayp(
             uri: object(UriInterface::class),
-            status: int()
-                ->withAccept(...static::STATUSES),
+            status: int()->withAccept(...static::STATUSES),
         );
     }
 
@@ -63,7 +62,9 @@ abstract class RedirectController extends Controller implements RedirectControll
     final public function uri(): UriInterface
     {
         return $this->uri
-            ?? throw new LogicException(message('No uri set'));
+            ?? throw new LogicException(
+                (string) message('No uri set')
+            );
     }
 
     /**
@@ -101,9 +102,11 @@ abstract class RedirectController extends Controller implements RedirectControll
         }
 
         throw new InvalidArgumentException(
-            message('Invalid status code %status% provided, must be one of %statuses%')
-                ->withCode('%status%', strval($this->status))
-                ->withCode('%statuses%', implode(', ', static::STATUSES))
+            (string) message(
+                'Invalid status code `%status%` provided, must be one of `%statuses%`',
+                status: strval($this->status),
+                statuses: implode(', ', static::STATUSES),
+            )
         );
     }
 }

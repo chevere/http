@@ -15,11 +15,9 @@ namespace Chevere\Http;
 
 use Chevere\Controller\Controller as BaseController;
 use Chevere\Http\Interfaces\ControllerInterface;
-use Chevere\Parameter\Arguments;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
-use Chevere\Parameter\Interfaces\FileParameterInterface;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
@@ -70,12 +68,15 @@ abstract class Controller extends BaseController implements ControllerInterface
     {
         $new = clone $this;
         $array = [];
-        /** @var FileParameterInterface $parameter */
-        foreach ($new->acceptFiles()->parameters() as $key => $parameter) {
-            $arguments = new Arguments(
-                $parameter->parameters(),
-                $files[$key]
-            );
+        $parameters = $new->acceptFiles()->parameters();
+        foreach ($files as $key => $file) {
+            $key = strval($key);
+            $parameters->assertHas($key);
+            $collection = match (true) {
+                $parameters->requiredKeys()->contains($key) => $parameters->required($key),
+                default => $parameters->optional($key),
+            };
+            $arguments = arguments($collection->array(), $file);
             $array[$key] = $arguments;
         }
         $new->files = $array;
