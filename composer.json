@@ -19,7 +19,7 @@
         "chevere/parameter": "^1.0.x-dev",
         "nyholm/psr7": "^1.8",
         "psr/http-factory": "^1",
-        "psr/http-message": "^1",
+        "psr/http-message": "^1|^2",
         "psr/http-server-handler": "^1",
         "psr/http-server-middleware": "^1"
     },
