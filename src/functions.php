@@ -17,7 +17,6 @@ use Chevere\Http\Attributes\Request;
 use Chevere\Http\Attributes\Response;
 use Chevere\Http\Interfaces\MiddlewaresInterface;
 use ReflectionClass;
-use function Chevere\Attribute\getAttribute;
 
 function middlewares(string ...$middleware): MiddlewaresInterface
 {
@@ -33,14 +32,22 @@ function requestAttribute(string $className): Request
 {
     // @phpstan-ignore-next-line
     $reflection = new ReflectionClass($className);
-    // @phpstan-ignore-next-line
-    return getAttribute($reflection, Request::class);
+    $attributes = $reflection->getAttributes(Request::class);
+    if ($attributes === []) {
+        return new (Request::class)();
+    }
+
+    return $attributes[0]->newInstance();
 }
 
 function responseAttribute(string $className): Response
 {
     // @phpstan-ignore-next-line
     $reflection = new ReflectionClass($className);
-    // @phpstan-ignore-next-line
-    return getAttribute($reflection, Response::class);
+    $attributes = $reflection->getAttributes(Response::class);
+    if ($attributes === []) {
+        return new (Response::class)();
+    }
+
+    return $attributes[0]->newInstance();
 }

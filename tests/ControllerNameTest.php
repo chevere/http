@@ -16,9 +16,9 @@ namespace Chevere\Tests;
 use Chevere\Http\ControllerName;
 use Chevere\Tests\src\NullController;
 use Chevere\Tests\src\WrongController;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Throwable;
-use TypeError;
 
 final class ControllerNameTest extends TestCase
 {
@@ -30,7 +30,7 @@ final class ControllerNameTest extends TestCase
 
     public function testControllerNotHttp(): void
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(InvalidArgumentException::class);
         new ControllerName(WrongController::class);
     }
 
