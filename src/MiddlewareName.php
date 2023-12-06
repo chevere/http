@@ -14,15 +14,19 @@ declare(strict_types=1);
 namespace Chevere\Http;
 
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
+use InvalidArgumentException;
 use Psr\Http\Server\MiddlewareInterface;
-use function Chevere\Common\assertClassName;
 
 final class MiddlewareName implements MiddlewareNameInterface
 {
     public function __construct(
         private string $name
     ) {
-        assertClassName(MiddlewareInterface::class, $this->name);
+        if (is_subclass_of($this->name, MiddlewareInterface::class)) {
+            return;
+        }
+
+        throw new InvalidArgumentException();
     }
 
     public function __toString(): string

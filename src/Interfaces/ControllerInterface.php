@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Http\Interfaces;
 
-use Chevere\Controller\Interfaces\ControllerInterface as BaseControllerInterface;
+use Chevere\Action\Interfaces\ControllerInterface as BaseControllerInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;

@@ -62,9 +62,7 @@ abstract class RedirectController extends Controller implements RedirectControll
     final public function uri(): UriInterface
     {
         return $this->uri
-            ?? throw new LogicException(
-                (string) message('No uri set')
-            );
+            ?? throw new LogicException('No uri set');
     }
 
     /**
@@ -105,7 +103,7 @@ abstract class RedirectController extends Controller implements RedirectControll
             (string) message(
                 'Invalid status code `%status%` provided, must be one of `%statuses%`',
                 status: strval($this->status),
-                statuses: implode(', ', static::STATUSES),
+                statuses: implode(', ', static::STATUSES)
             )
         );
     }

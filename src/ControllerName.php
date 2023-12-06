@@ -15,14 +15,18 @@ namespace Chevere\Http;
 
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Http\Interfaces\ControllerNameInterface;
-use function Chevere\Common\assertClassName;
+use InvalidArgumentException;
 
 final class ControllerName implements ControllerNameInterface
 {
     public function __construct(
         private string $name
     ) {
-        assertClassName(ControllerInterface::class, $name);
+        if (is_subclass_of($this->name, ControllerInterface::class)) {
+            return;
+        }
+
+        throw new InvalidArgumentException();
     }
 
     public function __toString(): string

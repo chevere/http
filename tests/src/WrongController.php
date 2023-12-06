@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\src;
 
-use Chevere\Controller\Controller;
+use Chevere\Action\Controller;
 
 class WrongController extends Controller
 {
