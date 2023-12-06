@@ -48,7 +48,7 @@ final class AcceptOptionalController extends Controller
     public static function acceptFiles(): ArrayParameterInterface
     {
         return arrayp()->withOptional(
-            MyFile: file(
+            myFile: file(
                 type: string('/^text\/plain$/')
             )
         );

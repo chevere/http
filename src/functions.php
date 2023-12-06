@@ -13,10 +13,16 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
+use Chevere\Http\Attributes\Description;
 use Chevere\Http\Attributes\Request;
 use Chevere\Http\Attributes\Response;
 use Chevere\Http\Interfaces\MiddlewaresInterface;
 use ReflectionClass;
+use ReflectionClassConstant;
+use ReflectionFunction;
+use ReflectionMethod;
+use ReflectionParameter;
+use ReflectionProperty;
 
 function middlewares(string ...$middleware): MiddlewaresInterface
 {
@@ -32,21 +38,37 @@ function requestAttribute(string $className): Request
 {
     // @phpstan-ignore-next-line
     $reflection = new ReflectionClass($className);
-    $attributes = $reflection->getAttributes(Request::class);
-    if ($attributes === []) {
-        return new (Request::class)();
-    }
 
-    return $attributes[0]->newInstance();
+    // @phpstan-ignore-next-line
+    return getAttribute($reflection, Request::class);
 }
 
 function responseAttribute(string $className): Response
 {
     // @phpstan-ignore-next-line
     $reflection = new ReflectionClass($className);
-    $attributes = $reflection->getAttributes(Response::class);
+
+    // @phpstan-ignore-next-line
+    return getAttribute($reflection, Response::class);
+}
+
+function descriptionAttribute(string $className): Description
+{
+    // @phpstan-ignore-next-line
+    $reflection = new ReflectionClass($className);
+
+    // @phpstan-ignore-next-line
+    return getAttribute($reflection, Description::class);
+}
+
+// @phpstan-ignore-next-line
+function getAttribute(
+    ReflectionClass|ReflectionFunction|ReflectionMethod|ReflectionProperty|ReflectionParameter|ReflectionClassConstant $reflection,
+    string $attribute
+): object {
+    $attributes = $reflection->getAttributes($attribute);
     if ($attributes === []) {
-        return new (Response::class)();
+        return new $attribute();
     }
 
     return $attributes[0]->newInstance();

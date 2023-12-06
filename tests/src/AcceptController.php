@@ -52,11 +52,16 @@ final class AcceptController extends Controller
 
     public static function acceptFiles(): ArrayParameterInterface
     {
-        return arrayp(
-            MyFile: file(
-                type: string('/^text\/plain$/')
-            )
-        );
+        return
+            arrayp(
+                myFile: file(
+                    type: string('/^text\/plain$/')
+                )
+            )->withOptional(
+                myImage: file(
+                    type: string('/^image\/png$/')
+                )
+            );
     }
 
     public function run(): array

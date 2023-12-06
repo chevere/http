@@ -18,6 +18,9 @@ use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
+use LogicException;
+use Throwable;
+use function Chevere\Message\message;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
@@ -29,9 +32,9 @@ abstract class Controller extends BaseController implements ControllerInterface
     private ?ArgumentsInterface $body = null;
 
     /**
-     * @var array<ArgumentsInterface>
+     * @var ?array<ArgumentsInterface>
      */
-    private array $files = [];
+    private ?array $files = null;
 
     public static function acceptQuery(): ArrayStringParameterInterface
     {
@@ -98,13 +101,24 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     final public function files(): array
     {
-        return $this->files;
+        return $this->files
+            ??= [];
     }
 
     protected function assertRuntime(): void
     {
-        $this->query();
-        $this->body();
-        $this->files();
+        foreach (['query', 'body', 'files'] as $method) {
+            try {
+                $this->{$method}();
+            } catch (Throwable $e) {
+                throw new LogicException(
+                    (string) message(
+                        '%topic%: %message%',
+                        topic: $method,
+                        message: $e->getMessage()
+                    )
+                );
+            }
+        }
     }
 }

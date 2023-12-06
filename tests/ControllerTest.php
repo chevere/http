@@ -18,10 +18,20 @@ use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptOptionalController;
 use Chevere\Tests\src\NullController;
 use InvalidArgumentException;
+use LogicException;
+use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 
 final class ControllerTest extends TestCase
 {
+    public function testAssertRuntime(): void
+    {
+        $controller = new AcceptController();
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('query: Missing required argument(s): `foo`');
+        $controller->getResponse();
+    }
+
     public function testDefaults(): void
     {
         $controller = new NullController();
@@ -86,27 +96,53 @@ final class ControllerTest extends TestCase
         $this->assertSame('123', $controllerWith->body()->optional('bar')->string());
     }
 
-    public function testAcceptFileParameters(): void
+    public function testAcceptFile(): void
     {
         $controller = new AcceptController();
-        $file = [
+        $myFile = [
             'error' => UPLOAD_ERR_OK,
             'name' => 'readme.txt',
-            'size' => 1313,
+            'size' => 12345,
             'type' => 'text/plain',
             'tmp_name' => '/tmp/file.yx5kVl',
         ];
+        $myImage = [
+            'error' => UPLOAD_ERR_OK,
+            'name' => 'image.png',
+            'size' => 1234,
+            'type' => 'image/png',
+            'tmp_name' => '/tmp/file.pnp4t1',
+        ];
         $this->assertSame([], $controller->files());
         $controllerWith = $controller->withFiles([
-            'MyFile' => $file,
+            'myFile' => $myFile,
+            'myImage' => $myImage,
         ]);
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $myFile = $controllerWith->files()['MyFile'];
-        $this->assertSame($file, $myFile->toArray());
+        $theFile = $controllerWith->files()['myFile'];
+        $theImage = $controllerWith->files()['myImage'];
+        $this->assertSame($myFile, $theFile->toArray());
+        $this->assertSame($myImage, $theImage->toArray());
+    }
+
+    public function testAcceptFileInvalidArgument(): void
+    {
+        $controller = new AcceptController();
         $this->expectException(ArgumentCountError::class);
+        $this->expectExceptionMessage('Missing required argument(s): `error, name, size, type, tmp_name`');
         $controller->withFiles([
-            'MyFile' => [],
+            'myFile' => [],
+        ]);
+    }
+
+    public function testAcceptFileMissingKey(): void
+    {
+        $controller = new AcceptController();
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Missing key(s) `404`');
+        $controller->withFiles([
+            '404' => [],
         ]);
     }
 }
