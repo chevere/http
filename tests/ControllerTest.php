@@ -29,7 +29,7 @@ final class ControllerTest extends TestCase
         $controller = new AcceptController();
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('query: Missing required argument(s): `foo`');
-        $controller->getResponse();
+        $controller->__invoke();
     }
 
     public function testDefaults(): void

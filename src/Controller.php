@@ -18,7 +18,9 @@ use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
+use Chevere\Parameter\Interfaces\ParameterInterface;
 use LogicException;
+use ReflectionMethod;
 use Throwable;
 use function Chevere\Message\message;
 use function Chevere\Parameter\arguments;
@@ -105,8 +107,10 @@ abstract class Controller extends BaseController implements ControllerInterface
             ??= [];
     }
 
-    protected function assertRuntime(): void
-    {
+    protected function assertRuntime(
+        ReflectionMethod $reflection,
+        ParameterInterface $return,
+    ): void {
         foreach (['query', 'body', 'files'] as $method) {
             try {
                 $this->{$method}();
