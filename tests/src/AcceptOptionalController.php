@@ -54,7 +54,7 @@ final class AcceptOptionalController extends Controller
         );
     }
 
-    public function run(): array
+    public function main(): array
     {
         return [];
     }

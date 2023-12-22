@@ -17,7 +17,7 @@ use Chevere\Http\Controller;
 
 class NullController extends Controller
 {
-    public function run(): array
+    public function main(): array
     {
         return [];
     }

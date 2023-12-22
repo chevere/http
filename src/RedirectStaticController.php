@@ -19,7 +19,7 @@ class RedirectStaticController extends RedirectController
      * @return array<string, mixed>
      * @codeCoverageIgnore
      */
-    public function run(): array
+    public function main(): array
     {
         return $this->data();
     }
