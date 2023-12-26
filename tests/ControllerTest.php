@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use ArgumentCountError;
+use Chevere\Action\Exceptions\ActionException;
 use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptOptionalController;
 use Chevere\Tests\src\NullController;
 use InvalidArgumentException;
-use LogicException;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 
@@ -27,8 +27,10 @@ final class ControllerTest extends TestCase
     public function testAssertRuntime(): void
     {
         $controller = new AcceptController();
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('query: Missing required argument(s): `foo`');
+        $this->expectException(ActionException::class);
+        $this->expectExceptionMessage(<<<PLAIN
+        `Chevere\Tests\src\AcceptController` ArgumentCountError → Missing required argument(s): `foo`
+        PLAIN);
         $controller->__invoke();
     }
 

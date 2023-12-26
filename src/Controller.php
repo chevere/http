@@ -14,15 +14,11 @@ declare(strict_types=1);
 namespace Chevere\Http;
 
 use Chevere\Action\Controller as BaseController;
+use Chevere\Action\Interfaces\ReflectionActionInterface;
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
-use Chevere\Parameter\Interfaces\ParameterInterface;
-use LogicException;
-use ReflectionMethod;
-use Throwable;
-use function Chevere\Message\message;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
@@ -107,22 +103,10 @@ abstract class Controller extends BaseController implements ControllerInterface
             ??= [];
     }
 
-    protected function assertRuntime(
-        ReflectionMethod $reflection,
-        ParameterInterface $return,
-    ): void {
-        foreach (['query', 'body', 'files'] as $method) {
-            try {
-                $this->{$method}();
-            } catch (Throwable $e) {
-                throw new LogicException(
-                    (string) message(
-                        '%topic%: %message%',
-                        topic: $method,
-                        message: $e->getMessage()
-                    )
-                );
-            }
-        }
+    protected function assertRuntime(ReflectionActionInterface $reflection): void
+    {
+        $this->query();
+        $this->body();
+        $this->files();
     }
 }

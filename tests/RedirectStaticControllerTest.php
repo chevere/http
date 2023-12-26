@@ -39,7 +39,7 @@ final class RedirectStaticControllerTest extends TestCase
                 'uri' => $controllerWithUri->uri(),
                 'status' => $controllerWithUri->status(),
             ],
-            $controllerWithUri->__invoke()->array()
+            $controllerWithUri->__invoke()
         );
         $this->assertNotSame($controller, $controllerWithUri);
         $this->assertNotEquals($controller, $controllerWithUri);
