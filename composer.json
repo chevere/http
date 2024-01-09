@@ -16,7 +16,7 @@
         "chevere/action": "^1.0.x-dev",
         "chevere/data-structure": "^1.0.1",
         "chevere/message": "^1.0.0",
-        "chevere/parameter": "^1.0.x-dev",
+        "chevere/parameter": "^1.0.0",
         "nyholm/psr7": "^1.8",
         "psr/http-factory": "^1",
         "psr/http-message": "^1|^2",
