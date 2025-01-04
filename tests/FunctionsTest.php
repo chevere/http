@@ -46,7 +46,7 @@ final class FunctionsTest extends TestCase
             [
                 $header->line,
             ],
-            $request->headers->toArray()
+            $request->headers->toLines()
         );
     }
 
@@ -68,7 +68,7 @@ final class FunctionsTest extends TestCase
                 $contentType->line,
                 $contentType2->line,
             ],
-            $response->headers->toArray()
+            $response->headers->toLines()
         );
     }
 }

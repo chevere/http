@@ -33,11 +33,24 @@ final class Headers implements VectoredInterface
     /**
      * @return array<string>
      */
-    public function toArray(): array
+    public function toLines(): array
     {
         $return = [];
         foreach ($this->getIterator() as $header) {
             $return[] = $header->line;
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function toArray(): array
+    {
+        $return = [];
+        foreach ($this->getIterator() as $header) {
+            $return[$header->name] = $header->value;
         }
 
         return $return;

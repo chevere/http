@@ -34,6 +34,10 @@ final class HeadersTest extends TestCase
         $this->assertSame([
             'foo: bar',
             'foo: baz',
+        ], $headers->toLines());
+        $this->assertSame([
+            'foo' => 'bar',
+            'foo' => 'baz',
         ], $headers->toArray());
     }
 }
