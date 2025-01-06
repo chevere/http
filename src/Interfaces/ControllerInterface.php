@@ -63,5 +63,8 @@ interface ControllerInterface extends BaseControllerInterface
      */
     public function files(): array;
 
+    /**
+     * Define a method to handle terminated responses (e.g. set headers, redirects)
+     */
     public function terminate(ResponseInterface $response): ResponseInterface;
 }
