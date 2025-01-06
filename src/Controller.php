@@ -19,6 +19,7 @@ use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
+use Psr\Http\Message\ResponseInterface;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
@@ -47,6 +48,11 @@ abstract class Controller extends BaseController implements ControllerInterface
     public static function acceptFiles(): ArrayParameterInterface
     {
         return arrayp();
+    }
+
+    public function terminate(ResponseInterface $response): ResponseInterface
+    {
+        return $response;
     }
 
     final public function withQuery(array $query): static

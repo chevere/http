@@ -17,6 +17,7 @@ use Chevere\Action\Interfaces\ControllerInterface as BaseControllerInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Describes the component in charge of defining an Http Controller which adds methods for handling HTTP requests.
@@ -61,4 +62,6 @@ interface ControllerInterface extends BaseControllerInterface
      * @return array<ArgumentsInterface>
      */
     public function files(): array;
+
+    public function terminate(ResponseInterface $response): ResponseInterface;
 }
