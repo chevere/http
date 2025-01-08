@@ -25,7 +25,7 @@ use function Chevere\Parameter\object;
 
 abstract class RedirectController extends Controller implements RedirectControllerInterface
 {
-    private ?UriInterface $uri;
+    private UriInterface $uri;
 
     /**
      * @var int<300, 399>
