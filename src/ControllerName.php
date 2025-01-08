@@ -13,32 +13,16 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
+use Chevere\Action\Traits\ControllerNameTrait;
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Http\Interfaces\ControllerNameInterface;
-use InvalidArgumentException;
 
 final class ControllerName implements ControllerNameInterface
 {
-    public function __construct(
-        private string $name
-    ) {
-        if ($this->isSubclassOf(ControllerInterface::class)) {
-            return;
-        }
+    use ControllerNameTrait;
 
-        throw new InvalidArgumentException();
-    }
-
-    public function __toString(): string
+    public static function interface(): string
     {
-        /**
-         * @var class-string HttpControllerInterface
-         */
-        return $this->name;
-    }
-
-    public function isSubclassOf(string $class): bool
-    {
-        return is_subclass_of($this->name, $class, true);
+        return ControllerInterface::class;
     }
 }

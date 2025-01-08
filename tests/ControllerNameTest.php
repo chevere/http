@@ -25,6 +25,11 @@ final class ControllerNameTest extends TestCase
     public function testInvalid(): void
     {
         $this->expectException(Throwable::class);
+        $this->expectExceptionMessage(
+            <<<PLAIN
+            Controller `` doesn't implement `Chevere\Http\Interfaces\ControllerInterface`
+            PLAIN
+        );
         new ControllerName('');
     }
 

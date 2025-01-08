@@ -13,20 +13,15 @@ declare(strict_types=1);
 
 namespace Chevere\Http\Interfaces;
 
-use Stringable;
+use Chevere\Action\Interfaces\ControllerNameInterface as ActionControllerNameInterface;
 
 /**
- * Describes the component in charge of doing.
+ * Describes the component in charge of handling the HTTP controller name.
  */
-interface ControllerNameInterface extends Stringable
+interface ControllerNameInterface extends ActionControllerNameInterface
 {
     /**
      * @return class-string HttpControllerInterface
      */
     public function __toString(): string;
-
-    /**
-     * Returns a boolean if the object has this class as one of its parents or implements it.
-     */
-    public function isSubclassOf(string $class): bool;
 }
