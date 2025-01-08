@@ -22,7 +22,7 @@ final class ControllerName implements ControllerNameInterface
     public function __construct(
         private string $name
     ) {
-        if (is_subclass_of($this->name, ControllerInterface::class)) {
+        if ($this->isSubclassOf(ControllerInterface::class)) {
             return;
         }
 
@@ -35,5 +35,10 @@ final class ControllerName implements ControllerNameInterface
          * @var class-string HttpControllerInterface
          */
         return $this->name;
+    }
+
+    public function isSubclassOf(string $class): bool
+    {
+        return is_subclass_of($this->name, $class, true);
     }
 }
