@@ -26,14 +26,14 @@ use function Chevere\Parameter\arrayString;
 
 abstract class Controller extends BaseController implements ControllerInterface
 {
-    private ?ArgumentsInterface $query = null;
+    private ?ArgumentsInterface $_query = null;
 
-    private ?ArgumentsInterface $body = null;
+    private ?ArgumentsInterface $_body = null;
 
     /**
      * @var ?array<ArgumentsInterface>
      */
-    private ?array $files = null;
+    private ?array $_files = null;
 
     public static function acceptQuery(): ArrayStringParameterInterface
     {
@@ -58,7 +58,7 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function withQuery(array $query): static
     {
         $new = clone $this;
-        $new->query = arguments($new::acceptQuery()->parameters(), $query);
+        $new->_query = arguments($new::acceptQuery()->parameters(), $query);
 
         return $new;
     }
@@ -66,7 +66,7 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function withBody(array $body): static
     {
         $new = clone $this;
-        $new->body = arguments($new::acceptBody()->parameters(), $body);
+        $new->_body = arguments($new::acceptBody()->parameters(), $body);
 
         return $new;
     }
@@ -86,26 +86,26 @@ abstract class Controller extends BaseController implements ControllerInterface
             $arguments = arguments($collection->array(), $file);
             $array[$key] = $arguments;
         }
-        $new->files = $array;
+        $new->_files = $array;
 
         return $new;
     }
 
     final public function query(): ArgumentsInterface
     {
-        return $this->query
+        return $this->_query
             ??= arguments(static::acceptQuery()->parameters(), []);
     }
 
     final public function body(): ArgumentsInterface
     {
-        return $this->body
+        return $this->_body
             ??= arguments(static::acceptBody()->parameters(), []);
     }
 
     final public function files(): array
     {
-        return $this->files
+        return $this->_files
             ??= [];
     }
 
