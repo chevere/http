@@ -20,4 +20,8 @@ use Stringable;
  */
 interface MiddlewareNameInterface extends Stringable
 {
+    /**
+     * @return array<string,mixed>
+     */
+    public function arguments(): array;
 }

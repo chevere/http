@@ -13,24 +13,49 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
+use Chevere\Action\Traits\ActionNameTrait;
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
-use InvalidArgumentException;
+use Chevere\Parameter\Arguments;
 use Psr\Http\Server\MiddlewareInterface;
+use ReflectionMethod;
+use function Chevere\Parameter\reflectionToParameters;
 
 final class MiddlewareName implements MiddlewareNameInterface
 {
-    public function __construct(
-        private string $name
-    ) {
-        if (is_subclass_of($this->name, MiddlewareInterface::class)) {
-            return;
-        }
+    use ActionNameTrait;
 
-        throw new InvalidArgumentException();
+    /**
+     * @var array<string|int, mixed>
+     */
+    private array $arguments;
+
+    /**
+     * @param array<string|int, mixed> $arguments
+     */
+    public function __construct(
+        private string $name,
+        mixed ...$arguments
+    ) {
+        $this->onConstruct();
+        $this->arguments = [];
+        if (method_exists($this->name, 'setUp')) {
+            $parameters = reflectionToParameters(
+                new ReflectionMethod($this->name, 'setUp')
+            );
+            $this->arguments = (new Arguments($parameters, $arguments))->toArray();
+        }
     }
 
-    public function __toString(): string
+    /**
+     * @return array<string|int, mixed>
+     */
+    public function arguments(): array
     {
-        return $this->name;
+        return $this->arguments;
+    }
+
+    public static function interface(): string
+    {
+        return MiddlewareInterface::class;
     }
 }

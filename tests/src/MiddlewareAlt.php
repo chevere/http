@@ -15,4 +15,13 @@ namespace Chevere\Tests\src;
 
 final class MiddlewareAlt extends Middleware
 {
+    private string $test;
+
+    private int $code;
+
+    public function setUp(string $test = 'test', int $code = 100): void
+    {
+        $this->test = $test;
+        $this->code = $code;
+    }
 }

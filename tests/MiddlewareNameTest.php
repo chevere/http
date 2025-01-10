@@ -15,6 +15,7 @@ namespace Chevere\Tests;
 
 use Chevere\Http\MiddlewareName;
 use Chevere\Tests\src\Middleware;
+use Chevere\Tests\src\MiddlewareAlt;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
@@ -31,5 +32,54 @@ final class MiddlewareNameTest extends TestCase
         $middleware = Middleware::class;
         $name = new MiddlewareName($middleware);
         $this->assertSame($middleware, $name->__toString());
+        $this->assertSame([], $name->arguments());
+    }
+
+    public function testConstructArgumentsNoSetup(): void
+    {
+        $middleware = Middleware::class;
+        $arguments = ['arg1', 'arg2'];
+        $name = new MiddlewareName($middleware, ...$arguments);
+        $this->assertSame([], $name->arguments());
+    }
+
+    /**
+     * @dataProvider provideConstructArguments
+     */
+    public function testConstructArgumentsSetup(
+        string $middleware,
+        array $arguments,
+        array $expectedArguments
+    ): void {
+        $name = new MiddlewareName($middleware, ...$arguments);
+        $this->assertSame($expectedArguments, $name->arguments());
+    }
+
+    public static function provideConstructArguments(): array
+    {
+        return [
+            [
+                MiddlewareAlt::class,
+                [
+                    0 => 'foo',
+                    1 => 123,
+                ],
+                [
+                    'test' => 'foo',
+                    'code' => 123,
+                ],
+            ],
+            [
+                MiddlewareAlt::class,
+                [
+                    'test' => 'foo',
+                    'code' => 123,
+                ],
+                [
+                    'test' => 'foo',
+                    'code' => 123,
+                ],
+            ],
+        ];
     }
 }
