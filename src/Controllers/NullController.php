@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Chevere\Http\Controllers;
 
-use Chevere\Http\Attributes\Response;
 use Chevere\Http\Controller;
-use Chevere\Http\Status;
 
-#[Response(
-    new Status(405),
-)]
-final class MethodNotAllowedController extends Controller
+/**
+ * Null controller doesn't do anything!
+ *  *
+ * @codeCoverageIgnore
+ */
+final class NullController extends Controller
 {
     protected function main(): void
     {
