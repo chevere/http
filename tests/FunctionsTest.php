@@ -30,9 +30,10 @@ final class FunctionsTest extends TestCase
     public function testMiddlewares(): void
     {
         $middleware = Middleware::class;
-        $name = new MiddlewareName($middleware);
-        $middlewares = middlewares($middleware);
-        $new = new Middlewares($name);
+        $name1 = new MiddlewareName($middleware);
+        $name2 = new MiddlewareName($middleware);
+        $middlewares = middlewares($middleware, $name2);
+        $new = new Middlewares($name1, $name2);
         $this->assertEquals($new, $middlewares);
     }
 

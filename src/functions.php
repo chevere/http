@@ -16,6 +16,7 @@ namespace Chevere\Http;
 use Chevere\Http\Attributes\Description;
 use Chevere\Http\Attributes\Request;
 use Chevere\Http\Attributes\Response;
+use Chevere\Http\Interfaces\MiddlewareNameInterface;
 use Chevere\Http\Interfaces\MiddlewaresInterface;
 use ReflectionClass;
 use ReflectionClassConstant;
@@ -24,14 +25,15 @@ use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionProperty;
 
-function middlewares(string ...$middleware): MiddlewaresInterface
+function middlewares(string|MiddlewareNameInterface ...$middleware): MiddlewaresInterface
 {
-    $middlewares = [];
-    foreach ($middleware as $name) {
-        $middlewares[] = new MiddlewareName($name);
+    foreach ($middleware as &$item) {
+        if (is_string($item)) {
+            $item = new MiddlewareName($item);
+        }
     }
 
-    return new Middlewares(...$middlewares);
+    return new Middlewares(...$middleware);
 }
 
 function requestAttribute(string $className): Request
