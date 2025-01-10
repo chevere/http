@@ -13,13 +13,18 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
-use Chevere\Action\Traits\ControllerNameTrait;
+use Chevere\Action\Traits\ActionNameTrait;
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Http\Interfaces\ControllerNameInterface;
 
 final class ControllerName implements ControllerNameInterface
 {
-    use ControllerNameTrait;
+    use ActionNameTrait;
+
+    public static function symbol(): string
+    {
+        return 'HTTP Controller';
+    }
 
     public static function interface(): string
     {

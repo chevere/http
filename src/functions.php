@@ -32,7 +32,7 @@ function middlewares(string|MiddlewareNameInterface ...$middleware): Middlewares
             $item = new MiddlewareName($item);
         }
     }
-
+    /** @var array<MiddlewareNameInterface> $middleware */
     return new Middlewares(...$middleware);
 }
 
