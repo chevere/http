@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Chevere\Http;
 
 use Chevere\DataStructure\Interfaces\VectoredInterface;
-use Chevere\DataStructure\Interfaces\VectorInterface;
 use Chevere\DataStructure\Traits\VectorTrait;
 use Chevere\DataStructure\Vector;
 
@@ -54,13 +53,5 @@ final class Headers implements VectoredInterface
         }
 
         return $return;
-    }
-
-    /**
-     * @return VectorInterface<Headers>
-     */
-    public function vector(): VectorInterface
-    {
-        return $this->vector;
     }
 }

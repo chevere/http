@@ -19,6 +19,7 @@ use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptOptionalController;
 use Chevere\Tests\src\NullController;
 use InvalidArgumentException;
+use Nyholm\Psr7\Response;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 
@@ -146,5 +147,13 @@ final class ControllerTest extends TestCase
         $controller->withFiles([
             '404' => [],
         ]);
+    }
+
+    public function testTerminate(): void
+    {
+        $controller = new AcceptController();
+        $response = new Response();
+        $terminate = $controller->terminate($response);
+        $this->assertSame($response, $terminate);
     }
 }

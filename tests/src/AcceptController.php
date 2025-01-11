@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\src;
 
+use Chevere\Http\Attributes\Description;
 use Chevere\Http\Attributes\Request;
 use Chevere\Http\Attributes\Response;
 use Chevere\Http\Controller;
@@ -25,6 +26,7 @@ use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\file;
 use function Chevere\Parameter\string;
 
+#[Description('This is a description')]
 #[Request(
     new Header('foo', 'bar'),
 )]
