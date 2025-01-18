@@ -20,20 +20,29 @@ use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
 
 abstract class Controller extends BaseController implements ControllerInterface
 {
+    /**
+     * @var array<string, mixed>
+     */
+    public array $_attributes;
+
+    /**
+     * @var array<string, mixed>
+     */
+    public array $_serverParams;
+
     private ?ArgumentsInterface $_query = null;
 
     private ?ArgumentsInterface $_body = null;
 
-    /**
-     * @var ?array<ArgumentsInterface>
-     */
-    private ?array $_files = null;
+    private ?ArgumentsInterface $_files = null;
 
     public static function acceptQuery(): ArrayStringParameterInterface
     {
@@ -55,38 +64,20 @@ abstract class Controller extends BaseController implements ControllerInterface
         return $response;
     }
 
-    final public function withQuery(array $query): static
+    final public function withServerRequest(ServerRequestInterface $serverRequest): static
     {
         $new = clone $this;
-        $new->_query = arguments($new::acceptQuery()->parameters(), $query);
-
-        return $new;
-    }
-
-    final public function withBody(array $body): static
-    {
-        $new = clone $this;
-        $new->_body = arguments($new::acceptBody()->parameters(), $body);
-
-        return $new;
-    }
-
-    final public function withFiles(array $files): static
-    {
-        $new = clone $this;
-        $array = [];
-        $parameters = $new->acceptFiles()->parameters();
-        foreach ($files as $key => $file) {
-            $key = strval($key);
-            $parameters->assertHas($key);
-            $collection = match (true) {
-                $parameters->requiredKeys()->contains($key) => $parameters->required($key),
-                default => $parameters->optional($key),
-            };
-            $arguments = arguments($collection->array(), $file);
-            $array[$key] = $arguments;
-        }
-        $new->_files = $array;
+        $new->_query = arguments(
+            $new::acceptQuery()->parameters(),
+            $serverRequest->getQueryParams()
+        );
+        $new->_body = arguments(
+            $new::acceptBody()->parameters(),
+            (array) ($serverRequest->getParsedBody() ?? [])
+        );
+        $new->_serverParams = $serverRequest->getServerParams();
+        $new->_attributes = $serverRequest->getAttributes();
+        $new->setFiles($serverRequest->getUploadedFiles());
 
         return $new;
     }
@@ -103,10 +94,20 @@ abstract class Controller extends BaseController implements ControllerInterface
             ??= arguments(static::acceptBody()->parameters(), []);
     }
 
-    final public function files(): array
+    final public function files(): ArgumentsInterface
     {
         return $this->_files
-            ??= [];
+            ??= arguments(static::acceptFiles()->parameters(), []);
+    }
+
+    final public function serverParams(): array
+    {
+        return $this->_serverParams;
+    }
+
+    final public function attributes(): array
+    {
+        return $this->_attributes;
     }
 
     protected function assertRuntime(ReflectionActionInterface $reflection): void
@@ -114,5 +115,27 @@ abstract class Controller extends BaseController implements ControllerInterface
         $this->query();
         $this->body();
         $this->files();
+    }
+
+    /**
+     * @param array<string, UploadedFileInterface> $files
+     */
+    protected function setFiles(array $files): void
+    {
+        $arguments = [];
+        $parameters = $this->acceptFiles()->parameters();
+        foreach ($files as $key => $file) {
+            $key = strval($key);
+            $parameters->assertHas($key);
+            $array = [
+                'error' => $file->getError(),
+                'name' => $file->getClientFilename(),
+                'type' => $file->getClientMediaType(),
+                'size' => $file->getSize(),
+                'tmp_name' => $file->getStream()->getMetadata('uri'),
+            ];
+            $arguments[$key] = $array;
+        }
+        $this->_files = arguments($parameters, $arguments);
     }
 }
