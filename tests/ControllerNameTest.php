@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\ControllerName;
+use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Tests\src\NullController;
 use Chevere\Tests\src\WrongController;
 use InvalidArgumentException;
@@ -44,5 +45,17 @@ final class ControllerNameTest extends TestCase
         $name = NullController::class;
         $controllerName = new ControllerName($name);
         $this->assertSame($name, $controllerName->__toString());
+    }
+
+    public function testInterface(): void
+    {
+        $this->assertSame(
+            'HTTP Controller',
+            ControllerName::symbol()
+        );
+        $this->assertSame(
+            ControllerInterface::class,
+            ControllerName::interface()
+        );
     }
 }

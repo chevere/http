@@ -17,6 +17,7 @@ use Chevere\Http\MiddlewareName;
 use Chevere\Tests\src\Middleware;
 use Chevere\Tests\src\MiddlewareAlt;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Server\MiddlewareInterface;
 use Throwable;
 
 final class MiddlewareNameTest extends TestCase
@@ -41,6 +42,14 @@ final class MiddlewareNameTest extends TestCase
         $arguments = ['arg1', 'arg2'];
         $name = new MiddlewareName($middleware, ...$arguments);
         $this->assertSame([], $name->arguments());
+    }
+
+    public function testInterface(): void
+    {
+        $this->assertSame(
+            MiddlewareInterface::class,
+            MiddlewareName::interface()
+        );
     }
 
     /**
