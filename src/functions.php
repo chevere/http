@@ -32,12 +32,19 @@ function middlewares(string|MiddlewareNameInterface ...$middleware): Middlewares
             $item = new MiddlewareName($item);
         }
     }
+
     /** @var array<MiddlewareNameInterface> $middleware */
     return new Middlewares(...$middleware);
 }
 
-function requestAttribute(string $className): Request
+/**
+ * Retrieves the Request attribute from the provided class name or the calling class.
+ */
+function requestAttribute(string $className = ''): Request
 {
+    if ($className === '') {
+        $className = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? '';
+    }
     // @phpstan-ignore-next-line
     $reflection = new ReflectionClass($className);
 
@@ -45,8 +52,14 @@ function requestAttribute(string $className): Request
     return getAttribute($reflection, Request::class);
 }
 
-function responseAttribute(string $className): Response
+/**
+ * Retrieves the Response attribute from the provided class name or the calling class.
+ */
+function responseAttribute(string $className = ''): Response
 {
+    if ($className === '') {
+        $className = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? '';
+    }
     // @phpstan-ignore-next-line
     $reflection = new ReflectionClass($className);
 
@@ -54,8 +67,14 @@ function responseAttribute(string $className): Response
     return getAttribute($reflection, Response::class);
 }
 
-function descriptionAttribute(string $className): Description
+/**
+ * Retrieves the Description attribute from the provided class name or the calling class.
+ */
+function descriptionAttribute(string $className = ''): Description
 {
+    if ($className === '') {
+        $className = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? '';
+    }
     // @phpstan-ignore-next-line
     $reflection = new ReflectionClass($className);
 
