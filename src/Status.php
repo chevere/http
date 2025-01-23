@@ -15,6 +15,8 @@ namespace Chevere\Http;
 
 use Iterator;
 use IteratorAggregate;
+use RuntimeException;
+use function Chevere\Message\message;
 
 /**
  * @implements IteratorAggregate<int>
@@ -22,10 +24,15 @@ use IteratorAggregate;
 class Status implements IteratorAggregate
 {
     /**
-     * @var array<int>
+     * Maps name => code
+     * @var array<string|int, int>
      */
     public readonly array $other;
 
+    /**
+     * @param int $primary The primary status code
+     * @param int ...$other Additional status codes `name: value,...`
+     */
     public function __construct(
         public readonly int $primary = 200,
         int ...$other
@@ -36,6 +43,20 @@ class Status implements IteratorAggregate
             unset($other[$search]);
         }
         $this->other = $other;
+    }
+
+    /**
+     * Provides read access to the `$other` status codes.
+     */
+    public function __get(string $name): int
+    {
+        return $this->other[$name]
+            ?? throw new RuntimeException(
+                (string) message(
+                    'Property `{{ name }}` is not defined',
+                    name: $name
+                )
+            );
     }
 
     /**

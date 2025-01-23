@@ -15,6 +15,7 @@ namespace Chevere\Tests;
 
 use Chevere\Http\Status;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 final class StatusTest extends TestCase
 {
@@ -24,6 +25,13 @@ final class StatusTest extends TestCase
         $this->assertSame(200, $status->primary);
         $this->assertSame([], $status->other);
         $this->assertSame([200], $status->toArray());
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            <<<PLAIN
+            Property `missing` is not defined
+            PLAIN
+        );
+        $status->missing;
     }
 
     public function testPrimary(): void
@@ -56,5 +64,21 @@ final class StatusTest extends TestCase
         $this->assertSame(200, $status->primary);
         $this->assertSame([400], $status->other);
         $this->assertSame([200, 400], $status->toArray());
+    }
+
+    public function testOtherNamed(): void
+    {
+        $status = new Status(200, bad: 400, notFound: 404);
+        $this->assertSame(200, $status->primary);
+        $this->assertSame(
+            [
+                'bad' => 400,
+                'notFound' => 404,
+            ],
+            $status->other
+        );
+        $this->assertSame([200, 400, 404], $status->toArray());
+        $this->assertSame(400, $status->bad);
+        $this->assertSame(404, $status->notFound);
     }
 }
