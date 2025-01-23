@@ -22,7 +22,7 @@ final class StatusTest extends TestCase
     public function testDefault(): void
     {
         $status = new Status();
-        $this->assertSame(200, $status->primary);
+        $this->assertSame(200, $status->success);
         $this->assertSame([], $status->other);
         $this->assertSame([200], $status->toArray());
         $this->expectException(RuntimeException::class);
@@ -37,7 +37,7 @@ final class StatusTest extends TestCase
     public function testPrimary(): void
     {
         $status = new Status(200);
-        $this->assertSame(200, $status->primary);
+        $this->assertSame(200, $status->success);
         $this->assertSame([], $status->other);
         $this->assertSame([200], $status->toArray());
     }
@@ -45,7 +45,7 @@ final class StatusTest extends TestCase
     public function testPrimaryOverride(): void
     {
         $status = new Status(200, 200);
-        $this->assertSame(200, $status->primary);
+        $this->assertSame(200, $status->success);
         $this->assertSame([], $status->other);
         $this->assertSame([200], $status->toArray());
     }
@@ -53,7 +53,7 @@ final class StatusTest extends TestCase
     public function testOther(): void
     {
         $status = new Status(201, 400);
-        $this->assertSame(201, $status->primary);
+        $this->assertSame(201, $status->success);
         $this->assertSame([400], $status->other);
         $this->assertSame([201, 400], $status->toArray());
     }
@@ -61,7 +61,7 @@ final class StatusTest extends TestCase
     public function testOtherOverride(): void
     {
         $status = new Status(200, 400, 400);
-        $this->assertSame(200, $status->primary);
+        $this->assertSame(200, $status->success);
         $this->assertSame([400], $status->other);
         $this->assertSame([200, 400], $status->toArray());
     }
@@ -69,7 +69,7 @@ final class StatusTest extends TestCase
     public function testOtherNamed(): void
     {
         $status = new Status(200, bad: 400, notFound: 404);
-        $this->assertSame(200, $status->primary);
+        $this->assertSame(200, $status->success);
         $this->assertSame(
             [
                 'bad' => 400,

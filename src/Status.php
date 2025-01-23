@@ -30,15 +30,15 @@ class Status implements IteratorAggregate
     public readonly array $other;
 
     /**
-     * @param int $primary The primary status code
+     * @param int $success The success status code
      * @param int ...$other Additional status codes `name: value,...`
      */
     public function __construct(
-        public readonly int $primary = 200,
+        public readonly int $success = 200,
         int ...$other
     ) {
         $other = array_unique($other);
-        $search = array_search($primary, $other, true);
+        $search = array_search($success, $other, true);
         if ($search !== false) {
             unset($other[$search]);
         }
@@ -64,7 +64,7 @@ class Status implements IteratorAggregate
      */
     public function getIterator(): Iterator
     {
-        yield $this->primary;
+        yield $this->success;
         foreach ($this->other as $status) {
             yield $status;
         }
