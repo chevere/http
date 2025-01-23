@@ -21,7 +21,7 @@ use Chevere\Action\Interfaces\ControllerNameInterface as ActionControllerNameInt
 interface ControllerNameInterface extends ActionControllerNameInterface
 {
     /**
-     * @return class-string HttpControllerInterface
+     * @return class-string<ControllerInterface>
      */
     public function __toString(): string;
 }
