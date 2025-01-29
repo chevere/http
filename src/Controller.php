@@ -16,6 +16,7 @@ namespace Chevere\Http;
 use Chevere\Action\Controller as BaseController;
 use Chevere\Action\Interfaces\ReflectionActionInterface;
 use Chevere\Http\Interfaces\ControllerInterface;
+use Chevere\Http\Interfaces\StatusInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
@@ -31,18 +32,20 @@ abstract class Controller extends BaseController implements ControllerInterface
     /**
      * @var array<string, mixed>
      */
-    public array $_attributes;
+    private array $_attributes;
 
     /**
      * @var array<string, mixed>
      */
-    public array $_serverParams;
+    private array $_serverParams;
 
     private ?ArgumentsInterface $_query = null;
 
     private ?ArgumentsInterface $_body = null;
 
     private ?ArgumentsInterface $_files = null;
+
+    private Status $_status;
 
     public static function acceptQuery(): ArrayStringParameterInterface
     {
@@ -108,6 +111,12 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function attributes(): array
     {
         return $this->_attributes;
+    }
+
+    final public function status(): StatusInterface
+    {
+        return $this->_status
+            ??= responseAttribute()->status;
     }
 
     protected function assertRuntime(ReflectionActionInterface $reflection): void

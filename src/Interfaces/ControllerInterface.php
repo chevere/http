@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Http\Interfaces;
 
 use Chevere\Action\Interfaces\ControllerInterface as BaseControllerInterface;
+use Chevere\Http\Status;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
@@ -71,6 +72,11 @@ interface ControllerInterface extends BaseControllerInterface
      * @return array<string, mixed>
      */
     public function attributes(): array;
+
+    /**
+     * Provides access to the ResponseAttr Status codes for the controller.
+     */
+    public function status(): StatusInterface;
 
     /**
      * Define a method to handle terminated responses (e.g. set headers, redirects)

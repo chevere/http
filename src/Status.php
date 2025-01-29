@@ -13,50 +13,57 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
+use Chevere\Http\Interfaces\StatusInterface;
 use Iterator;
-use IteratorAggregate;
 use RuntimeException;
 use function Chevere\Message\message;
 
-/**
- * @implements IteratorAggregate<int>
- */
-class Status implements IteratorAggregate
+class Status implements StatusInterface
 {
     /**
      * Maps name => code
      * @var array<string|int, int>
      */
-    public readonly array $other;
+    private readonly array $codes;
 
     /**
      * @param int $success The success status code
-     * @param int ...$other Additional status codes `name: value,...`
      */
     public function __construct(
-        public readonly int $success = 200,
-        int ...$other
+        private readonly int $success = 200,
+        int ...$code
     ) {
-        $other = array_unique($other);
-        $search = array_search($success, $other, true);
+        $code = array_unique($code);
+        $search = array_search($success, $code, true);
         if ($search !== false) {
-            unset($other[$search]);
+            unset($code[$search]);
         }
-        $this->other = $other;
+        $this->codes = $code;
     }
 
-    /**
-     * Provides read access to the `$other` status codes.
-     */
-    public function __get(string $name): int
+    public function success(): int
     {
-        return $this->other[$name]
-            ?? throw new RuntimeException(
+        return $this->success;
+    }
+
+    public function code(string $name): int
+    {
+        return array_key_exists($name, $this->codes)
+            ? $this->codes[$name]
+            : throw new RuntimeException(
                 (string) message(
-                    'Property `{{ name }}` is not defined',
+                    'Status `{{ name }}` is not defined',
                     name: $name
                 )
             );
+    }
+
+    /**
+     * @return array<int>
+     */
+    public function codes(): array
+    {
+        return $this->codes;
     }
 
     /**
@@ -65,14 +72,11 @@ class Status implements IteratorAggregate
     public function getIterator(): Iterator
     {
         yield $this->success;
-        foreach ($this->other as $status) {
+        foreach ($this->codes as $status) {
             yield $status;
         }
     }
 
-    /**
-     * @return array<int>
-     */
     public function toArray(): array
     {
         return iterator_to_array($this->getIterator());

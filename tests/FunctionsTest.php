@@ -58,8 +58,8 @@ final class FunctionsTest extends TestCase
         $this->assertEquals($attribute, $response->status);
         $this->assertCount(0, $response->headers);
         $response = responseAttribute(AcceptController::class);
-        $this->assertSame(200, $response->status->success);
-        $this->assertSame([400], $response->status->other);
+        $this->assertSame(200, $response->status->success());
+        $this->assertSame([400], $response->status->codes());
         $contentDisposition = new Header('Content-Disposition', 'attachment');
         $contentType = new Header('Content-Type', 'text/html; charset=UTF-8');
         $contentType2 = new Header('Content-Type', 'multipart/form-data; boundary=something');
