@@ -45,7 +45,7 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     private ?ArgumentsInterface $_files = null;
 
-    private Status $_status;
+    private ?Status $_status = null;
 
     public static function acceptQuery(): ArrayStringParameterInterface
     {
@@ -116,7 +116,7 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function status(): StatusInterface
     {
         return $this->_status
-            ??= responseAttribute()->status;
+            ??= responseAttribute(static::class)->status;
     }
 
     protected function assertRuntime(ReflectionActionInterface $reflection): void
