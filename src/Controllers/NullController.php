@@ -16,8 +16,8 @@ namespace Chevere\Http\Controllers;
 use Chevere\Http\Controller;
 
 /**
- * Null controller doesn't do anything!
- *  *
+ * Null controller doesn't do anything.
+ *
  * @codeCoverageIgnore
  */
 final class NullController extends Controller
