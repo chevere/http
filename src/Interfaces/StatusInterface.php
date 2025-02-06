@@ -33,5 +33,10 @@ interface StatusInterface extends IteratorAggregate
     /**
      * @return array<int>
      */
+    public function codes(): array;
+
+    /**
+     * @return array<int>
+     */
     public function toArray(): array;
 }

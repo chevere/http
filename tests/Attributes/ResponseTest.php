@@ -18,20 +18,21 @@ use Chevere\Http\Header;
 use Chevere\Http\Status;
 use PHPUnit\Framework\TestCase;
 
-final class ResponseTests extends TestCase
+final class ResponseTest extends TestCase
 {
     public function testConstructEmpty(): void
     {
-        $request = new Response();
-        $status = new Status(200);
-        $this->assertCount(0, $request->headers);
-        $this->assertEquals($status, $request->status);
-        $this->assertCount(1, $request);
+        $response = new Response();
+        $this->assertSame(200, $response->status->success());
+        $status = new Status();
+        $this->assertCount(0, $response->headers);
+        $this->assertEquals($status, $response->status);
+        $this->assertCount(1, $response);
         $this->assertEquals(
             [
                 'status' => $status,
             ],
-            $request->toArray()
+            $response->toArray()
         );
     }
 

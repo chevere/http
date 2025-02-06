@@ -16,7 +16,6 @@ namespace Chevere\Tests;
 use Chevere\Http\Header;
 use Chevere\Http\MiddlewareName;
 use Chevere\Http\Middlewares;
-use Chevere\Http\Status;
 use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\Middleware;
 use Chevere\Tests\src\NullController;
@@ -37,10 +36,8 @@ final class FunctionsTest extends TestCase
         $this->assertEquals($new, $middlewares);
     }
 
-    public function testGetRequest(): void
+    public function testRequestAttribute(): void
     {
-        $request = requestAttribute(NullController::class);
-        $this->assertCount(0, $request->headers);
         $request = requestAttribute(AcceptController::class);
         $header = new Header('foo', 'bar');
         $this->assertEquals(
@@ -51,12 +48,10 @@ final class FunctionsTest extends TestCase
         );
     }
 
-    public function testGetResponse(): void
+    public function testResponseAttribute(): void
     {
         $response = responseAttribute(NullController::class);
-        $attribute = new Status();
-        $this->assertEquals($attribute, $response->status);
-        $this->assertCount(0, $response->headers);
+        $this->assertNull($response);
         $response = responseAttribute(AcceptController::class);
         $this->assertSame(200, $response->status->success());
         $this->assertSame([400], $response->status->codes());

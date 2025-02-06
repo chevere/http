@@ -15,6 +15,8 @@ namespace Chevere\Http;
 
 use Chevere\Action\Controller as BaseController;
 use Chevere\Action\Interfaces\ReflectionActionInterface;
+use Chevere\DataStructure\Interfaces\MapInterface;
+use Chevere\DataStructure\Map;
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Http\Interfaces\StatusInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
@@ -30,14 +32,14 @@ use function Chevere\Parameter\arrayString;
 abstract class Controller extends BaseController implements ControllerInterface
 {
     /**
-     * @var array<string, mixed>
+     * @var Map<mixed>
      */
-    private array $_attributes;
+    private Map $_attributes;
 
     /**
-     * @var array<string, mixed>
+     * @var Map<mixed>
      */
-    private array $_serverParams;
+    private Map $_serverParams;
 
     private ?ArgumentsInterface $_query = null;
 
@@ -78,8 +80,8 @@ abstract class Controller extends BaseController implements ControllerInterface
             $new::acceptBody()->parameters(),
             (array) ($serverRequest->getParsedBody() ?? [])
         );
-        $new->_serverParams = $serverRequest->getServerParams();
-        $new->_attributes = $serverRequest->getAttributes();
+        $new->_serverParams = new Map(...$serverRequest->getServerParams());
+        $new->_attributes = new Map(...$serverRequest->getAttributes());
         $new->setFiles($serverRequest->getUploadedFiles());
 
         return $new;
@@ -103,20 +105,23 @@ abstract class Controller extends BaseController implements ControllerInterface
             ??= arguments(static::acceptFiles()->parameters(), []);
     }
 
-    final public function serverParams(): array
+    final public function serverParams(): MapInterface
     {
-        return $this->_serverParams;
+        return $this->_serverParams
+            ??= new Map();
     }
 
-    final public function attributes(): array
+    final public function attributes(): MapInterface
     {
-        return $this->_attributes;
+        return $this->_attributes
+            ??= new Map();
     }
 
     final public function status(): StatusInterface
     {
         return $this->_status
-            ??= responseAttribute(static::class)->status;
+            ??= responseAttribute(static::class)->status
+            ?? new Status();
     }
 
     protected function assertRuntime(ReflectionActionInterface $reflection): void

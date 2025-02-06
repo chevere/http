@@ -40,7 +40,7 @@ function middlewares(string|MiddlewareNameInterface ...$middleware): Middlewares
 /**
  * Retrieves the Request attribute from the provided class name or the calling class.
  */
-function requestAttribute(string $className = ''): Request
+function requestAttribute(string $className = ''): ?Request
 {
     if ($className === '') {
         $className = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? '';
@@ -55,7 +55,7 @@ function requestAttribute(string $className = ''): Request
 /**
  * Retrieves the Response attribute from the provided class name or the calling class.
  */
-function responseAttribute(string $className = ''): Response
+function responseAttribute(string $className = ''): ?Response
 {
     if ($className === '') {
         $className = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? '';
@@ -70,7 +70,7 @@ function responseAttribute(string $className = ''): Response
 /**
  * Retrieves the Description attribute from the provided class name or the calling class.
  */
-function descriptionAttribute(string $className = ''): Description
+function descriptionAttribute(string $className = ''): ?Description
 {
     if ($className === '') {
         $className = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? '';
@@ -86,10 +86,10 @@ function descriptionAttribute(string $className = ''): Description
 function getAttribute(
     ReflectionClass|ReflectionFunction|ReflectionMethod|ReflectionProperty|ReflectionParameter|ReflectionClassConstant $reflection,
     string $attribute
-): object {
+): ?object {
     $attributes = $reflection->getAttributes($attribute);
     if ($attributes === []) {
-        return new $attribute();
+        return null;
     }
 
     return $attributes[0]->newInstance();

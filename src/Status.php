@@ -58,9 +58,6 @@ class Status implements StatusInterface
             );
     }
 
-    /**
-     * @return array<int>
-     */
     public function codes(): array
     {
         return $this->codes;

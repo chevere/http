@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Http\Interfaces;
 
 use Chevere\Action\Interfaces\ControllerInterface as BaseControllerInterface;
+use Chevere\DataStructure\Interfaces\MapInterface;
 use Chevere\Http\Status;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
@@ -56,9 +57,9 @@ interface ControllerInterface extends BaseControllerInterface
      * typically derived from PHP's $_SERVER superglobal. The data IS NOT
      * REQUIRED to originate from $_SERVER.
      *
-     * @return array<string, mixed>
+     * @return MapInterface<mixed>
      */
-    public function serverParams(): array;
+    public function serverParams(): MapInterface;
 
     /**
      * Retrieve attributes derived from the request.
@@ -69,9 +70,9 @@ interface ControllerInterface extends BaseControllerInterface
      * deserializing non-form-encoded message bodies; etc. Attributes
      * will be application and request specific.
      *
-     * @return array<string, mixed>
+     * @return MapInterface<mixed>
      */
-    public function attributes(): array;
+    public function attributes(): MapInterface;
 
     /**
      * Provides access to the ResponseAttr Status codes for the controller.

@@ -15,6 +15,7 @@ namespace Chevere\Tests;
 
 use ArgumentCountError;
 use Chevere\Action\Exceptions\ActionException;
+use Chevere\Http\Status;
 use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptOptionalController;
 use Chevere\Tests\src\NullController;
@@ -45,6 +46,35 @@ final class ControllerTest extends TestCase
         $this->assertCount(0, $controller->acceptFiles()->parameters());
         $this->assertCount(0, $controller->query()->parameters());
         $this->assertCount(0, $controller->body()->parameters());
+        $this->assertEquals(new Status(), $controller->status());
+        $this->assertSame(
+            spl_object_id($controller->body()),
+            spl_object_id($controller->body()),
+        );
+    }
+
+    public function testWithServerParams(): void
+    {
+        $serverParams = [
+            'super' => 'taldo',
+        ];
+        $serverRequest = new ServerRequest('GET', '/', serverParams: $serverParams);
+        $controller = (new NullController())->withServerRequest($serverRequest);
+        $this->assertSame(
+            $serverParams,
+            $controller->serverParams()->toArray()
+        );
+    }
+
+    public function testStatus(): void
+    {
+        $controller = new AcceptController();
+        $status = new Status(200, 400);
+        $this->assertSame(
+            spl_object_id($controller->status()),
+            spl_object_id($controller->status()),
+        );
+        $this->assertEquals($status, $controller->status());
     }
 
     public function testAcceptQueryBody(): void
@@ -101,6 +131,22 @@ final class ControllerTest extends TestCase
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
         $this->assertSame('abc', $controllerWith->query()->optional('foo')->string());
+    }
+
+    public function testWithRequestAttributes(): void
+    {
+        $serverRequest = new ServerRequest('GET', '/');
+        $controller = (new NullController())
+            ->withServerRequest(
+                $serverRequest->withAttribute('foo', 'bar')
+            );
+        $controller->attributes()->get('foo');
+        $this->assertSame(
+            [
+                'foo' => 'bar',
+            ],
+            $controller->attributes()->toArray()
+        );
     }
 
     public function testAcceptFile(): void

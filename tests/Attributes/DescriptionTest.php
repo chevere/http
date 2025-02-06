@@ -16,7 +16,7 @@ namespace Chevere\Tests\Attributes;
 use Chevere\Http\Attributes\Description;
 use PHPUnit\Framework\TestCase;
 
-final class DescriptionTests extends TestCase
+final class DescriptionTest extends TestCase
 {
     public function testConstruct(): void
     {
