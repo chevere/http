@@ -70,12 +70,12 @@ final class MiddlewareNameTest extends TestCase
             [
                 MiddlewareAlt::class,
                 [
-                    0 => 'foo',
-                    1 => 123,
+                    'foo',
+                    123,
                 ],
                 [
-                    'test' => 'foo',
-                    'code' => 123,
+                    'foo',
+                    123,
                 ],
             ],
             [
