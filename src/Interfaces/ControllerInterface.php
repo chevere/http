@@ -19,6 +19,7 @@ use Chevere\Http\Status;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
+use Chevere\Parameter\Interfaces\CastInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -60,6 +61,11 @@ interface ControllerInterface extends BaseControllerInterface
      * @return MapInterface<mixed>
      */
     public function serverParams(): MapInterface;
+
+    public function attribute(
+        string $name,
+        mixed $default = null
+    ): CastInterface;
 
     /**
      * Retrieve attributes derived from the request.

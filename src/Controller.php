@@ -22,12 +22,14 @@ use Chevere\Http\Interfaces\StatusInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
+use Chevere\Parameter\Interfaces\CastInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
+use function Chevere\Parameter\cast;
 
 abstract class Controller extends BaseController implements ControllerInterface
 {
@@ -109,6 +111,13 @@ abstract class Controller extends BaseController implements ControllerInterface
     {
         return $this->_serverParams
             ??= new Map();
+    }
+
+    final public function attribute(
+        string $name,
+        mixed $default = null
+    ): CastInterface {
+        return cast($this->attributes()->get($name, $default));
     }
 
     final public function attributes(): MapInterface
