@@ -117,7 +117,9 @@ abstract class Controller extends BaseController implements ControllerInterface
         string $name,
         mixed $default = null
     ): CastInterface {
-        return cast($this->attributes()->get($name, $default));
+        return cast(
+            $this->attributes()->getOrDefault($name, $default)
+        );
     }
 
     final public function attributes(): MapInterface
