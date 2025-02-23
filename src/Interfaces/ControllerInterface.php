@@ -62,6 +62,12 @@ interface ControllerInterface extends BaseControllerInterface
      */
     public function serverParams(): MapInterface;
 
+    /**
+     * Retrieve a single attribute derived from the request.
+     *
+     * @param string $name The attribute name.
+     * @param mixed $default Default value to return if the attribute does not exist.
+     */
     public function attribute(
         string $name,
         mixed $default = null
