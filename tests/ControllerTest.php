@@ -244,4 +244,44 @@ final class ControllerTest extends TestCase
         $terminate = $controller->terminate($response);
         $this->assertSame($response, $terminate);
     }
+
+    public function testServerRequestHeaders(): void
+    {
+        $headers = [
+            'Content-Type' => 'text/html',
+            'Set-Cookie' => [
+                'session_id=abc123; Path=/; Secure; HttpOnly',
+                'theme=dark; Path=/; Secure',
+            ],
+            'Cache-Control' => [
+                'no-store',
+                'no-cache, must-revalidate',
+            ],
+        ];
+        $expected = [];
+        foreach ($headers as $key => $value) {
+            $expected[$key] = implode(', ', (array) $value);
+        }
+        $serverRequest = new ServerRequest('GET', '/', headers: $headers);
+        $controller = (new NullController())->withServerRequest($serverRequest);
+        $this->assertSame(
+            $expected,
+            $controller->headers()->toArray()
+        );
+    }
+
+    public function testServerRequestCookieParams(): void
+    {
+        $cookieParams = [
+            'session_id' => 'abc123',
+            'theme' => 'dark',
+        ];
+        $serverRequest = (new ServerRequest('GET', '/'))
+            ->withCookieParams($cookieParams);
+        $controller = (new NullController())->withServerRequest($serverRequest);
+        $this->assertSame(
+            $cookieParams,
+            $controller->cookieParams()->toArray()
+        );
+    }
 }

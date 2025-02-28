@@ -43,6 +43,16 @@ abstract class Controller extends BaseController implements ControllerInterface
      */
     private Map $_serverParams;
 
+    /**
+     * @var Map<string>
+     */
+    private Map $_headers;
+
+    /**
+     * @var Map<string>
+     */
+    private Map $_cookieParams;
+
     private ?ArgumentsInterface $_query = null;
 
     private ?ArgumentsInterface $_body = null;
@@ -84,6 +94,13 @@ abstract class Controller extends BaseController implements ControllerInterface
         );
         $new->_serverParams = new Map(...$serverRequest->getServerParams());
         $new->_attributes = new Map(...$serverRequest->getAttributes());
+        $headers = [];
+        $headersKeys = array_keys($serverRequest->getHeaders());
+        foreach ($headersKeys as $key) {
+            $headers[$key] = $serverRequest->getHeaderLine($key);
+        }
+        $new->_headers = new Map(...$headers);
+        $new->_cookieParams = new Map(...$serverRequest->getCookieParams());
         $new->setFiles($serverRequest->getUploadedFiles());
 
         return $new;
@@ -99,6 +116,18 @@ abstract class Controller extends BaseController implements ControllerInterface
     {
         return $this->_body
             ??= arguments(static::acceptBody()->parameters(), []);
+    }
+
+    final public function headers(): MapInterface
+    {
+        return $this->_headers
+            ??= new Map();
+    }
+
+    final public function cookieParams(): MapInterface
+    {
+        return $this->_cookieParams
+            ??= new Map();
     }
 
     final public function files(): ArgumentsInterface

@@ -45,12 +45,6 @@ interface ControllerInterface extends BaseControllerInterface
 
     public function withServerRequest(ServerRequestInterface $serverRequest): static;
 
-    public function query(): ArgumentsInterface;
-
-    public function body(): ArgumentsInterface;
-
-    public function files(): ArgumentsInterface;
-
     /**
      * Retrieve server parameters.
      *
@@ -61,6 +55,44 @@ interface ControllerInterface extends BaseControllerInterface
      * @return MapInterface<mixed>
      */
     public function serverParams(): MapInterface;
+
+    /**
+     * Provides access to cookie parameters sent by the client to the server.
+     *
+     * @return MapInterface<string>
+     */
+    public function cookieParams(): MapInterface;
+
+    /**
+     * Provides access to server request headers.
+     *
+     * The keys represent the header name as it will be sent over the wire, and
+     * each value is the header line.
+     *
+     * @return MapInterface<string>
+     */
+    public function headers(): MapInterface;
+
+    /**
+     * Provides access to query string arguments.
+     */
+    public function query(): ArgumentsInterface;
+
+    /**
+     * Provides access to arguments provided in the request body.
+     *
+     * If the request Content-Type is either application/x-www-form-urlencoded
+     * or multipart/form-data, and the request method is POST, this method MUST
+     * return the contents of $_POST.
+     *
+     * Otherwise, this method may return any results of deserializing
+     * the request body content; as parsing returns structured content, the
+     * potential types MUST be arrays or objects only. A null value indicates
+     * the absence of body content.
+     */
+    public function body(): ArgumentsInterface;
+
+    public function files(): ArgumentsInterface;
 
     /**
      * Retrieve a single attribute derived from the request.
