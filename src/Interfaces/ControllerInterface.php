@@ -19,7 +19,6 @@ use Chevere\Http\Status;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
-use Chevere\Parameter\Interfaces\CastInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -93,17 +92,6 @@ interface ControllerInterface extends BaseControllerInterface
     public function body(): ArgumentsInterface;
 
     public function files(): ArgumentsInterface;
-
-    /**
-     * Retrieve a single attribute derived from the request.
-     *
-     * @param string $name The attribute name.
-     * @param mixed $default Default value to return if the attribute does not exist.
-     */
-    public function attribute(
-        string $name,
-        mixed $default = null
-    ): CastInterface;
 
     /**
      * Retrieve attributes derived from the request.
