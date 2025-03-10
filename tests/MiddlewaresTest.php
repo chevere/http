@@ -26,6 +26,8 @@ final class MiddlewaresTest extends TestCase
     {
         $middlewares = new Middlewares();
         $this->assertCount(0, $middlewares);
+        $middlewareName = new MiddlewareName(Middleware::class);
+        $this->assertFalse($middlewares->has(Middleware::class));
     }
 
     public function testConstruct(): void
@@ -39,6 +41,7 @@ final class MiddlewaresTest extends TestCase
             [$name],
             iterator_to_array($middlewares->getIterator())
         );
+        $this->assertTrue($middlewares->has($middleware));
     }
 
     public function testWithAppend(): void
