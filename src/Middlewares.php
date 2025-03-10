@@ -44,7 +44,7 @@ final class Middlewares implements MiddlewaresInterface
     {
         $new = clone $this;
         $new->vector = $new->vector->withPush(...$middleware);
-        $new->index = $new->index->withPush(...$this->toNames(...$middleware));
+        $new->index = $new->index->withPush(...$new->toNames(...$middleware));
 
         return $new;
     }
@@ -53,15 +53,15 @@ final class Middlewares implements MiddlewaresInterface
     {
         $new = clone $this;
         $new->vector = $new->vector->withUnshift(...$middleware);
-        $new->index = $new->index->withUnshift(...$this->toNames(...$middleware));
+        $new->index = $new->index->withUnshift(...$new->toNames(...$middleware));
 
         return $new;
     }
 
-    public function has(string ...$middleware): bool
+    public function has(string|MiddlewareNameInterface ...$middleware): bool
     {
         foreach ($middleware as $name) {
-            if ($this->index->find($name) === null) {
+            if ($this->index->find(strval($name)) === null) {
                 return false;
             }
         }

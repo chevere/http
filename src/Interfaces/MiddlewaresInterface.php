@@ -44,7 +44,7 @@ interface MiddlewaresInterface extends Countable, IntegerKeysInterface, Iterator
      */
     public function withPrepend(MiddlewareNameInterface ...$middleware): self;
 
-    public function has(string ...$middleware): bool;
+    public function has(string|MiddlewareNameInterface ...$middleware): bool;
 
     /**
      * @return Iterator<int, MiddlewareNameInterface>
