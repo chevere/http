@@ -30,12 +30,12 @@ interface ControllerInterface extends BaseControllerInterface
     /**
      * Defines the query accepted.
      */
-    public static function acceptQuery(): ArrayStringParameterInterface;
+    public static function acceptQuery(): ArrayParameterInterface|ArrayStringParameterInterface;
 
     /**
      * Defines the body accepted.
      */
-    public static function acceptBody(): ArrayParameterInterface;
+    public static function acceptBody(): ArrayParameterInterface|ArrayStringParameterInterface;
 
     /**
      * Defines the FILES accepted.

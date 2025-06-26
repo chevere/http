@@ -59,12 +59,12 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     private ?Status $_status = null;
 
-    public static function acceptQuery(): ArrayStringParameterInterface
+    public static function acceptQuery(): ArrayParameterInterface|ArrayStringParameterInterface
     {
         return arrayString();
     }
 
-    public static function acceptBody(): ArrayParameterInterface
+    public static function acceptBody(): ArrayParameterInterface|ArrayStringParameterInterface
     {
         return arrayp();
     }
