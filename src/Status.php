@@ -24,13 +24,13 @@ class Status implements StatusInterface
      * Maps name => code
      * @var array<string|int, int>
      */
-    private readonly array $codes;
+    public readonly array $codes;
 
     /**
      * @param int $success The success status code
      */
     public function __construct(
-        private readonly int $success = 200,
+        public readonly int $success = 200,
         int ...$code
     ) {
         $code = array_unique($code);
