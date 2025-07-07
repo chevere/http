@@ -18,6 +18,6 @@ use Exception;
 /**
  * Exception thrown at Controller layer.
  */
-final class ControllerException extends Exception
+class ControllerException extends Exception
 {
 }
