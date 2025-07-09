@@ -13,13 +13,14 @@ declare(strict_types=1);
 
 namespace Chevere\Http\Exceptions;
 
+use Chevere\Http\Interfaces\ControllerNameInterface;
 use Exception;
 use Throwable;
 
 /**
  * Exception thrown at HTTP Controller layer.
  */
-final class ControllerException extends Exception
+class ControllerException extends Exception
 {
     public function __construct(
         string $message = '',
@@ -28,5 +29,10 @@ final class ControllerException extends Exception
         ?Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
+    }
+
+    public function return(ControllerNameInterface $controllerName): mixed
+    {
+        return $controllerName->__toString()::return()->__invoke($this->return);
     }
 }
