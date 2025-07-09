@@ -14,10 +14,19 @@ declare(strict_types=1);
 namespace Chevere\Http\Exceptions;
 
 use Exception;
+use Throwable;
 
 /**
- * Exception thrown at Controller layer.
+ * Exception thrown at HTTP Controller layer.
  */
-class ControllerException extends Exception
+final class ControllerException extends Exception
 {
+    public function __construct(
+        string $message = '',
+        int $code = 0,
+        public readonly mixed $return = null,
+        ?Throwable $previous = null
+    ) {
+        parent::__construct($message, $code, $previous);
+    }
 }
