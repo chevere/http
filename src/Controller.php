@@ -17,6 +17,7 @@ use Chevere\Action\Controller as BaseController;
 use Chevere\Action\Interfaces\ReflectionActionInterface;
 use Chevere\DataStructure\Interfaces\MapInterface;
 use Chevere\DataStructure\Map;
+use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Http\Interfaces\StatusInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
@@ -25,6 +26,7 @@ use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use Throwable;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
@@ -82,14 +84,19 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function withServerRequest(ServerRequestInterface $serverRequest): static
     {
         $new = clone $this;
-        $new->_query = arguments(
-            $new::acceptQuery()->parameters(),
-            $serverRequest->getQueryParams()
-        );
-        $new->_body = arguments(
-            $new::acceptBody()->parameters(),
-            (array) ($serverRequest->getParsedBody() ?? [])
-        );
+
+        try {
+            $new->_query = arguments(
+                $new::acceptQuery()->parameters(),
+                $serverRequest->getQueryParams()
+            );
+            $new->_body = arguments(
+                $new::acceptBody()->parameters(),
+                (array) ($serverRequest->getParsedBody() ?? [])
+            );
+        } catch (Throwable $e) {
+            throw new ControllerException($e->getMessage(), 400, $e);
+        }
         $new->_serverParams = new Map(...$serverRequest->getServerParams());
         $new->_attributes = new Map(...$serverRequest->getAttributes());
         $headers = [];
