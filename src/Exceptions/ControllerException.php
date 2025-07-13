@@ -41,7 +41,7 @@ class ControllerException extends Exception
         $class = $backtrace[1]['class'] ?? null;
 
         try {
-            $controllerName = new ControllerName($class);
+            new ControllerName($class);
         } catch (Throwable $e) {
             throw new ActionException(
                 self::class . ' must be thrown from a Controller',
@@ -50,28 +50,6 @@ class ControllerException extends Exception
                 $line
             );
         }
-
-        try {
-            $this->returnTyped = $controllerName->__toString()::return()->__invoke($this->return);
-        } catch (Throwable $e) {
-            throw new ActionException(
-                <<<PLAIN
-                Argument `\$return` value is not compatible with return type defined in {$controllerName}
-                PLAIN,
-                $e,
-                $file,
-                $line
-            );
-        }
         parent::__construct($message, $code, $previous);
-    }
-
-    /**
-     * This method returns the value that was passed to the constructor, after
-     * being processed by the Controller's `return()` method.
-     */
-    public function returnTyped(): mixed
-    {
-        return $this->returnTyped;
     }
 }
