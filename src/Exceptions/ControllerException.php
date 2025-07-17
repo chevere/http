@@ -27,8 +27,6 @@ use Throwable;
  */
 class ControllerException extends Exception
 {
-    public readonly mixed $returnTyped;
-
     public function __construct(
         string $message = '',
         int $code = 0,
@@ -38,7 +36,7 @@ class ControllerException extends Exception
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         $file = $backtrace[0]['file'] ?? __FILE__;
         $line = $backtrace[0]['line'] ?? __LINE__;
-        $class = $backtrace[1]['class'] ?? null;
+        $class = $backtrace[1]['class'] ?? '';
 
         try {
             new ControllerName($class);

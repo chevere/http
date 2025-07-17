@@ -19,6 +19,8 @@ use Chevere\Http\Status;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
+use Chevere\Parameter\Interfaces\CastInterface;
+use Chevere\Parameter\Interfaces\ParameterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -35,7 +37,7 @@ interface ControllerInterface extends BaseControllerInterface
     /**
      * Defines the body accepted.
      */
-    public static function acceptBody(): ArrayParameterInterface|ArrayStringParameterInterface;
+    public static function acceptBody(): ParameterInterface;
 
     /**
      * Defines the FILES accepted.
@@ -80,16 +82,16 @@ interface ControllerInterface extends BaseControllerInterface
     /**
      * Provides access to arguments provided in the request body.
      *
-     * If the request Content-Type is either application/x-www-form-urlencoded
-     * or multipart/form-data, and the request method is POST, this method MUST
-     * return the contents of $_POST.
-     *
-     * Otherwise, this method may return any results of deserializing
-     * the request body content; as parsing returns structured content, the
-     * potential types MUST be arrays or objects only. A null value indicates
-     * the absence of body content.
+     * If the request Content-Type is either application/x-www-form-urlencoded,
+     * multipart/form-data, or application/json, this method will return
+     * the parsed body content arguments.
      */
-    public function body(): ArgumentsInterface;
+    public function bodyParsed(): ArgumentsInterface;
+
+    /**
+     * Provides access to the body variable (typed).
+     */
+    public function body(): CastInterface;
 
     public function files(): ArgumentsInterface;
 

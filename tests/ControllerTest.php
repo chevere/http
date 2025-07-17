@@ -15,16 +15,19 @@ namespace Chevere\Tests;
 
 use ArgumentCountError;
 use Chevere\Action\Exceptions\ActionException;
+use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Http\Status;
 use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptOptionalController;
+use Chevere\Tests\src\JsonBodyController;
 use Chevere\Tests\src\NullController;
-use InvalidArgumentException;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\UploadedFile;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
+use function Chevere\Parameter\mixed;
+use function Chevere\Writer\streamTemp;
 
 final class ControllerTest extends TestCase
 {
@@ -42,14 +45,14 @@ final class ControllerTest extends TestCase
     {
         $controller = new NullController();
         $this->assertCount(0, $controller->acceptQuery()->parameters());
-        $this->assertCount(0, $controller->acceptBody()->parameters());
+        $this->assertEquals(mixed(), $controller->acceptBody());
         $this->assertCount(0, $controller->acceptFiles()->parameters());
         $this->assertCount(0, $controller->query()->parameters());
-        $this->assertCount(0, $controller->body()->parameters());
+        $this->assertCount(0, $controller->bodyParsed()->parameters());
         $this->assertEquals(new Status(), $controller->status());
         $this->assertSame(
-            spl_object_id($controller->body()),
-            spl_object_id($controller->body()),
+            spl_object_id($controller->bodyParsed()),
+            spl_object_id($controller->bodyParsed()),
         );
     }
 
@@ -105,7 +108,7 @@ final class ControllerTest extends TestCase
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
         $this->assertSame('abc', $controllerWith->query()->required('foo')->string());
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ControllerException::class);
         $controller->withServerRequest(
             $serverRequest
                 ->withQueryParams([
@@ -283,5 +286,17 @@ final class ControllerTest extends TestCase
             $cookieParams,
             $controller->cookieParams()->toArray()
         );
+    }
+
+    public function testJsonBody(): void
+    {
+        $json = json_encode(99);
+        $serverRequest = (new ServerRequest('POST', '/'))
+            ->withHeader('Content-Type', 'application/json')
+            ->withBody(streamTemp($json));
+        $controller = (new JsonBodyController())
+            ->withServerRequest($serverRequest);
+        $return = $controller->__invoke();
+        $this->assertSame([[], 99], $return);
     }
 }

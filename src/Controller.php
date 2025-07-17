@@ -23,6 +23,10 @@ use Chevere\Http\Interfaces\StatusInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
+use Chevere\Parameter\Interfaces\CastInterface;
+use Chevere\Parameter\Interfaces\ParameterInterface;
+use Chevere\Parameter\Interfaces\ParametersAccessInterface;
+use PhpParser\Builder\Param;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -30,6 +34,8 @@ use Throwable;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
+use function Chevere\Parameter\cast;
+use function Chevere\Parameter\mixed;
 
 abstract class Controller extends BaseController implements ControllerInterface
 {
@@ -55,20 +61,22 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     private ?ArgumentsInterface $_query = null;
 
-    private ?ArgumentsInterface $_body = null;
+    private ?ArgumentsInterface $_bodyParsed = null;
 
     private ?ArgumentsInterface $_files = null;
 
     private ?Status $_status = null;
+
+    private mixed $_body = null;
 
     public static function acceptQuery(): ArrayParameterInterface|ArrayStringParameterInterface
     {
         return arrayString();
     }
 
-    public static function acceptBody(): ArrayParameterInterface|ArrayStringParameterInterface
+    public static function acceptBody(): ParameterInterface
     {
-        return arrayp();
+        return mixed();
     }
 
     public static function acceptFiles(): ArrayParameterInterface
@@ -90,9 +98,20 @@ abstract class Controller extends BaseController implements ControllerInterface
                 $new::acceptQuery()->parameters(),
                 $serverRequest->getQueryParams()
             );
-            $new->_body = arguments(
-                $new::acceptBody()->parameters(),
-                (array) ($serverRequest->getParsedBody() ?? [])
+            $parsedBody = (array) ($serverRequest->getParsedBody() ?? []);
+            $new->_body = $parsedBody;
+            if ($serverRequest->getHeaderLine('Content-Type') === 'application/json') {
+                $new->_body = json_decode($serverRequest->getBody()->__toString(), true);
+            }
+            $acceptBody = $new::acceptBody();
+            $acceptBody->__invoke($new->_body);
+            $new->_bodyParsed = arguments(
+                $acceptBody instanceof ParametersAccessInterface
+                    ? $acceptBody->parameters()
+                    : arrayp(),
+                is_array($new->_body)
+                    ? $new->_body
+                    : $parsedBody
             );
         } catch (Throwable $e) {
             throw new ControllerException($e->getMessage(), 400, $e);
@@ -117,10 +136,22 @@ abstract class Controller extends BaseController implements ControllerInterface
             ??= arguments(static::acceptQuery()->parameters(), []);
     }
 
-    final public function body(): ArgumentsInterface
+    final public function bodyParsed(): ArgumentsInterface
     {
-        return $this->_body
-            ??= arguments(static::acceptBody()->parameters(), []);
+        $acceptBody = static::acceptBody();
+
+        return $this->_bodyParsed
+            ??= arguments(
+                $acceptBody instanceof ParametersAccessInterface
+                    ? $acceptBody->parameters()
+                    : arrayp(),
+                []
+            );
+    }
+
+    final public function body(): CastInterface
+    {
+        return cast($this->_body);
     }
 
     final public function headers(): MapInterface
@@ -163,7 +194,7 @@ abstract class Controller extends BaseController implements ControllerInterface
     protected function assertRuntime(ReflectionActionInterface $reflection): void
     {
         $this->query();
-        $this->body();
+        $this->bodyParsed();
         $this->files();
     }
 
