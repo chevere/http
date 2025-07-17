@@ -23,6 +23,7 @@ use Chevere\Parameter\Interfaces\CastInterface;
 use Chevere\Parameter\Interfaces\ParameterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Describes the component in charge of defining an Http Controller which adds methods for handling HTTP requests.
@@ -87,6 +88,11 @@ interface ControllerInterface extends BaseControllerInterface
      * the parsed body content arguments.
      */
     public function bodyParsed(): ArgumentsInterface;
+
+    /**
+     * Gets the body of the message.
+     */
+    public function bodyStream(): StreamInterface;
 
     /**
      * Provides access to the body variable (typed).

@@ -29,6 +29,7 @@ use Chevere\Parameter\Interfaces\ParametersAccessInterface;
 use PhpParser\Builder\Param;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Throwable;
 use function Chevere\Parameter\arguments;
@@ -68,6 +69,8 @@ abstract class Controller extends BaseController implements ControllerInterface
     private ?Status $_status = null;
 
     private mixed $_body = null;
+
+    private StreamInterface $bodyStream;
 
     public static function acceptQuery(): ArrayParameterInterface|ArrayStringParameterInterface
     {
@@ -116,6 +119,7 @@ abstract class Controller extends BaseController implements ControllerInterface
         } catch (Throwable $e) {
             throw new ControllerException($e->getMessage(), 400, $e);
         }
+        $new->bodyStream = $serverRequest->getBody();
         $new->_serverParams = new Map(...$serverRequest->getServerParams());
         $new->_attributes = new Map(...$serverRequest->getAttributes());
         $headers = [];
@@ -152,6 +156,11 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function body(): CastInterface
     {
         return cast($this->_body);
+    }
+
+    final public function bodyStream(): StreamInterface
+    {
+        return $this->bodyStream;
     }
 
     final public function headers(): MapInterface
