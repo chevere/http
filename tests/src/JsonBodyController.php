@@ -33,7 +33,7 @@ class JsonBodyController extends Controller
     {
         return [
             $this->bodyParsed()->toArray(),
-            $this->body(),
+            $this->body()->int(),
         ];
     }
 }
