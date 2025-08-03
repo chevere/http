@@ -49,6 +49,7 @@ class ControllerException extends Exception
         mixed $return = null,
         ?Throwable $previous = null
     ) {
+        /** @infection-ignore-all */
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         $file = $backtrace[0]['file'] ?? __FILE__;
         $line = $backtrace[0]['line'] ?? __LINE__;

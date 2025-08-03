@@ -15,12 +15,11 @@ namespace Chevere\Tests\src;
 
 use Chevere\Http\Controller;
 use Chevere\Http\Exceptions\ControllerException;
-use Exception;
 
-class ControllerThrowsControllerException extends Controller
+class ControllerThrowsControllerExceptionDefault extends Controller
 {
     public function __construct()
     {
-        throw new ControllerException('test', 123, 1.5, new Exception('previous'));
+        throw new ControllerException();
     }
 }

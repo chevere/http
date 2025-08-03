@@ -16,9 +16,12 @@ namespace Chevere\Tests;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Tests\src\ControllerThrowsControllerException;
+use Chevere\Tests\src\ControllerThrowsControllerExceptionDefault;
 use Chevere\Tests\src\ControllerWrongReturnControllerException;
+use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 use TypeError;
 
 final class ControllerExceptionTest extends TestCase
@@ -40,17 +43,39 @@ final class ControllerExceptionTest extends TestCase
         }
     }
 
-    public function testConstruct(): void
+    public function testThrowsDefaults(): void
     {
-        $this->expectException(ControllerException::class);
-        new ControllerThrowsControllerException();
+        try {
+            new ControllerThrowsControllerExceptionDefault();
+        } catch (Throwable $e) {
+            $this->assertInstanceOf(ControllerException::class, $e);
+            $this->assertSame('', $e->getMessage());
+            $this->assertSame(0, $e->getCode());
+            $this->assertNull($e->getPrevious());
+            $this->assertNull($e->return);
+        }
+    }
+
+    public function testThrows(): void
+    {
+        try {
+            new ControllerThrowsControllerException();
+        } catch (Throwable $e) {
+            $this->assertInstanceOf(ControllerException::class, $e);
+            $this->assertSame('test', $e->getMessage());
+            $this->assertSame(123, $e->getCode());
+            $this->assertInstanceOf(Exception::class, $e->getPrevious());
+            $this->assertSame('previous', $e->getPrevious()->getMessage());
+            $this->assertSame(1.5, $e->return);
+        }
     }
 
     public function testWrongReturn(): void
     {
         try {
             new ControllerWrongReturnControllerException();
-        } catch (ActionException $e) {
+        } catch (Throwable $e) {
+            $this->assertInstanceOf(ActionException::class, $e);
             $this->assertSame(
                 'Argument `$return` value is not compatible with return type defined in Chevere\Tests\src\ControllerWrongReturnControllerException::return() method',
                 $e->getMessage()
