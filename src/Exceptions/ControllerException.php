@@ -15,22 +15,38 @@ namespace Chevere\Http\Exceptions;
 
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\ControllerName;
+use Chevere\Http\Interfaces\ControllerInterface;
 use Exception;
 use Throwable;
+use function Chevere\Message\message;
 
 /**
  * Exception thrown at HTTP Controller layer.
  *
- * This exception must be thrown from a HTTP Controller and must pass the corresponding
- * return value to the constructor. The return value must be compatible with the
- * return type defined in the Controller's `return()` method.
+ * This exception MUST be thrown from a class implementing ControllerInterface.
+ *
+ * Dependencies should throw domain-specific exceptions. Controllers should
+ * translate them to ControllerException with appropriate HTTP status codes.
+ *
+ * Example:
+ * ```php
+ * try {
+ *     $user = $this->userService->findById($id);
+ * } catch (UserNotFoundException $e) {
+ *     throw new ControllerException('User not found', 404);
+ * }
+ * ```
+ *
+ * @param mixed $return Return value compatible with the definition at Controller's `return()` method
  */
 class ControllerException extends Exception
 {
+    public readonly mixed $return;
+
     public function __construct(
         string $message = '',
         int $code = 0,
-        public readonly mixed $return = null,
+        mixed $return = null,
         ?Throwable $previous = null
     ) {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
@@ -39,15 +55,38 @@ class ControllerException extends Exception
         $class = $backtrace[1]['class'] ?? '';
 
         try {
-            new ControllerName($class);
+            $controllerName = new ControllerName($class);
         } catch (Throwable $e) {
             throw new ActionException(
-                self::class . ' must be thrown from a Controller',
+                (string) message(
+                    '%self% must be thrown from a class implementing %interface%',
+                    self: self::class,
+                    interface: ControllerInterface::class
+                ),
                 $e,
                 $file,
                 $line
             );
         }
+        if ($return !== null) {
+            try {
+                $this->return = $controllerName->__toString()::return()->__invoke($return);
+            } catch (Throwable $e) {
+                throw new ActionException(
+                    (string) message(
+                        'Argument `%argument%` value is not compatible with return type defined in %controller%::return() method',
+                        argument: '$return',
+                        controller: $controllerName
+                    ),
+                    $e,
+                    $file,
+                    $line
+                );
+            }
+        } else {
+            $this->return = null;
+        }
+
         parent::__construct($message, $code, $previous);
     }
 }

@@ -291,12 +291,17 @@ final class ControllerTest extends TestCase
     public function testJsonBody(): void
     {
         $json = json_encode(99);
+        $stream = streamTemp($json);
         $serverRequest = (new ServerRequest('POST', '/'))
             ->withHeader('Content-Type', 'application/json')
-            ->withBody(streamTemp($json));
+            ->withBody($stream);
         $controller = (new JsonBodyController())
             ->withServerRequest($serverRequest);
         $return = $controller->__invoke();
         $this->assertSame([[], 99], $return);
+        $this->assertSame(
+            $stream,
+            $controller->bodyStream()
+        );
     }
 }
