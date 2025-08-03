@@ -22,9 +22,7 @@ class ControllerWrongReturnControllerException extends Controller
 {
     public function __construct()
     {
-        throw new ControllerException(
-            return: false,
-        );
+        throw new ControllerException(return: false);
     }
 
     public static function return(): IntParameterInterface
