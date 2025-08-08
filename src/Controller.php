@@ -70,7 +70,7 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     private mixed $_body = null;
 
-    private StreamInterface $bodyStream;
+    private StreamInterface $_bodyStream;
 
     public static function acceptQuery(): ArrayParameterInterface|ArrayStringParameterInterface
     {
@@ -97,7 +97,7 @@ abstract class Controller extends BaseController implements ControllerInterface
         $new = clone $this;
 
         try {
-            $new->bodyStream = $serverRequest->getBody();
+            $new->_bodyStream = $serverRequest->getBody();
             $new->_query = arguments(
                 $new::acceptQuery()->parameters(),
                 $serverRequest->getQueryParams()
@@ -105,14 +105,14 @@ abstract class Controller extends BaseController implements ControllerInterface
             $parsedBody = $serverRequest->getParsedBody();
             $new->_body = $parsedBody ?? null;
             if ($serverRequest->getHeaderLine('Content-Type') === 'application/json') {
-                $streamed = $new->bodyStream->__toString();
+                $streamed = $new->_bodyStream->__toString();
                 $new->_body = json_decode($streamed, true);
                 if ($new->_body === null && $streamed !== '') {
                     $new->_body = $streamed;
                 }
             }
             if ($new->_body === null) {
-                $new->_body = $streamed ?? $new->bodyStream->__toString();
+                $new->_body = $streamed ?? $new->_bodyStream->__toString();
             }
             $acceptBody = $new::acceptBody();
             $acceptBody->__invoke($new->_body);
@@ -167,7 +167,7 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     final public function bodyStream(): StreamInterface
     {
-        return $this->bodyStream;
+        return $this->_bodyStream;
     }
 
     final public function headers(): MapInterface
