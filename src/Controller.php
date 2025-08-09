@@ -37,6 +37,7 @@ use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\cast;
 use function Chevere\Parameter\mixed;
+use function Chevere\Parameter\parameters;
 
 abstract class Controller extends BaseController implements ControllerInterface
 {
@@ -66,7 +67,7 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     private ?ArgumentsInterface $_files = null;
 
-    private ?Status $_status = null;
+    private ?StatusInterface $_status = null;
 
     private mixed $_body = null;
 
@@ -155,7 +156,7 @@ abstract class Controller extends BaseController implements ControllerInterface
             ??= arguments(
                 $acceptBody instanceof ParametersAccessInterface
                     ? $acceptBody->parameters()
-                    : arrayp(),
+                    : parameters(),
                 []
             );
     }

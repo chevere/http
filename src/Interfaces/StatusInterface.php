@@ -16,27 +16,27 @@ namespace Chevere\Http\Interfaces;
 use IteratorAggregate;
 
 /**
- * @extends IteratorAggregate<int>
+ * @extends IteratorAggregate<int|string>
  */
 interface StatusInterface extends IteratorAggregate
 {
     /**
      * Provides access to the success status code.
      */
-    public function success(): int;
+    public function success(): int|string;
 
     /**
      * Provides access to the additional named codes.
      */
-    public function code(string $name): int;
+    public function code(string $name): int|string;
 
     /**
-     * @return array<int>
+     * @return array<int|string>
      */
     public function codes(): array;
 
     /**
-     * @return array<int>
+     * @return array<int|string>
      */
     public function toArray(): array;
 }

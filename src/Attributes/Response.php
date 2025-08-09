@@ -16,12 +16,13 @@ namespace Chevere\Http\Attributes;
 use Attribute;
 use Chevere\Http\Header;
 use Chevere\Http\Headers;
+use Chevere\Http\Interfaces\StatusInterface;
 use Chevere\Http\Status;
 use Iterator;
 use IteratorAggregate;
 
 /**
- * @implements IteratorAggregate<string, Status|Header>
+ * @implements IteratorAggregate<string, StatusInterface|Header>
  */
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Response implements IteratorAggregate
@@ -29,14 +30,14 @@ final class Response implements IteratorAggregate
     public readonly Headers $headers;
 
     public function __construct(
-        public readonly Status $status = new Status(200),
+        public readonly StatusInterface $status = new Status(200),
         Header ...$header,
     ) {
         $this->headers = new Headers(...$header);
     }
 
     /**
-     * @return Iterator<string, Status|Header>
+     * @return Iterator<string, StatusInterface|Header>
      */
     public function getIterator(): Iterator
     {
@@ -47,7 +48,7 @@ final class Response implements IteratorAggregate
     }
 
     /**
-     * @return array<string, Status|Header>
+     * @return array<string, StatusInterface|Header>
      */
     public function toArray(): array
     {
