@@ -26,6 +26,7 @@ use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\CastInterface;
 use Chevere\Parameter\Interfaces\ParameterInterface;
 use Chevere\Parameter\Interfaces\ParametersAccessInterface;
+use LogicException;
 use PhpParser\Builder\Param;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -193,22 +194,18 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function status(): StatusInterface
     {
         return $this->_status
-            ??= responseAttribute(static::class)?->status
+            ??= responseAttribute(static::class)->status
             ?? new Status();
     }
 
     /**
-     * Asserts that the controller is ready to be executed
-     * for the __invoke() method.
-     *
-     * @infection-ignore-all False positive
+     * @infection-ignore-all
      */
     protected function assertRuntime(ReflectionActionInterface $reflection): void
     {
-        // @infection-ignore-all False positive
-        $this->query();
-        $this->bodyParsed();
-        $this->files();
+        if (! isset($this->_query, $this->_bodyParsed, $this->_files)) {
+            throw new LogicException('Server request not set. Did you forget to call withServerRequest() method?');
+        }
     }
 
     /**

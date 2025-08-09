@@ -38,9 +38,9 @@ final class ControllerTest extends TestCase
     {
         $controller = new AcceptController();
         $this->expectException(ActionException::class);
-        $this->expectExceptionMessageMatches(
+        $this->expectExceptionMessage(
             <<<PLAIN
-            /`Chevere\\\Tests\\\src\\\AcceptController` Error → Typed property .* must not be accessed before initialization/
+            `Chevere\Tests\src\AcceptController` LogicException → Server request not set. Did you forget to call withServerRequest() method?
             PLAIN
         );
         $controller->__invoke();
