@@ -31,9 +31,9 @@ use Psr\Http\Message\StreamInterface;
 interface ControllerInterface extends BaseControllerInterface
 {
     /**
-     * Defines the query accepted.
+     * Defines the query string accepted.
      */
-    public static function acceptQuery(): ArrayParameterInterface|ArrayStringParameterInterface;
+    public static function acceptQuery(): ArrayStringParameterInterface;
 
     /**
      * Defines the body accepted.

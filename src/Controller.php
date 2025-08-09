@@ -37,7 +37,6 @@ use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\cast;
 use function Chevere\Parameter\mixed;
-use function Chevere\Parameter\parameters;
 
 abstract class Controller extends BaseController implements ControllerInterface
 {
@@ -61,19 +60,19 @@ abstract class Controller extends BaseController implements ControllerInterface
      */
     private Map $_cookieParams;
 
-    private ?ArgumentsInterface $_query = null;
+    private ArgumentsInterface $_query;
 
-    private ?ArgumentsInterface $_bodyParsed = null;
+    private ArgumentsInterface $_bodyParsed;
 
-    private ?ArgumentsInterface $_files = null;
+    private ArgumentsInterface $_files;
 
-    private ?StatusInterface $_status = null;
+    private StatusInterface $_status;
 
     private mixed $_body = null;
 
     private StreamInterface $_bodyStream;
 
-    public static function acceptQuery(): ArrayParameterInterface|ArrayStringParameterInterface
+    public static function acceptQuery(): ArrayStringParameterInterface
     {
         return arrayString();
     }
@@ -144,21 +143,12 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     final public function query(): ArgumentsInterface
     {
-        return $this->_query
-            ??= arguments(static::acceptQuery()->parameters(), []);
+        return $this->_query;
     }
 
     final public function bodyParsed(): ArgumentsInterface
     {
-        $acceptBody = static::acceptBody();
-
-        return $this->_bodyParsed
-            ??= arguments(
-                $acceptBody instanceof ParametersAccessInterface
-                    ? $acceptBody->parameters()
-                    : parameters(),
-                []
-            );
+        return $this->_bodyParsed;
     }
 
     final public function body(): CastInterface
@@ -179,32 +169,28 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     final public function cookieParams(): MapInterface
     {
-        return $this->_cookieParams
-            ??= new Map();
+        return $this->_cookieParams;
     }
 
     final public function files(): ArgumentsInterface
     {
-        return $this->_files
-            ??= arguments(static::acceptFiles()->parameters(), []);
+        return $this->_files;
     }
 
     final public function serverParams(): MapInterface
     {
-        return $this->_serverParams
-            ??= new Map();
+        return $this->_serverParams;
     }
 
     final public function attributes(): MapInterface
     {
-        return $this->_attributes
-            ??= new Map();
+        return $this->_attributes;
     }
 
     final public function status(): StatusInterface
     {
         return $this->_status
-            ??= responseAttribute(static::class)->status
+            ??= responseAttribute(static::class)?->status
             ?? new Status();
     }
 

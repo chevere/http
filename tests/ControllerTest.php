@@ -21,6 +21,7 @@ use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptOptionalController;
 use Chevere\Tests\src\JsonBodyController;
 use Chevere\Tests\src\NullController;
+use Error;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\UploadedFile;
@@ -31,14 +32,28 @@ use function Chevere\Writer\streamTemp;
 
 final class ControllerTest extends TestCase
 {
-    public function testAssertRuntime(): void
+    public function testAssertWithoutServerRequest(): void
     {
         $controller = new AcceptController();
         $this->expectException(ActionException::class);
-        $this->expectExceptionMessage(<<<PLAIN
-        `Chevere\Tests\src\AcceptController` ArgumentCountError → Missing required argument(s): `foo`
-        PLAIN);
+        $this->expectExceptionMessageMatches(
+            <<<PLAIN
+            /`Chevere\\\Tests\\\src\\\AcceptController` Error → Typed property .* must not be accessed before initialization/
+            PLAIN
+        );
         $controller->__invoke();
+    }
+
+    public function testAssertRuntime(): void
+    {
+        $controller = new AcceptController();
+        $this->expectException(ControllerException::class);
+        $this->expectExceptionMessage(<<<PLAIN
+        Missing required argument(s): `foo`
+        PLAIN);
+        $controller->withServerRequest(
+            new ServerRequest('GET', '/')
+        );
     }
 
     public function testDefaults(): void
@@ -47,13 +62,30 @@ final class ControllerTest extends TestCase
         $this->assertCount(0, $controller->acceptQuery()->parameters());
         $this->assertEquals(mixed(), $controller->acceptBody());
         $this->assertCount(0, $controller->acceptFiles()->parameters());
-        $this->assertCount(0, $controller->query()->parameters());
-        $this->assertCount(0, $controller->bodyParsed()->parameters());
         $this->assertEquals(new Status(), $controller->status());
-        $this->assertSame(
-            spl_object_id($controller->bodyParsed()),
-            spl_object_id($controller->bodyParsed()),
-        );
+    }
+
+    public static function dataProviderDefaultsNoInitialized(): array
+    {
+        return [
+            ['query'],
+            ['bodyParsed'],
+            ['cookieParams'],
+            ['files'],
+            ['serverParams'],
+            ['attributes'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderDefaultsNoInitialized
+     */
+    public function testDefaultsNoInitialized(string $method): void
+    {
+        $controller = new NullController();
+        $this->expectException(Error::class);
+        $this->expectExceptionMessageMatches('/Typed property .* must not be accessed before initialization/');
+        $controller->{$method}();
     }
 
     public function testWithServerParams(): void
@@ -122,7 +154,6 @@ final class ControllerTest extends TestCase
     {
         $serverRequest = new ServerRequest('GET', '/');
         $controller = new AcceptOptionalController();
-        $this->assertSame([], $controller->query()->toArray());
         $controllerWith = $controller->withServerRequest(
             $serverRequest
                 ->withQueryParams([
