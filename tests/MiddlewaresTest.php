@@ -41,22 +41,25 @@ final class MiddlewaresTest extends TestCase
             [$name, $nameAlt],
             iterator_to_array($middlewares->getIterator())
         );
-        $this->assertTrue($middlewares->has($middleware));
+        $this->assertTrue($middlewares->has($middleware, $nameAlt));
     }
 
     public function testWithAppend(): void
     {
         $middlewareTest = new MiddlewareName(Middleware::class);
         $middlewareAlt = new MiddlewareName(MiddlewareAlt::class);
-        $middlewares = new Middlewares($middlewareTest);
-        $httpMiddlewareWith = $middlewares->withAppend($middlewareAlt);
-        $this->assertNotSame($middlewares, $httpMiddlewareWith);
-        $this->assertCount(1, $middlewares);
-        $this->assertCount(2, $httpMiddlewareWith);
-        $this->assertSame([0, 1], $httpMiddlewareWith->keys());
-        $array = array_map(function (MiddlewareNameInterface $middleware) {
-            return $middleware::class;
-        }, iterator_to_array($httpMiddlewareWith->getIterator()));
+        $middlewares = new Middlewares();
+        $middlewaresWith = $middlewares->withAppend($middlewareTest, $middlewareAlt);
+        $this->assertNotSame($middlewares, $middlewaresWith);
+        $this->assertTrue($middlewaresWith->has(MiddlewareAlt::class, Middleware::class));
+        $this->assertCount(2, $middlewaresWith);
+        $this->assertSame([0, 1], $middlewaresWith->keys());
+        $array = array_map(
+            function (MiddlewareNameInterface $middleware) {
+                return $middleware::class;
+            },
+            iterator_to_array($middlewaresWith->getIterator())
+        );
         $this->assertSame(
             [$middlewareTest::class, $middlewareAlt::class],
             $array
@@ -67,15 +70,17 @@ final class MiddlewaresTest extends TestCase
     {
         $middlewareTest = new MiddlewareName(Middleware::class);
         $middlewareAlt = new MiddlewareName(MiddlewareAlt::class);
-        $httpMiddleware = new Middlewares($middlewareTest);
-        $httpMiddlewareWith = $httpMiddleware->withPrepend($middlewareAlt);
-        $this->assertNotSame($httpMiddleware, $httpMiddlewareWith);
-        $this->assertCount(1, $httpMiddleware);
-        $this->assertCount(2, $httpMiddlewareWith);
-        $this->assertSame([0, 1], $httpMiddlewareWith->keys());
-        $array = array_map(function (MiddlewareNameInterface $middleware) {
-            return $middleware::class;
-        }, iterator_to_array($httpMiddlewareWith->getIterator()));
+        $middlewares = new Middlewares();
+        $middlewaresWith = $middlewares->withPrepend($middlewareTest, $middlewareAlt);
+        $this->assertNotSame($middlewares, $middlewaresWith);
+        $this->assertCount(2, $middlewaresWith);
+        $this->assertSame([0, 1], $middlewaresWith->keys());
+        $array = array_map(
+            function (MiddlewareNameInterface $middleware) {
+                return $middleware::class;
+            },
+            iterator_to_array($middlewaresWith->getIterator())
+        );
         $this->assertSame(
             [$middlewareAlt::class, $middlewareTest::class],
             $array
