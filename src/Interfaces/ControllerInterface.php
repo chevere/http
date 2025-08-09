@@ -15,7 +15,6 @@ namespace Chevere\Http\Interfaces;
 
 use Chevere\Action\Interfaces\ControllerInterface as BaseControllerInterface;
 use Chevere\DataStructure\Interfaces\MapInterface;
-use Chevere\Http\Status;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
@@ -26,7 +25,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * Describes the component in charge of defining an Http Controller which adds methods for handling HTTP requests.
+ * Describes the component in charge of defining an Http Controller
+ * which is an action that adds methods for handling HTTP contexts.
  */
 interface ControllerInterface extends BaseControllerInterface
 {
@@ -51,8 +51,8 @@ interface ControllerInterface extends BaseControllerInterface
      * Retrieve server parameters.
      *
      * Retrieves data related to the incoming request environment,
-     * typically derived from PHP's $_SERVER superglobal. The data IS NOT
-     * REQUIRED to originate from $_SERVER.
+     * typically derived from PHP's $_SERVER superglobal.
+     * The data IS NOT REQUIRED to originate from $_SERVER.
      *
      * @return MapInterface<mixed>
      */
@@ -115,7 +115,8 @@ interface ControllerInterface extends BaseControllerInterface
     public function attributes(): MapInterface;
 
     /**
-     * Provides access to the ResponseAttr Status codes for the controller.
+     * Provides access to the response attribute (ResponseAttr)
+     * StatusInterface codes for the controller.
      */
     public function status(): StatusInterface;
 
