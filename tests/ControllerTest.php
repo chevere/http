@@ -109,6 +109,7 @@ final class ControllerTest extends TestCase
         $this->assertNotEquals($controller, $controllerWith);
         $this->assertSame('abc', $controllerWith->query()->required('foo')->string());
         $this->expectException(ControllerException::class);
+        $this->expectExceptionCode(400);
         $controller->withServerRequest(
             $serverRequest
                 ->withQueryParams([

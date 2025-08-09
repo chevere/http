@@ -22,16 +22,17 @@ class Status implements StatusInterface
 {
     /**
      * Maps name => code
-     * @var array<string|int, int>
+     * @var array<string|int, int|string>
      */
     public readonly array $codes;
 
     /**
-     * @param int $success The success status code
+     * @param int|string $success The success status code, e.g. `200` or `2xx`
+     * @param int|string ...$code Additional status codes
      */
     public function __construct(
-        public readonly int $success = 200,
-        int ...$code
+        public readonly int|string $success = 200,
+        int|string ...$code
     ) {
         $code = array_unique($code);
         $search = array_search($success, $code, true);
@@ -41,12 +42,12 @@ class Status implements StatusInterface
         $this->codes = $code;
     }
 
-    public function success(): int
+    public function success(): int|string
     {
         return $this->success;
     }
 
-    public function code(string $name): int
+    public function code(string $name): int|string
     {
         return array_key_exists($name, $this->codes)
             ? $this->codes[$name]
@@ -64,7 +65,7 @@ class Status implements StatusInterface
     }
 
     /**
-     * @return Iterator<int>
+     * @return Iterator<int|string>
      */
     public function getIterator(): Iterator
     {

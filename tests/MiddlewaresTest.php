@@ -22,23 +22,23 @@ use PHPUnit\Framework\TestCase;
 
 final class MiddlewaresTest extends TestCase
 {
-    public function testEmpty(): void
+    public function testConstructEmpty(): void
     {
         $middlewares = new Middlewares();
         $this->assertCount(0, $middlewares);
-        $middlewareName = new MiddlewareName(Middleware::class);
         $this->assertFalse($middlewares->has(Middleware::class));
     }
 
-    public function testConstruct(): void
+    public function testConstructValues(): void
     {
         $middleware = Middleware::class;
         $name = new MiddlewareName($middleware);
-        $middlewares = new Middlewares($name);
-        $this->assertCount(1, $middlewares);
-        $this->assertSame([0], $middlewares->keys());
+        $nameAlt = new MiddlewareName($middleware);
+        $middlewares = new Middlewares($name, $nameAlt);
+        $this->assertCount(2, $middlewares);
+        $this->assertSame([0, 1], $middlewares->keys());
         $this->assertSame(
-            [$name],
+            [$name, $nameAlt],
             iterator_to_array($middlewares->getIterator())
         );
         $this->assertTrue($middlewares->has($middleware));
