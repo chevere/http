@@ -21,6 +21,8 @@ use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptOptionalController;
 use Chevere\Tests\src\JsonBodyController;
 use Chevere\Tests\src\NullController;
+use Chevere\Tests\src\WithoutResponseAttributeStatusController;
+use Chevere\Tests\src\WithResponseAttributeStatusController;
 use Error;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
@@ -110,6 +112,10 @@ final class ControllerTest extends TestCase
             spl_object_id($controller->status()),
         );
         $this->assertEquals($status, $controller->status());
+        $controllerWithStatus = new WithResponseAttributeStatusController();
+        $this->assertSame(666, $controllerWithStatus->status()->success());
+        $controllerWithoutStatus = new WithoutResponseAttributeStatusController();
+        $this->assertSame(200, $controllerWithoutStatus->status()->success());
     }
 
     public function testAcceptQueryBody(): void

@@ -187,6 +187,9 @@ abstract class Controller extends BaseController implements ControllerInterface
         return $this->_attributes;
     }
 
+    /**
+     * @infection-ignore-all False positive
+     */
     final public function status(): StatusInterface
     {
         return $this->_status
@@ -194,8 +197,15 @@ abstract class Controller extends BaseController implements ControllerInterface
             ?? new Status();
     }
 
+    /**
+     * Asserts that the controller is ready to be executed
+     * for the __invoke() method.
+     *
+     * @infection-ignore-all False positive
+     */
     protected function assertRuntime(ReflectionActionInterface $reflection): void
     {
+        // @infection-ignore-all False positive
         $this->query();
         $this->bodyParsed();
         $this->files();
