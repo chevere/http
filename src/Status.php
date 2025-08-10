@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Chevere\Http;
 
 use Chevere\Http\Interfaces\StatusInterface;
+use Chevere\Parameter\Cast;
+use Chevere\Parameter\Interfaces\CastInterface;
 use Iterator;
 use RuntimeException;
 use function Chevere\Message\message;
@@ -42,14 +44,14 @@ class Status implements StatusInterface
         $this->codes = $code;
     }
 
-    public function success(): int|string
+    public function success(): CastInterface
     {
-        return $this->success;
+        return new Cast($this->success);
     }
 
-    public function code(string $name): int|string
+    public function code(string $name): CastInterface
     {
-        return array_key_exists($name, $this->codes)
+        $return = array_key_exists($name, $this->codes)
             ? $this->codes[$name]
             : throw new RuntimeException(
                 (string) message(
@@ -57,6 +59,8 @@ class Status implements StatusInterface
                     name: $name
                 )
             );
+
+        return new Cast($return);
     }
 
     public function codes(): array

@@ -22,7 +22,7 @@ final class StatusTest extends TestCase
     public function testDefault(): void
     {
         $status = new Status();
-        $this->assertSame(200, $status->success());
+        $this->assertSame(200, $status->success()->int());
         $this->assertSame([], $status->codes());
         $this->assertSame([200], $status->toArray());
         $this->expectException(RuntimeException::class);
@@ -37,7 +37,7 @@ final class StatusTest extends TestCase
     public function testPrimary(): void
     {
         $status = new Status(200);
-        $this->assertSame(200, $status->success());
+        $this->assertSame(200, $status->success()->int());
         $this->assertSame([], $status->codes());
         $this->assertSame([200], $status->toArray());
     }
@@ -45,7 +45,7 @@ final class StatusTest extends TestCase
     public function testPrimaryOverride(): void
     {
         $status = new Status(200, 200);
-        $this->assertSame(200, $status->success());
+        $this->assertSame(200, $status->success()->int());
         $this->assertSame([], $status->codes());
         $this->assertSame([200], $status->toArray());
     }
@@ -53,7 +53,7 @@ final class StatusTest extends TestCase
     public function testOther(): void
     {
         $status = new Status(201, 400);
-        $this->assertSame(201, $status->success());
+        $this->assertSame(201, $status->success()->int());
         $this->assertSame([400], $status->codes());
         $this->assertSame([201, 400], $status->toArray());
     }
@@ -61,8 +61,8 @@ final class StatusTest extends TestCase
     public function testOtherOverride(): void
     {
         $status = new Status(200, 400, 400);
-        $this->assertSame(200, $status->success());
-        $this->assertSame(400, $status->code('0'));
+        $this->assertSame(200, $status->success()->int());
+        $this->assertSame(400, $status->code('0')->int());
         $this->assertSame([400], $status->codes());
         $this->assertSame([200, 400], $status->toArray());
     }
@@ -70,7 +70,7 @@ final class StatusTest extends TestCase
     public function testOtherNamed(): void
     {
         $status = new Status(200, bad: 400, notFound: 404);
-        $this->assertSame(200, $status->success());
+        $this->assertSame(200, $status->success()->int());
         $this->assertSame(
             [
                 'bad' => 400,
@@ -79,7 +79,7 @@ final class StatusTest extends TestCase
             $status->codes()
         );
         $this->assertSame([200, 400, 404], $status->toArray());
-        $this->assertSame(400, $status->code('bad'));
-        $this->assertSame(404, $status->code('notFound'));
+        $this->assertSame(400, $status->code('bad')->int());
+        $this->assertSame(404, $status->code('notFound')->int());
     }
 }

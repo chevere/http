@@ -115,9 +115,9 @@ final class ControllerTest extends TestCase
         );
         $this->assertEquals($status, $controller->status());
         $controllerWithStatus = new WithResponseAttributeStatusController();
-        $this->assertSame(666, $controllerWithStatus->status()->success());
+        $this->assertSame(666, $controllerWithStatus->status()->success()->int());
         $controllerWithoutStatus = new WithoutResponseAttributeStatusController();
-        $this->assertSame(200, $controllerWithoutStatus->status()->success());
+        $this->assertSame(200, $controllerWithoutStatus->status()->success()->int());
     }
 
     public function testAcceptQuery(): void
