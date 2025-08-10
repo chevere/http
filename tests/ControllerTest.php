@@ -17,8 +17,10 @@ use ArgumentCountError;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Http\Status;
+use Chevere\Tests\src\AcceptBodyController;
 use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptOptionalController;
+use Chevere\Tests\src\AcceptQueryController;
 use Chevere\Tests\src\JsonBodyController;
 use Chevere\Tests\src\NullController;
 use Chevere\Tests\src\WithoutResponseAttributeStatusController;
@@ -118,7 +120,53 @@ final class ControllerTest extends TestCase
         $this->assertSame(200, $controllerWithoutStatus->status()->success());
     }
 
-    public function testAcceptQueryBody(): void
+    public function testAcceptQuery(): void
+    {
+        $serverRequest = new ServerRequest('GET', '/');
+        $controller = new AcceptQueryController();
+        $controllerWith = $controller->withServerRequest(
+            $serverRequest
+                ->withQueryParams([
+                    'foo' => 'abc',
+                ])
+        );
+        $this->assertNotSame($controller, $controllerWith);
+        $this->assertNotEquals($controller, $controllerWith);
+        $this->assertSame('abc', $controllerWith->query()->required('foo')->string());
+        $this->expectException(ControllerException::class);
+        $this->expectExceptionCode(400);
+        $controller->withServerRequest(
+            $serverRequest
+                ->withQueryParams([
+                    'foo' => '123',
+                ])
+        );
+    }
+
+    public function testAcceptBody(): void
+    {
+        $serverRequest = new ServerRequest('GET', '/');
+        $controller = new AcceptBodyController();
+        $controllerWith = $controller->withServerRequest(
+            $serverRequest
+                ->withParsedBody([
+                    'bar' => '123',
+                ])
+        );
+        $this->assertNotSame($controller, $controllerWith);
+        $this->assertNotEquals($controller, $controllerWith);
+        $this->assertSame('123', $controllerWith->bodyParsed()->required('bar')->string());
+        $this->expectException(ControllerException::class);
+        $this->expectExceptionCode(400);
+        $controller->withServerRequest(
+            $serverRequest
+                ->withParsedBody([
+                    'bar' => 'error',
+                ])
+        );
+    }
+
+    public function testAcceptQueryBodyFiles(): void
     {
         $serverRequest = new ServerRequest('GET', '/');
         $controller = new AcceptController();

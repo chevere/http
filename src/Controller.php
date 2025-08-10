@@ -104,8 +104,11 @@ abstract class Controller extends BaseController implements ControllerInterface
                 $serverRequest->getQueryParams()
             );
             $parsedBody = $serverRequest->getParsedBody();
+            if (is_object($parsedBody)) {
+                $parsedBody = (array) $parsedBody;
+            }
             $new->_body = $parsedBody ?? null;
-            if ($serverRequest->getHeaderLine('Content-Type') === 'application/json') {
+            if (! $new->_body && $serverRequest->getHeaderLine('Content-Type') === 'application/json') {
                 $streamed = $new->_bodyStream->__toString();
                 $new->_body = json_decode($streamed, true);
                 if ($new->_body === null && $streamed !== '') {
@@ -116,14 +119,14 @@ abstract class Controller extends BaseController implements ControllerInterface
                 $new->_body = $streamed ?? $new->_bodyStream->__toString();
             }
             $acceptBody = $new::acceptBody();
-            $acceptBody->__invoke($new->_body);
+            $acceptBody = $acceptBody instanceof ParametersAccessInterface
+                ? $acceptBody->parameters()
+                : arrayp();
             $new->_bodyParsed = arguments(
-                $acceptBody instanceof ParametersAccessInterface
-                    ? $acceptBody->parameters()
-                    : arrayp(),
+                $acceptBody,
                 is_array($new->_body)
                     ? $new->_body
-                    : (array) ($parsedBody ?? [])
+                    : ($parsedBody ?? [])
             );
         } catch (Throwable $e) {
             throw new ControllerException($e->getMessage(), 400, $e);
