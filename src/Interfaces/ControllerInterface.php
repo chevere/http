@@ -45,6 +45,15 @@ interface ControllerInterface extends BaseControllerInterface
      */
     public static function acceptFiles(): ArrayParameterInterface;
 
+    /**
+     * Return an instance with the specified server request `$serverRequest` processing.
+     *
+     * This method MUST retain the state of the current instance, and return
+     * an instance that contains the data taken from `$serverRequest`.
+     *
+     * This method MUST be called before any other method that requires the server
+     * request data to be processed, such as `serverParams()`, `headers()`, etc.
+     */
     public function withServerRequest(ServerRequestInterface $serverRequest): static;
 
     /**
@@ -99,6 +108,9 @@ interface ControllerInterface extends BaseControllerInterface
      */
     public function body(): CastInterface;
 
+    /**
+     * Provides access to the files uploaded in the request.
+     */
     public function files(): ArgumentsInterface;
 
     /**
@@ -122,6 +134,7 @@ interface ControllerInterface extends BaseControllerInterface
 
     /**
      * Define a method to handle terminated responses (e.g. set headers, redirects)
+     * This method will be called at the end of the request lifecycle.
      */
     public function terminate(ResponseInterface $response): ResponseInterface;
 }

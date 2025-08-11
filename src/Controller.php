@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
+use BadMethodCallException;
 use Chevere\Action\Controller as BaseController;
 use Chevere\Action\Interfaces\ReflectionActionInterface;
 use Chevere\DataStructure\Interfaces\MapInterface;
@@ -44,34 +45,34 @@ abstract class Controller extends BaseController implements ControllerInterface
     /**
      * @var Map<mixed>
      */
-    private Map $_attributes;
+    private ?Map $_attributes = null;
 
     /**
      * @var Map<mixed>
      */
-    private Map $_serverParams;
+    private ?Map $_serverParams = null;
 
     /**
      * @var Map<string>
      */
-    private Map $_headers;
+    private ?Map $_headers = null;
 
     /**
      * @var Map<string>
      */
-    private Map $_cookieParams;
+    private ?Map $_cookieParams = null;
 
-    private ArgumentsInterface $_query;
+    private ?ArgumentsInterface $_query = null;
 
-    private ArgumentsInterface $_bodyParsed;
+    private ?ArgumentsInterface $_bodyParsed = null;
 
-    private ArgumentsInterface $_files;
+    private ?ArgumentsInterface $_files = null;
 
-    private StatusInterface $_status;
+    private ?StatusInterface $_status = null;
 
     private mixed $_body = null;
 
-    private StreamInterface $_bodyStream;
+    private ?StreamInterface $_bodyStream = null;
 
     public static function acceptQuery(): ArrayStringParameterInterface
     {
@@ -147,12 +148,14 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     final public function query(): ArgumentsInterface
     {
-        return $this->_query;
+        return $this->_query
+            ?? throw new BadMethodCallException();
     }
 
     final public function bodyParsed(): ArgumentsInterface
     {
-        return $this->_bodyParsed;
+        return $this->_bodyParsed
+            ?? throw new BadMethodCallException();
     }
 
     final public function body(): CastInterface
@@ -162,33 +165,38 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     final public function bodyStream(): StreamInterface
     {
-        return $this->_bodyStream;
+        return $this->_bodyStream
+            ?? throw new BadMethodCallException();
     }
 
     final public function headers(): MapInterface
     {
         return $this->_headers
-            ??= new Map();
+            ?? throw new BadMethodCallException();
     }
 
     final public function cookieParams(): MapInterface
     {
-        return $this->_cookieParams;
+        return $this->_cookieParams
+            ?? throw new BadMethodCallException();
     }
 
     final public function files(): ArgumentsInterface
     {
-        return $this->_files;
+        return $this->_files
+            ?? throw new BadMethodCallException();
     }
 
     final public function serverParams(): MapInterface
     {
-        return $this->_serverParams;
+        return $this->_serverParams
+            ?? throw new BadMethodCallException();
     }
 
     final public function attributes(): MapInterface
     {
-        return $this->_attributes;
+        return $this->_attributes
+            ?? throw new BadMethodCallException();
     }
 
     /**

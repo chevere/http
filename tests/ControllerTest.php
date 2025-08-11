@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use ArgumentCountError;
+use BadMethodCallException;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Http\Status;
@@ -69,7 +70,7 @@ final class ControllerTest extends TestCase
         $this->assertEquals(new Status(), $controller->status());
     }
 
-    public static function dataProviderDefaultsNoInitialized(): array
+    public static function dataProviderDefaultsNull(): array
     {
         return [
             ['query'],
@@ -82,13 +83,12 @@ final class ControllerTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProviderDefaultsNoInitialized
+     * @dataProvider dataProviderDefaultsNull
      */
-    public function testDefaultsNoInitialized(string $method): void
+    public function testDefaultsNull(string $method): void
     {
         $controller = new NullController();
-        $this->expectException(Error::class);
-        $this->expectExceptionMessageMatches('/Typed property .* must not be accessed before initialization/');
+        $this->expectException(BadMethodCallException::class);
         $controller->{$method}();
     }
 
