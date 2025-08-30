@@ -173,6 +173,11 @@ final class ControllerTest extends TestCase
         $this->assertSame('abc', $controllerWith->query()->required('foo')->string());
         $this->expectException(ControllerException::class);
         $this->expectExceptionCode(400);
+        $this->expectExceptionMessage(
+            <<<PLAIN
+            [HTTP query] [foo]: Argument value provided `123` doesn't match the regex `/^[a-z]+$/`
+            PLAIN
+        );
         $controller->withServerRequest(
             $serverRequest
                 ->withQueryParams([
@@ -196,6 +201,11 @@ final class ControllerTest extends TestCase
         $this->assertSame('123', $controllerWith->bodyParsed()->required('bar')->string());
         $this->expectException(ControllerException::class);
         $this->expectExceptionCode(400);
+        $this->expectExceptionMessage(
+            <<<PLAIN
+            [HTTP body] [bar]: Argument value provided `error` doesn't match the regex `/^[1-9]+$/`
+            PLAIN
+        );
         $controller->withServerRequest(
             $serverRequest
                 ->withParsedBody([

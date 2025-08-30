@@ -101,11 +101,15 @@ abstract class Controller extends BaseController implements ControllerInterface
         $new = clone $this;
 
         try {
-            $new->_bodyStream = $serverRequest->getBody();
-            $new->_query = arguments(
-                $new::acceptQuery()->parameters(),
-                $serverRequest->getQueryParams()
+            $new->_query = $new::acceptQuery()->parameters()(
+                ...$serverRequest->getQueryParams()
             );
+        } catch (Throwable $e) {
+            throw new ControllerException('[HTTP query] ' . $e->getMessage(), 400, $e);
+        }
+
+        try {
+            $new->_bodyStream = $serverRequest->getBody();
             $parsedBody = $serverRequest->getParsedBody();
             if (is_object($parsedBody)) {
                 $parsedBody = (array) $parsedBody;
@@ -132,7 +136,7 @@ abstract class Controller extends BaseController implements ControllerInterface
                     : ($parsedBody ?? [])
             );
         } catch (Throwable $e) {
-            throw new ControllerException($e->getMessage(), 400, $e);
+            throw new ControllerException('[HTTP body] ' . $e->getMessage(), 400, $e);
         }
 
         try {
