@@ -52,13 +52,13 @@ Define accepted parameters for headers using the `acceptHeaders` method.
 
 ```php
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
-use function Chevere\Parameter\arrayp;
+use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\parameters;
 use function Chevere\Parameter\string;
 
 public static function acceptHeaders(): ArrayStringParameterInterface
 {
-    return arrayp(
+    return arrayString(
         ...['Webhook-Id' => string()],
     );
 }
@@ -70,13 +70,13 @@ Define accepted parameters for query string using the `acceptQuery` method.
 
 ```php
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
-use function Chevere\Parameter\arrayp;
+use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\parameters;
 use function Chevere\Parameter\string;
 
 public static function acceptQuery(): ArrayStringParameterInterface
 {
-    return arrayp(
+    return arrayString(
         foo: string('/^[a-z]+$/'),
     );
 }
@@ -135,7 +135,7 @@ Use method `headers` to read headers parameters.
 
 ```php
 $headers = $controller->headers();
-$header = $headers->required('Webhook-Id')->string();
+$header = $headers->required('Webhook-Id');
 ```
 
 ### Query
@@ -144,7 +144,7 @@ Use method `query` to read query parameters.
 
 ```php
 $query = $controller->query();
-$foo = $query->required('foo')->string();
+$foo = $query->required('foo');
 ```
 
 ### Body
