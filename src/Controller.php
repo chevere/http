@@ -21,7 +21,9 @@ use Chevere\DataStructure\Map;
 use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Http\Interfaces\StatusInterface;
+use Chevere\Parameter\ArgumentsString;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
+use Chevere\Parameter\Interfaces\ArgumentsStringInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\CastInterface;
@@ -57,9 +59,9 @@ abstract class Controller extends BaseController implements ControllerInterface
      */
     private ?Map $_cookieParams = null;
 
-    private ?ArgumentsInterface $_headers = null;
+    private ?ArgumentsStringInterface $_headers = null;
 
-    private ?ArgumentsInterface $_query = null;
+    private ?ArgumentsStringInterface $_query = null;
 
     private ?ArgumentsInterface $_bodyParsed = null;
 
@@ -101,8 +103,9 @@ abstract class Controller extends BaseController implements ControllerInterface
         $new = clone $this;
 
         try {
-            $new->_query = $new::acceptQuery()->parameters()(
-                ...$serverRequest->getQueryParams()
+            $new->_query = new ArgumentsString(
+                $new::acceptQuery()->parameters(),
+                $serverRequest->getQueryParams()
             );
         } catch (Throwable $e) {
             throw new ControllerException('[HTTP query] ' . $e->getMessage(), 400, $e);
@@ -144,7 +147,10 @@ abstract class Controller extends BaseController implements ControllerInterface
             foreach (array_keys($serverRequest->getHeaders()) as $key) {
                 $headers[$key] = $serverRequest->getHeaderLine($key);
             }
-            $new->_headers = $new::acceptHeaders()->parameters()(...$headers);
+            $new->_headers = new ArgumentsString(
+                $new::acceptHeaders()->parameters(),
+                $headers
+            );
         } catch (Throwable $e) {
             throw new ControllerException('[HTTP headers] ' . $e->getMessage(), 400, $e);
         }
@@ -156,7 +162,7 @@ abstract class Controller extends BaseController implements ControllerInterface
         return $new;
     }
 
-    final public function query(): ArgumentsInterface
+    final public function query(): ArgumentsStringInterface
     {
         return $this->_query
             ?? throw new BadMethodCallException();
@@ -179,7 +185,7 @@ abstract class Controller extends BaseController implements ControllerInterface
             ?? throw new BadMethodCallException();
     }
 
-    final public function headers(): ArgumentsInterface
+    final public function headers(): ArgumentsStringInterface
     {
         return $this->_headers
             ?? throw new BadMethodCallException();

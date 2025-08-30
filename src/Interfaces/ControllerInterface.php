@@ -16,6 +16,7 @@ namespace Chevere\Http\Interfaces;
 use Chevere\Action\Interfaces\ControllerInterface as BaseControllerInterface;
 use Chevere\DataStructure\Interfaces\MapInterface;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
+use Chevere\Parameter\Interfaces\ArgumentsStringInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\CastInterface;
@@ -85,12 +86,12 @@ interface ControllerInterface extends BaseControllerInterface
      * The keys represent the header name as it will be sent over the wire, and
      * each value is the header line.
      */
-    public function headers(): ArgumentsInterface;
+    public function headers(): ArgumentsStringInterface;
 
     /**
      * Provides access to query string arguments.
      */
-    public function query(): ArgumentsInterface;
+    public function query(): ArgumentsStringInterface;
 
     /**
      * Provides access to arguments provided in the request body.

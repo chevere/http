@@ -145,6 +145,21 @@ final class ControllerTest extends TestCase
             }
         };
         $controllerWith = $controller->withServerRequest($serverRequest);
+        $this->assertSame(
+            [
+                'Content-Type' => 'application/json',
+                'X-Custom-Header' => 'value',
+            ],
+            $controllerWith->headers()->toArray()
+        );
+        $this->assertSame(
+            'application/json',
+            $controllerWith->headers()->required('Content-Type')
+        );
+        $this->assertSame(
+            'value',
+            $controllerWith->headers()->required('X-Custom-Header')
+        );
         $this->assertNotSame($controller, $controllerWith);
         $this->expectException(ControllerException::class);
         $this->expectExceptionCode(400);
@@ -170,7 +185,7 @@ final class ControllerTest extends TestCase
         );
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('abc', $controllerWith->query()->required('foo')->string());
+        $this->assertSame('abc', $controllerWith->query()->required('foo'));
         $this->expectException(ControllerException::class);
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage(
@@ -241,7 +256,7 @@ final class ControllerTest extends TestCase
         );
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('abc', $controllerWith->query()->required('foo')->string());
+        $this->assertSame('abc', $controllerWith->query()->required('foo'));
         $this->expectException(ControllerException::class);
         $this->expectExceptionCode(400);
         $controller->withServerRequest(
@@ -267,7 +282,7 @@ final class ControllerTest extends TestCase
         );
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $this->assertSame('abc', $controllerWith->query()->optional('foo')->string());
+        $this->assertSame('abc', $controllerWith->query()->optional('foo'));
     }
 
     public function testWithRequestAttributes(): void
