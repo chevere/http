@@ -18,6 +18,7 @@ use BadMethodCallException;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Http\Status;
+use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Tests\src\AcceptBodyController;
 use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptOptionalController;
@@ -32,7 +33,9 @@ use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\UploadedFile;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
+use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\mixed;
+use function Chevere\Parameter\string;
 use function Chevere\Writer\streamTemp;
 
 final class ControllerTest extends TestCase
@@ -118,6 +121,41 @@ final class ControllerTest extends TestCase
         $this->assertSame(666, $controllerWithStatus->status()->success()->int());
         $controllerWithoutStatus = new WithoutResponseAttributeStatusController();
         $this->assertSame(200, $controllerWithoutStatus->status()->success()->int());
+    }
+
+    public function testAcceptHeaders(): void
+    {
+        $serverRequest = new ServerRequest(
+            'GET',
+            '/',
+            headers: [
+                'Content-Type' => 'application/json',
+                'X-Custom-Header' => 'value',
+            ]
+        );
+        $controller = new class() extends NullController {
+            public static function acceptHeaders(): ArrayStringParameterInterface
+            {
+                return arrayString(
+                    ...[
+                        'Content-Type' => string(),
+                        'X-Custom-Header' => string(),
+                    ]
+                );
+            }
+        };
+        $controllerWith = $controller->withServerRequest($serverRequest);
+        $this->assertNotSame($controller, $controllerWith);
+        $this->expectException(ControllerException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage(
+            <<<PLAIN
+            [HTTP headers] Missing required argument(s): `Content-Type, X-Custom-Header`
+            PLAIN
+        );
+        $controller->withServerRequest(
+            new ServerRequest('GET', '/')
+        );
     }
 
     public function testAcceptQuery(): void

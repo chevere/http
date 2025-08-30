@@ -31,6 +31,11 @@ use Psr\Http\Message\StreamInterface;
 interface ControllerInterface extends BaseControllerInterface
 {
     /**
+     * Defines the headers accepted.
+     */
+    public static function acceptHeaders(): ArrayStringParameterInterface;
+
+    /**
      * Defines the query string accepted.
      */
     public static function acceptQuery(): ArrayStringParameterInterface;
@@ -79,10 +84,8 @@ interface ControllerInterface extends BaseControllerInterface
      *
      * The keys represent the header name as it will be sent over the wire, and
      * each value is the header line.
-     *
-     * @return MapInterface<string>
      */
-    public function headers(): MapInterface;
+    public function headers(): ArgumentsInterface;
 
     /**
      * Provides access to query string arguments.

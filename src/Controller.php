@@ -55,12 +55,9 @@ abstract class Controller extends BaseController implements ControllerInterface
     /**
      * @var Map<string>
      */
-    private ?Map $_headers = null;
-
-    /**
-     * @var Map<string>
-     */
     private ?Map $_cookieParams = null;
+
+    private ?ArgumentsInterface $_headers = null;
 
     private ?ArgumentsInterface $_query = null;
 
@@ -73,6 +70,11 @@ abstract class Controller extends BaseController implements ControllerInterface
     private mixed $_body = null;
 
     private ?StreamInterface $_bodyStream = null;
+
+    public static function acceptHeaders(): ArrayStringParameterInterface
+    {
+        return arrayString();
+    }
 
     public static function acceptQuery(): ArrayStringParameterInterface
     {
@@ -132,14 +134,18 @@ abstract class Controller extends BaseController implements ControllerInterface
         } catch (Throwable $e) {
             throw new ControllerException($e->getMessage(), 400, $e);
         }
+
+        try {
+            $headers = [];
+            foreach (array_keys($serverRequest->getHeaders()) as $key) {
+                $headers[$key] = $serverRequest->getHeaderLine($key);
+            }
+            $new->_headers = $new::acceptHeaders()->parameters()(...$headers);
+        } catch (Throwable $e) {
+            throw new ControllerException('[HTTP headers] ' . $e->getMessage(), 400, $e);
+        }
         $new->_serverParams = new Map(...$serverRequest->getServerParams());
         $new->_attributes = new Map(...$serverRequest->getAttributes());
-        $headers = [];
-        $headersKeys = array_keys($serverRequest->getHeaders());
-        foreach ($headersKeys as $key) {
-            $headers[$key] = $serverRequest->getHeaderLine($key);
-        }
-        $new->_headers = new Map(...$headers);
         $new->_cookieParams = new Map(...$serverRequest->getCookieParams());
         $new->setFiles($serverRequest->getUploadedFiles());
 
@@ -169,7 +175,7 @@ abstract class Controller extends BaseController implements ControllerInterface
             ?? throw new BadMethodCallException();
     }
 
-    final public function headers(): MapInterface
+    final public function headers(): ArgumentsInterface
     {
         return $this->_headers
             ?? throw new BadMethodCallException();
