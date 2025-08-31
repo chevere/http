@@ -1,6 +1,6 @@
 {
     "name": "chevere/http",
-    "description": "A chevere http package",
+    "description": "PSR-7/17/18 compatible PHP library for creating HTTP components for routing",
     "homepage": "https://chevere.org",
     "type": "library",
     "license": "Apache-2.0",
