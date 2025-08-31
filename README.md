@@ -19,11 +19,13 @@
 
 ## Summary
 
-The Http package provides tooling for building HTTP components.
+Http is a library for creating HTTP components (Controller, Middleware, Header, Status) for [chevere/router](https://chevere.org/packages/router). It is compatible with the following [PHP-FIG](https://www.php-fig.org) PSR:
 
-::: tip 💡 Http introduction
- Read [Chevere Http](https://rodolfoberrios.com/2023/06/13/http/) at Rodolfo's blog for a compressive introduction to this package.
-:::
+- PSR-7: HTTP message interfaces
+- PSR-17: HTTP Factories
+- PSR-18: HTTP Client
+
+Read [Chevere Http](https://rodolfoberrios.com/2023/06/13/http/) at Rodolfo's blog for a compressive introduction to this package.
 
 ## Installing
 
@@ -250,7 +252,7 @@ Documentation is available at [chevere.org](https://chevere.org/packages/http).
 
 ## License
 
-Copyright 2025 [Rodolfo Berrios A.](https://rodolfoberrios.com/)
+Copyright [Rodolfo Berrios A.](https://rodolfoberrios.com/)
 
 Chevere is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for the full license text.
 
