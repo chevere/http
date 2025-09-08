@@ -22,7 +22,7 @@ use Chevere\Http\Controller;
  */
 final class NullController extends Controller
 {
-    protected function main(): void
+    public function __invoke(): void
     {
     }
 }

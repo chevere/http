@@ -38,6 +38,11 @@ use function Chevere\Parameter\string;
 )]
 final class AcceptController extends Controller
 {
+    public function __invoke(): void
+    {
+        $this->assert();
+    }
+
     public static function acceptQuery(): ArrayStringParameterInterface
     {
         return arrayString(
@@ -64,10 +69,5 @@ final class AcceptController extends Controller
                     type: string('/^image\/png$/')
                 )
             );
-    }
-
-    public function main(): array
-    {
-        return [];
     }
 }

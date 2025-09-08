@@ -17,7 +17,7 @@ use Chevere\Action\Controller;
 
 class WrongController extends Controller
 {
-    public function main(): array
+    public function __invoke(): array
     {
         return [];
     }

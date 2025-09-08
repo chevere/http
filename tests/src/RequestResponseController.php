@@ -32,7 +32,7 @@ use Chevere\Http\Status;
 ]
 class RequestResponseController extends Controller
 {
-    public function main(): array
+    public function __invoke(): array
     {
         return [];
     }

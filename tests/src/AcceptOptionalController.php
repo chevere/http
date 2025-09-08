@@ -31,6 +31,11 @@ use function Chevere\Parameter\string;
 )]
 final class AcceptOptionalController extends Controller
 {
+    public function __invoke(): array
+    {
+        return [];
+    }
+
     public static function acceptQuery(): ArrayStringParameterInterface
     {
         return arrayString()->withOptional(
@@ -52,10 +57,5 @@ final class AcceptOptionalController extends Controller
                 type: string('/^text\/plain$/')
             )
         );
-    }
-
-    public function main(): array
-    {
-        return [];
     }
 }

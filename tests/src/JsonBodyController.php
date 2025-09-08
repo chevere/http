@@ -24,16 +24,16 @@ use function Chevere\Parameter\int;
 )]
 class JsonBodyController extends Controller
 {
-    public static function acceptBody(): IntParameterInterface
-    {
-        return int(min: 10, max: 100);
-    }
-
-    protected function main(): array
+    public function __invoke(): array
     {
         return [
             $this->bodyParsed()->toArray(),
             $this->body()->int(),
         ];
+    }
+
+    public static function acceptBody(): IntParameterInterface
+    {
+        return int(min: 10, max: 100);
     }
 }
