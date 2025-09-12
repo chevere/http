@@ -29,6 +29,7 @@ use function Chevere\Message\message;
  * translate them to ControllerException with appropriate HTTP status codes.
  *
  * Example:
+ *
  * ```php
  * try {
  *     $user = $this->userService->findById($id);
@@ -36,18 +37,13 @@ use function Chevere\Message\message;
  *     throw new ControllerException('User not found', 404);
  * }
  * ```
- *
- * @param mixed $return Return value compatible with the definition at Controller's `return()` method
  */
 class ControllerException extends Exception
 {
-    public readonly mixed $return;
-
     public function __construct(
         string $message = '',
         int $code = 0,
-        mixed $return = null,
-        ?Throwable $previous = null
+        ?Throwable $previous = null,
     ) {
         /** @infection-ignore-all */
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
@@ -68,24 +64,6 @@ class ControllerException extends Exception
                 $file,
                 $line
             );
-        }
-        if ($return !== null) {
-            try {
-                $this->return = $controllerName->__toString()::return()->__invoke($return);
-            } catch (Throwable $e) {
-                throw new ActionException(
-                    (string) message(
-                        'Argument `%argument%` value is not compatible with return type defined in %controller%::return() method',
-                        argument: '$return',
-                        controller: $controllerName
-                    ),
-                    $e,
-                    $file,
-                    $line
-                );
-            }
-        } else {
-            $this->return = null;
         }
 
         parent::__construct($message, $code, $previous);

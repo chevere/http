@@ -15,7 +15,6 @@ namespace Chevere\Http;
 
 use BadMethodCallException;
 use Chevere\Action\Controller as BaseController;
-use Chevere\Action\Interfaces\ReflectionActionInterface;
 use Chevere\DataStructure\Interfaces\MapInterface;
 use Chevere\DataStructure\Map;
 use Chevere\Http\Exceptions\ControllerException;
@@ -228,7 +227,7 @@ abstract class Controller extends BaseController implements ControllerInterface
     /**
      * @infection-ignore-all
      */
-    protected function assertRuntime(ReflectionActionInterface $reflection): void
+    public function acceptRulesRuntime(): void
     {
         if (! isset($this->_query, $this->_bodyParsed, $this->_files)) {
             throw new LogicException('Server request not set. Did you forget to call withServerRequest() method?');

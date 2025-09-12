@@ -25,7 +25,7 @@ class ControllerWrongReturnControllerException extends Controller
         throw new ControllerException(return: false);
     }
 
-    public static function return(): IntParameterInterface
+    public static function acceptReturn(): IntParameterInterface
     {
         return int(min: 1);
     }
