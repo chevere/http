@@ -16,6 +16,7 @@ namespace Chevere\Http\Exceptions;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\ControllerName;
 use Chevere\Http\Interfaces\ControllerInterface;
+use Chevere\Parameter\Interfaces\ParameterInterface;
 use Exception;
 use Throwable;
 use function Chevere\Message\message;
@@ -23,13 +24,15 @@ use function Chevere\Message\message;
 /**
  * Exception thrown at HTTP Controller layer.
  *
- * This exception MUST be thrown from a class implementing ControllerInterface.
+ * This exception MUST be thrown from a concrete class implementing ControllerInterface.
+ * It provides a mechanism to return structured responses with appropriate HTTP
+ * status codes and optional return data.
  *
  * Dependencies should throw domain-specific exceptions. Controllers should
- * translate them to ControllerException with appropriate HTTP status codes.
+ * translate them to ControllerException with appropriate HTTP status codes
+ * and optional response data.
  *
- * Example:
- *
+ * @example Basic usage with status code
  * ```php
  * try {
  *     $user = $this->userService->findById($id);
@@ -37,26 +40,53 @@ use function Chevere\Message\message;
  *     throw new ControllerException('User not found', 404);
  * }
  * ```
+ *
+ * @example With return data for API responses
+ * ```php
+ * try {
+ *     $this->validator->validate($data);
+ * } catch (ValidationException $e) {
+ *     throw new ControllerException(
+ *         'Validation failed',
+ *         422,
+ *         $e,
+ *         ['errors' => $e->getErrors()]
+ *     );
+ * }
+ * ```
  */
 class ControllerException extends Exception
 {
+    private mixed $return;
+
+    private ParameterInterface $acceptReturn;
+
+    /**
+     * @param string $message Exception message describing the error
+     * @param int $code HTTP status code
+     * @param mixed $return Return value compatible with Controller context return
+     * @param class-string<ControllerInterface> $controller
+     * @throws ActionException When thrown from a class not implementing ControllerInterface
+     */
     public function __construct(
         string $message = '',
         int $code = 0,
         ?Throwable $previous = null,
+        mixed $return = null,
+        ?string $controller = null
     ) {
         /** @infection-ignore-all */
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         $file = $backtrace[0]['file'] ?? __FILE__;
         $line = $backtrace[0]['line'] ?? __LINE__;
-        $class = $backtrace[1]['class'] ?? '';
+        $controller = $controller ?? $backtrace[1]['class'] ?? '';
 
         try {
-            $controllerName = new ControllerName($class);
+            $controllerClass = (new ControllerName($controller))->__toString();
         } catch (Throwable $e) {
             throw new ActionException(
                 (string) message(
-                    '%self% must be thrown from a class implementing %interface%',
+                    'Exception `%self%` must be thrown from a class implementing `%interface%`',
                     self: self::class,
                     interface: ControllerInterface::class
                 ),
@@ -65,7 +95,27 @@ class ControllerException extends Exception
                 $line
             );
         }
-
+        $this->return = $return;
+        $this->acceptReturn = $controllerClass::reflection()->return();
         parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * @return mixed The return value "as-is" without validation
+     */
+    public function return(): mixed
+    {
+        return $this->return;
+    }
+
+    /**
+     * Validates and returns the return value according to Controller context
+     *
+     * @return mixed The asserted return value
+     * @throws ActionException If the return value is not compatible with the Controller context
+     */
+    public function assertReturn(): mixed
+    {
+        return $this->acceptReturn->__invoke($this->return);
     }
 }

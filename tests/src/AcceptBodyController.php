@@ -20,6 +20,10 @@ use function Chevere\Parameter\string;
 
 final class AcceptBodyController extends Controller
 {
+    public function __invoke(): void
+    {
+    }
+
     public static function acceptBody(): ArrayParameterInterface
     {
         return arrayp(

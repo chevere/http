@@ -31,8 +31,12 @@ final class ControllerExceptionTest extends TestCase
 
             throw new ControllerException();
         } catch (ActionException $e) {
+            $class = 'Chevere\Http\Exceptions\ControllerException';
+            $interface = 'Chevere\Http\Interfaces\ControllerInterface';
             $this->assertSame(
-                'Chevere\Http\Exceptions\ControllerException must be thrown from a class implementing Chevere\Http\Interfaces\ControllerInterface',
+                <<<PLAIN
+                Exception `{$class}` must be thrown from a class implementing `{$interface}`
+                PLAIN,
                 $e->getMessage()
             );
             $this->assertSame(InvalidArgumentException::class, $e->getPrevious()::class);

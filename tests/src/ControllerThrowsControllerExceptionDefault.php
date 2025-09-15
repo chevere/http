@@ -22,4 +22,8 @@ class ControllerThrowsControllerExceptionDefault extends Controller
     {
         throw new ControllerException();
     }
+
+    public function __invoke(): void
+    {
+    }
 }

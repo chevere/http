@@ -107,7 +107,12 @@ abstract class Controller extends BaseController implements ControllerInterface
                 $serverRequest->getQueryParams()
             );
         } catch (Throwable $e) {
-            throw new ControllerException('[HTTP query] ' . $e->getMessage(), 400, $e);
+            throw new ControllerException(
+                '[HTTP query] ' . $e->getMessage(),
+                400,
+                $e,
+                controller: static::class,
+            );
         }
 
         try {
@@ -138,7 +143,12 @@ abstract class Controller extends BaseController implements ControllerInterface
                     : ($parsedBody ?? [])
             );
         } catch (Throwable $e) {
-            throw new ControllerException('[HTTP body] ' . $e->getMessage(), 400, $e);
+            throw new ControllerException(
+                '[HTTP body] ' . $e->getMessage(),
+                400,
+                $e,
+                controller: static::class
+            );
         }
 
         try {
@@ -151,7 +161,12 @@ abstract class Controller extends BaseController implements ControllerInterface
                 $headers
             );
         } catch (Throwable $e) {
-            throw new ControllerException('[HTTP headers] ' . $e->getMessage(), 400, $e);
+            throw new ControllerException(
+                '[HTTP headers] ' . $e->getMessage(),
+                400,
+                $e,
+                controller: static::class
+            );
         }
         $new->_serverParams = new Map(...$serverRequest->getServerParams());
         $new->_attributes = new Map(...$serverRequest->getAttributes());

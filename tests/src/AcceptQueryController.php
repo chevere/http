@@ -20,6 +20,10 @@ use function Chevere\Parameter\string;
 
 final class AcceptQueryController extends Controller
 {
+    public function __invoke(): void
+    {
+    }
+
     public static function acceptQuery(): ArrayStringParameterInterface
     {
         return arrayString(

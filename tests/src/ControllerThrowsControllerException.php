@@ -23,4 +23,8 @@ class ControllerThrowsControllerException extends Controller
     {
         throw new ControllerException('test', 123, new Exception('previous'));
     }
+
+    public function __invoke(): void
+    {
+    }
 }

@@ -55,6 +55,7 @@ final class ControllerTest extends TestCase
     public function testAssertRuntime(): void
     {
         $controller = new AcceptController();
+
         $this->expectException(ControllerException::class);
         $this->expectExceptionMessage(<<<PLAIN
         Missing required argument(s): `foo`
