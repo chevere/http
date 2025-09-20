@@ -17,6 +17,7 @@ use BadMethodCallException;
 use Chevere\Action\Controller as BaseController;
 use Chevere\DataStructure\Interfaces\MapInterface;
 use Chevere\DataStructure\Map;
+use Chevere\DataStructure\Vector;
 use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Http\Interfaces\StatusInterface;
@@ -152,12 +153,24 @@ abstract class Controller extends BaseController implements ControllerInterface
         }
 
         try {
+            $acceptHeaders = $new::acceptHeaders()->parameters();
+            $parameterKeys = $acceptHeaders->keys();
+            $headerIndex = new Vector(...$parameterKeys);
+            $headerIndexLowercase = new Vector(
+                ...array_map('mb_strtolower', $parameterKeys)
+            );
             $headers = [];
             foreach (array_keys($serverRequest->getHeaders()) as $key) {
+                $lowercased = mb_strtolower($key);
+                $pos = $headerIndexLowercase->find($lowercased) ?? null;
+                if ($pos !== null) {
+                    /** @var string $key */
+                    $key = $headerIndex->get($pos);
+                }
                 $headers[$key] = $serverRequest->getHeaderLine($key);
             }
             $new->_headers = new ArgumentsString(
-                $new::acceptHeaders()->parameters(),
+                $acceptHeaders,
                 $headers
             );
         } catch (Throwable $e) {

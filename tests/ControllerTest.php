@@ -21,6 +21,7 @@ use Chevere\Http\Status;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Tests\src\AcceptBodyController;
 use Chevere\Tests\src\AcceptController;
+use Chevere\Tests\src\AcceptHeadersController;
 use Chevere\Tests\src\AcceptOptionalController;
 use Chevere\Tests\src\AcceptQueryController;
 use Chevere\Tests\src\JsonBodyController;
@@ -420,6 +421,24 @@ final class ControllerTest extends TestCase
         $this->assertSame(
             $expected,
             $controller->headers()->toArray()
+        );
+    }
+
+    public function testServerRequestHeadersAcceptHeaders(): void
+    {
+        $headers = [
+            'foo' => 'super',
+            'bar' => 'taldo',
+        ];
+        $serverRequest = new ServerRequest('GET', '/', headers: $headers);
+        $controller = (new AcceptHeadersController())->withServerRequest($serverRequest);
+        $this->assertSame(
+            $headers['foo'],
+            $controller->headers()->required('Foo')
+        );
+        $this->assertSame(
+            $headers['bar'],
+            $controller->headers()->required('Bar')
         );
     }
 
