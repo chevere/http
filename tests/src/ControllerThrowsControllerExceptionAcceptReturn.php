@@ -18,11 +18,16 @@ use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Parameter\Interfaces\IntParameterInterface;
 use function Chevere\Parameter\int;
 
-class ControllerWrongReturnControllerException extends Controller
+class ControllerThrowsControllerExceptionAcceptReturn extends Controller
 {
     public function __construct()
     {
         throw new ControllerException(return: false);
+    }
+
+    public function __invoke(): int
+    {
+        return 1;
     }
 
     public static function acceptReturn(): IntParameterInterface

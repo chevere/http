@@ -16,11 +16,13 @@ namespace Chevere\Tests;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Tests\src\ControllerThrowsControllerException;
+use Chevere\Tests\src\ControllerThrowsControllerExceptionAcceptReturn;
 use Chevere\Tests\src\ControllerThrowsControllerExceptionDefault;
 use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Throwable;
+use TypeError;
 
 final class ControllerExceptionTest extends TestCase
 {
@@ -67,6 +69,23 @@ final class ControllerExceptionTest extends TestCase
             $this->assertSame(123, $e->getCode());
             $this->assertInstanceOf(Exception::class, $e->getPrevious());
             $this->assertSame('previous', $e->getPrevious()->getMessage());
+        }
+    }
+
+    public function testWrongReturn(): void
+    {
+        try {
+            new ControllerThrowsControllerExceptionAcceptReturn();
+        } catch (ControllerException $e) {
+            $this->assertInstanceOf(ControllerException::class, $e);
+            $this->assertSame(false, $e->return());
+            $this->expectException(TypeError::class);
+            $this->expectExceptionMessage(
+                <<<PLAIN
+                Argument #1 (\$value) must be of type int, false given
+                PLAIN
+            );
+            $e->assertReturn();
         }
     }
 }
