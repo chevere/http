@@ -20,9 +20,9 @@ use Chevere\Http\Controller;
  *
  * @codeCoverageIgnore
  */
-final class NullController extends Controller
+class NullController extends Controller
 {
-    public function __invoke(): void
+    final public function __invoke(): void
     {
     }
 }
