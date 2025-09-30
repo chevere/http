@@ -16,6 +16,7 @@ namespace Chevere\Http\Exceptions;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\ControllerName;
 use Chevere\Http\Interfaces\ControllerInterface;
+use Chevere\Http\Interfaces\StatusCodesInterface;
 use Chevere\Parameter\Interfaces\ParameterInterface;
 use Exception;
 use Throwable;
@@ -70,7 +71,7 @@ class ControllerException extends Exception
      */
     public function __construct(
         string $message = '',
-        int $code = 0,
+        int $code = 500,
         ?Throwable $previous = null,
         mixed $return = null,
         ?string $controller = null
@@ -90,7 +91,17 @@ class ControllerException extends Exception
                     self: self::class,
                     interface: ControllerInterface::class
                 ),
-                $e,
+                $file,
+                $line,
+                $e
+            );
+        }
+        if (! array_key_exists($code, StatusCodesInterface::CODES)) {
+            throw new ActionException(
+                (string) message(
+                    'Status code `{{ code }}` is not a valid HTTP status code',
+                    code: $code
+                ),
                 $file,
                 $line
             );

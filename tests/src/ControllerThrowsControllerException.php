@@ -21,7 +21,11 @@ class ControllerThrowsControllerException extends Controller
 {
     public function __construct()
     {
-        throw new ControllerException('test', 123, new Exception('previous'));
+        throw new ControllerException(
+            message: 'test',
+            code: 400,
+            previous: new Exception('previous')
+        );
     }
 
     public function __invoke(): void

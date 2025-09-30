@@ -54,7 +54,7 @@ final class ControllerExceptionTest extends TestCase
         } catch (Throwable $e) {
             $this->assertInstanceOf(ControllerException::class, $e);
             $this->assertSame('', $e->getMessage());
-            $this->assertSame(0, $e->getCode());
+            $this->assertSame(500, $e->getCode());
             $this->assertNull($e->getPrevious());
         }
     }
@@ -66,7 +66,7 @@ final class ControllerExceptionTest extends TestCase
         } catch (Throwable $e) {
             $this->assertInstanceOf(ControllerException::class, $e);
             $this->assertSame('test', $e->getMessage());
-            $this->assertSame(123, $e->getCode());
+            $this->assertSame(400, $e->getCode());
             $this->assertInstanceOf(Exception::class, $e->getPrevious());
             $this->assertSame('previous', $e->getPrevious()->getMessage());
         }
