@@ -22,7 +22,6 @@ use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Throwable;
-use TypeError;
 
 final class ControllerExceptionTest extends TestCase
 {
@@ -78,11 +77,11 @@ final class ControllerExceptionTest extends TestCase
             new ControllerThrowsControllerExceptionAcceptReturn();
         } catch (ControllerException $e) {
             $this->assertInstanceOf(ControllerException::class, $e);
-            $this->assertSame(false, $e->return());
-            $this->expectException(TypeError::class);
+            $this->assertSame(0, $e->return());
+            $this->expectException(InvalidArgumentException::class);
             $this->expectExceptionMessage(
                 <<<PLAIN
-                Argument #1 (\$value) must be of type int, false given
+                Argument value provided `0` is less than `1`
                 PLAIN
             );
             $e->assertReturn();

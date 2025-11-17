@@ -103,7 +103,8 @@ class ControllerException extends Exception
                     code: $code
                 ),
                 $file,
-                $line
+                $line,
+                $previous,
             );
         }
         $this->return = $return;

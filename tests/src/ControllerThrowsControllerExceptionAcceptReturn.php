@@ -22,7 +22,7 @@ class ControllerThrowsControllerExceptionAcceptReturn extends Controller
 {
     public function __construct()
     {
-        throw new ControllerException(return: false);
+        throw new ControllerException(return: 0);
     }
 
     public function __invoke(): int
