@@ -16,6 +16,9 @@ namespace Chevere\Http\Traits;
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
 use Chevere\Http\MiddlewareName;
 
+/**
+ * @phpstan-ignore-next-line
+ */
 trait MiddlewareNameWithArgumentsTrait
 {
     public static function middlewareName(mixed ...$arguments): MiddlewareNameInterface
