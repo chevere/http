@@ -24,7 +24,7 @@
         "psr/http-server-middleware": "^1"
     },
     "require-dev": {
-        "chevere/var-dump": "^2.0.6",
+        "chevere/var-dump": "^2.0",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9.5",
         "symplify/easy-coding-standard": "^12.1"
