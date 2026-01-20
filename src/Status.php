@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Chevere\Http;
 
 use Chevere\Http\Interfaces\StatusInterface;
-use Chevere\Parameter\Cast;
-use Chevere\Parameter\Interfaces\CastInterface;
+use Chevere\Parameter\Interfaces\TypedInterface;
+use Chevere\Parameter\Typed;
 use Iterator;
 use RuntimeException;
 use function Chevere\Message\message;
@@ -44,12 +44,12 @@ class Status implements StatusInterface
         $this->codes = $code;
     }
 
-    public function success(): CastInterface
+    public function success(): TypedInterface
     {
-        return new Cast($this->success);
+        return new Typed($this->success);
     }
 
-    public function code(string $name): CastInterface
+    public function code(string $name): TypedInterface
     {
         $return = array_key_exists($name, $this->codes)
             ? $this->codes[$name]
@@ -60,7 +60,7 @@ class Status implements StatusInterface
                 )
             );
 
-        return new Cast($return);
+        return new Typed($return);
     }
 
     public function codes(): array

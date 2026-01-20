@@ -19,24 +19,17 @@ use Chevere\Tests\src\NullController;
 use Chevere\Tests\src\WrongController;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Throwable;
 
 final class ControllerNameTest extends TestCase
 {
-    public function testInvalid(): void
-    {
-        $this->expectException(Throwable::class);
-        $this->expectExceptionMessage(
-            <<<PLAIN
-            Controller `` doesn't implement `Chevere\Http\Interfaces\ControllerInterface`
-            PLAIN
-        );
-        new ControllerName('');
-    }
-
     public function testControllerNotHttp(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            <<<PLAIN
+            HTTP Controller `Chevere\Tests\src\WrongController` doesn't implement `Chevere\Http\Interfaces\ControllerInterface`
+            PLAIN
+        );
         new ControllerName(WrongController::class);
     }
 

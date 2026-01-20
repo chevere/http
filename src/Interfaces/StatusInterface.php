@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Http\Interfaces;
 
-use Chevere\Parameter\Interfaces\CastInterface;
+use Chevere\Parameter\Interfaces\TypedInterface;
 use IteratorAggregate;
 
 /**
@@ -24,12 +24,12 @@ interface StatusInterface extends IteratorAggregate
     /**
      * Provides access to the success status code.
      */
-    public function success(): CastInterface;
+    public function success(): TypedInterface;
 
     /**
      * Provides access to named codes.
      */
-    public function code(string $name): CastInterface;
+    public function code(string $name): TypedInterface;
 
     /**
      * @return array<int|string>

@@ -26,9 +26,9 @@ use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArgumentsStringInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
-use Chevere\Parameter\Interfaces\CastInterface;
 use Chevere\Parameter\Interfaces\ParameterInterface;
 use Chevere\Parameter\Interfaces\ParametersAccessInterface;
+use Chevere\Parameter\Interfaces\TypedInterface;
 use LogicException;
 use PhpParser\Builder\Param;
 use Psr\Http\Message\ResponseInterface;
@@ -39,8 +39,8 @@ use Throwable;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
-use function Chevere\Parameter\cast;
 use function Chevere\Parameter\mixed;
+use function Chevere\Parameter\typed;
 
 abstract class Controller extends BaseController implements ControllerInterface
 {
@@ -201,9 +201,9 @@ abstract class Controller extends BaseController implements ControllerInterface
             ?? throw new BadMethodCallException();
     }
 
-    final public function body(): CastInterface
+    final public function body(): TypedInterface
     {
-        return cast($this->_body);
+        return typed($this->_body);
     }
 
     final public function bodyStream(): StreamInterface

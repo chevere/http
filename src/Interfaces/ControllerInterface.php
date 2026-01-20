@@ -19,8 +19,8 @@ use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArgumentsStringInterface;
 use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
-use Chevere\Parameter\Interfaces\CastInterface;
 use Chevere\Parameter\Interfaces\ParameterInterface;
+use Chevere\Parameter\Interfaces\TypedInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -110,7 +110,7 @@ interface ControllerInterface extends BaseControllerInterface
     /**
      * Provides access to the body variable (typed).
      */
-    public function body(): CastInterface;
+    public function body(): TypedInterface;
 
     /**
      * Provides access to the files uploaded in the request.
