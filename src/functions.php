@@ -25,11 +25,20 @@ use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionProperty;
 
+/**
+ * Returns a MiddlewareNameInterface (without arguments) instance.
+ */
 function middlewareName(string $name): MiddlewareNameInterface
 {
     return new MiddlewareNameWithoutArguments($name);
 }
 
+/**
+ * Returns a MiddlewaresInterface instance.
+ *
+ * @param string|MiddlewareNameInterface ...$middleware When passing a string
+ * it will be converted to MiddlewareNameWithArguments instance to assert setup.
+ */
 function middlewares(string|MiddlewareNameInterface ...$middleware): MiddlewaresInterface
 {
     foreach ($middleware as &$item) {
