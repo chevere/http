@@ -25,11 +25,16 @@ use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionProperty;
 
+function middlewareName(string $name): MiddlewareNameInterface
+{
+    return new MiddlewareNameWithoutArguments($name);
+}
+
 function middlewares(string|MiddlewareNameInterface ...$middleware): MiddlewaresInterface
 {
     foreach ($middleware as &$item) {
         if (is_string($item)) {
-            $item = new MiddlewareName($item);
+            $item = new MiddlewareNameWithArguments($item);
         }
     }
 

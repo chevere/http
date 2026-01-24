@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\Header;
-use Chevere\Http\MiddlewareName;
+use Chevere\Http\MiddlewareNameWithArguments;
 use Chevere\Http\Middlewares;
 use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\Middleware;
@@ -29,8 +29,8 @@ final class FunctionsTest extends TestCase
     public function testMiddlewares(): void
     {
         $middleware = Middleware::class;
-        $name1 = new MiddlewareName($middleware);
-        $name2 = new MiddlewareName($middleware);
+        $name1 = new MiddlewareNameWithArguments($middleware);
+        $name2 = new MiddlewareNameWithArguments($middleware);
         $middlewares = middlewares($middleware, $name2);
         $new = new Middlewares($name1, $name2);
         $this->assertEquals($new, $middlewares);

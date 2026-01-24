@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Tests;
 
-use Chevere\Http\MiddlewareName;
+use Chevere\Http\MiddlewareNameWithArguments;
 use Chevere\Tests\src\Middleware;
 use Chevere\Tests\src\MiddlewareAlt;
 use PHPUnit\Framework\TestCase;
@@ -25,13 +25,13 @@ final class MiddlewareNameTest extends TestCase
     public function testInvalid(): void
     {
         $this->expectException(Throwable::class);
-        new MiddlewareName('');
+        new MiddlewareNameWithArguments('');
     }
 
     public function testConstruct(): void
     {
         $middleware = Middleware::class;
-        $name = new MiddlewareName($middleware);
+        $name = new MiddlewareNameWithArguments($middleware);
         $this->assertSame($middleware, $name->__toString());
         $this->assertSame([], $name->arguments());
     }
@@ -40,7 +40,7 @@ final class MiddlewareNameTest extends TestCase
     {
         $middleware = Middleware::class;
         $arguments = ['arg1', 'arg2'];
-        $name = new MiddlewareName($middleware, ...$arguments);
+        $name = new MiddlewareNameWithArguments($middleware, ...$arguments);
         $this->assertSame([], $name->arguments());
     }
 
@@ -48,7 +48,7 @@ final class MiddlewareNameTest extends TestCase
     {
         $this->assertSame(
             MiddlewareInterface::class,
-            MiddlewareName::interface()
+            MiddlewareNameWithArguments::interface()
         );
     }
 
@@ -60,7 +60,7 @@ final class MiddlewareNameTest extends TestCase
         array $arguments,
         array $expectedArguments
     ): void {
-        $name = new MiddlewareName($middleware, ...$arguments);
+        $name = new MiddlewareNameWithArguments($middleware, ...$arguments);
         $this->assertSame($expectedArguments, $name->arguments());
     }
 

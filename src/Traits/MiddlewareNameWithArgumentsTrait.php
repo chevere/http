@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Http\Traits;
 
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
-use Chevere\Http\MiddlewareName;
+use Chevere\Http\MiddlewareNameWithArguments;
 
 /**
  * @phpstan-ignore-next-line
@@ -23,6 +23,6 @@ trait MiddlewareNameWithArgumentsTrait
 {
     public static function middlewareName(mixed ...$arguments): MiddlewareNameInterface
     {
-        return new MiddlewareName(static::class, ...$arguments); // @phpstan-ignore-line
+        return new MiddlewareNameWithArguments(static::class, ...$arguments); // @phpstan-ignore-line
     }
 }
