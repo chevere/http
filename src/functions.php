@@ -18,6 +18,7 @@ use Chevere\Http\Attributes\Request;
 use Chevere\Http\Attributes\Response;
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
 use Chevere\Http\Interfaces\MiddlewaresInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use ReflectionClass;
 use ReflectionClassConstant;
 use ReflectionFunction;
@@ -26,24 +27,26 @@ use ReflectionParameter;
 use ReflectionProperty;
 
 /**
- * Returns a MiddlewareNameInterface (without arguments) instance.
+ * Returns a MiddlewareNameInterface without setup assertion.
+ *
+ * @param class-string<MiddlewareInterface> $name The middleware class name.
  */
-function middlewareName(string $name): MiddlewareNameInterface
+function middlewareWithoutSetUp(string $name): MiddlewareNameInterface
 {
-    return new MiddlewareNameWithoutArguments($name);
+    return new MiddlewareNameWithoutSetUp($name);
 }
 
 /**
  * Returns a MiddlewaresInterface instance.
  *
  * @param string|MiddlewareNameInterface ...$middleware When passing a string
- * it will be converted to MiddlewareNameWithArguments instance to assert setup.
+ * it will be converted to MiddlewareNameWithSetUp instance to assert setup.
  */
 function middlewares(string|MiddlewareNameInterface ...$middleware): MiddlewaresInterface
 {
     foreach ($middleware as &$item) {
         if (is_string($item)) {
-            $item = new MiddlewareNameWithArguments($item);
+            $item = new MiddlewareNameWithSetUp($item);
         }
     }
 

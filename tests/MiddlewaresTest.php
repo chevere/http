@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
-use Chevere\Http\MiddlewareNameWithArguments;
+use Chevere\Http\MiddlewareNameWithSetUp;
 use Chevere\Http\Middlewares;
 use Chevere\Tests\src\Middleware;
 use Chevere\Tests\src\MiddlewareAlt;
@@ -32,8 +32,8 @@ final class MiddlewaresTest extends TestCase
     public function testConstructValues(): void
     {
         $middleware = Middleware::class;
-        $name = new MiddlewareNameWithArguments($middleware);
-        $nameAlt = new MiddlewareNameWithArguments($middleware);
+        $name = new MiddlewareNameWithSetUp($middleware);
+        $nameAlt = new MiddlewareNameWithSetUp($middleware);
         $middlewares = new Middlewares($name, $nameAlt);
         $this->assertCount(2, $middlewares);
         $this->assertSame([0, 1], $middlewares->keys());
@@ -46,8 +46,8 @@ final class MiddlewaresTest extends TestCase
 
     public function testWithAppend(): void
     {
-        $middlewareTest = new MiddlewareNameWithArguments(Middleware::class);
-        $middlewareAlt = new MiddlewareNameWithArguments(MiddlewareAlt::class);
+        $middlewareTest = new MiddlewareNameWithSetUp(Middleware::class);
+        $middlewareAlt = new MiddlewareNameWithSetUp(MiddlewareAlt::class);
         $middlewares = new Middlewares();
         $middlewaresWith = $middlewares->withAppend($middlewareTest, $middlewareAlt);
         $this->assertNotSame($middlewares, $middlewaresWith);
@@ -68,8 +68,8 @@ final class MiddlewaresTest extends TestCase
 
     public function testWithPrepend(): void
     {
-        $middlewareTest = new MiddlewareNameWithArguments(Middleware::class);
-        $middlewareAlt = new MiddlewareNameWithArguments(MiddlewareAlt::class);
+        $middlewareTest = new MiddlewareNameWithSetUp(Middleware::class);
+        $middlewareAlt = new MiddlewareNameWithSetUp(MiddlewareAlt::class);
         $middlewares = new Middlewares();
         $middlewaresWith = $middlewares->withPrepend($middlewareTest, $middlewareAlt);
         $this->assertNotSame($middlewares, $middlewaresWith);

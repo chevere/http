@@ -15,27 +15,30 @@ namespace Chevere\Http;
 
 use Chevere\Action\Traits\ActionNameTrait;
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
+use Chevere\Parameter\Arguments;
 use Psr\Http\Server\MiddlewareInterface;
+use ReflectionMethod;
+use function Chevere\Parameter\reflectionToParameters;
 
-final class MiddlewareNameWithoutArguments implements MiddlewareNameInterface
+final class MiddlewareNameWithSetUp implements MiddlewareNameInterface
 {
     use ActionNameTrait;
 
+    /**
+     * @param array<string|int, mixed> $arguments
+     */
     public function __construct(
-        /**
-         * @phpstan-ignore-next-line
-         */
         private string $name,
+        mixed ...$arguments
     ) {
         $this->onConstruct();
-    }
-
-    /**
-     * @return array<string|int, mixed>
-     */
-    public function arguments(): array
-    {
-        return [];
+        $this->arguments = [];
+        if (method_exists($this->name, 'setUp')) {
+            $parameters = reflectionToParameters(
+                new ReflectionMethod($this->name, 'setUp')
+            );
+            $this->arguments = (new Arguments($parameters, $arguments))->toArray();
+        }
     }
 
     public static function interface(): string
