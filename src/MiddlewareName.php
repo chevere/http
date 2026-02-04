@@ -20,7 +20,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use ReflectionMethod;
 use function Chevere\Parameter\reflectionToParameters;
 
-final class MiddlewareNameWithSetUp implements MiddlewareNameInterface
+final class MiddlewareName implements MiddlewareNameInterface
 {
     use ActionNameTrait;
 

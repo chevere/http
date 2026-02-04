@@ -31,9 +31,9 @@ use ReflectionProperty;
  *
  * @param class-string<MiddlewareInterface> $name The middleware class name.
  */
-function middlewareWithoutSetUp(string $name): MiddlewareNameInterface
+function middlewareNameOnly(string $name): MiddlewareNameInterface
 {
-    return new MiddlewareNameWithoutSetUp($name);
+    return new MiddlewareNameOnly($name);
 }
 
 /**
@@ -46,7 +46,7 @@ function middlewares(string|MiddlewareNameInterface ...$middleware): Middlewares
 {
     foreach ($middleware as &$item) {
         if (is_string($item)) {
-            $item = new MiddlewareNameWithSetUp($item);
+            $item = new MiddlewareName($item);
         }
     }
 

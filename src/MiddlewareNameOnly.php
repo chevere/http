@@ -17,7 +17,7 @@ use Chevere\Action\Traits\ActionNameTrait;
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
 use Psr\Http\Server\MiddlewareInterface;
 
-final class MiddlewareNameWithoutSetUp implements MiddlewareNameInterface
+final class MiddlewareNameOnly implements MiddlewareNameInterface
 {
     use ActionNameTrait;
 
