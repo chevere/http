@@ -13,15 +13,16 @@ declare(strict_types=1);
 
 namespace Chevere\Http\Interfaces;
 
+use Chevere\Action\Interfaces\ActionNameInterface;
 use Stringable;
 
 /**
  * Describes the component in charge of handling the middleware name.
  */
-interface MiddlewareNameInterface extends Stringable
+interface MiddlewareNameInterface extends ActionNameInterface, Stringable
 {
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function arguments(): array;
 }
