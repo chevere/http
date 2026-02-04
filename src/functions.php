@@ -27,7 +27,7 @@ use ReflectionParameter;
 use ReflectionProperty;
 
 /**
- * Returns a MiddlewareNameInterface without setup assertion.
+ * Create a MiddlewareNameInterface instance without setup assertion.
  *
  * @param class-string<MiddlewareInterface> $name The middleware class name.
  */
@@ -37,10 +37,12 @@ function middlewareNameOnly(string $name): MiddlewareNameInterface
 }
 
 /**
- * Returns a MiddlewaresInterface instance.
+ * Create a MiddlewaresInterface instance.
  *
- * @param string|MiddlewareNameInterface ...$middleware When passing a string
- * it will be converted to MiddlewareNameWithSetUp instance to assert setup.
+ * String arguments are converted to `MiddlewareName`, which asserts setup.
+ * Use `middlewareNameOnly($middleware)` to skip setup assertion.
+ *
+ * @param class-string<MiddlewareInterface>|MiddlewareNameInterface ...$middleware Middleware class name or instance.
  */
 function middlewares(string|MiddlewareNameInterface ...$middleware): MiddlewaresInterface
 {
