@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": "^8.1",
-        "chevere/action": "^2.1.x-dev",
+        "chevere/action": "^3.0.x-dev",
         "chevere/data-structure": "^1.1.1",
         "chevere/message": "^1.0.0",
         "chevere/parameter": "^2.0.x-dev",
@@ -55,7 +55,7 @@
         ],
         "infection": [
             "Composer\\Config::disableProcessTimeout",
-            "infection --only-covered -j10"
+            "infection -j10"
         ],
         "infection-filter": "sh -c 'sh -c \"composer infection -- --filter=$0 --test-framework-options=--filter=$0\"' $1",
         "phpstan": "vendor/bin/phpstan analyze src/ --memory-limit 512M --level 9",
