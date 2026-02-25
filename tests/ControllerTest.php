@@ -239,9 +239,10 @@ final class ControllerTest extends TestCase
             'Content-Type' => 'application/json',
         ]);
         $controller = new AcceptBodyUnionController();
-        $controller->withServerRequest(
+        $with = $controller->withServerRequest(
             $serverRequest
         );
+        $this->assertSame(null, $with->__invoke());
         $streamString = (new Stream(fopen('php://temp', 'r+')));
         $streamString->write(json_encode('123'));
         $with = $controller->withServerRequest(
@@ -249,6 +250,7 @@ final class ControllerTest extends TestCase
                 ->withBody($streamString)
         );
         $this->assertCount(0, $with->bodyParsed()->parameters());
+        $this->assertSame('123', $with->__invoke());
         $this->assertSame('123', $with->body()->string());
     }
 

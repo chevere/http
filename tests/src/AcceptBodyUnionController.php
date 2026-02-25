@@ -25,8 +25,9 @@ use function Chevere\Parameter\unionNull;
 )]
 final class AcceptBodyUnionController extends Controller
 {
-    public function __invoke(): void
+    public function __invoke(): ?string
     {
+        return $this->body()->nullString();
     }
 
     public static function acceptBody(): UnionParameterInterface
