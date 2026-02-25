@@ -20,6 +20,7 @@ use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Http\Status;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Tests\src\AcceptBodyController;
+use Chevere\Tests\src\AcceptBodyUnionController;
 use Chevere\Tests\src\AcceptController;
 use Chevere\Tests\src\AcceptHeadersController;
 use Chevere\Tests\src\AcceptOptionalController;
@@ -31,6 +32,7 @@ use Chevere\Tests\src\WithResponseAttributeStatusController;
 use Error;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Stream;
 use Nyholm\Psr7\UploadedFile;
 use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
@@ -229,6 +231,25 @@ final class ControllerTest extends TestCase
                     'bar' => 'error',
                 ])
         );
+    }
+
+    public function testAcceptBodyUnion(): void
+    {
+        $serverRequest = new ServerRequest('GET', '/', [
+            'Content-Type' => 'application/json',
+        ]);
+        $controller = new AcceptBodyUnionController();
+        $controller->withServerRequest(
+            $serverRequest
+        );
+        $streamString = (new Stream(fopen('php://temp', 'r+')));
+        $streamString->write(json_encode('123'));
+        $with = $controller->withServerRequest(
+            $serverRequest
+                ->withBody($streamString)
+        );
+        $this->assertCount(0, $with->bodyParsed()->parameters());
+        $this->assertSame('123', $with->body()->string());
     }
 
     public function testAcceptQueryBodyFiles(): void

@@ -29,6 +29,7 @@ use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ParameterInterface;
 use Chevere\Parameter\Interfaces\ParametersAccessInterface;
 use Chevere\Parameter\Interfaces\TypedInterface;
+use Chevere\Parameter\Interfaces\UnionParameterInterface;
 use LogicException;
 use PhpParser\Builder\Param;
 use Psr\Http\Message\ResponseInterface;
@@ -40,6 +41,7 @@ use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\mixed;
+use function Chevere\Parameter\parameters;
 use function Chevere\Parameter\typed;
 
 abstract class Controller extends BaseController implements ControllerInterface
@@ -123,26 +125,31 @@ abstract class Controller extends BaseController implements ControllerInterface
                 $parsedBody = (array) $parsedBody;
             }
             $new->_body = $parsedBody ?? null;
-            if (! $new->_body && $serverRequest->getHeaderLine('Content-Type') === 'application/json') {
-                $streamed = $new->_bodyStream->__toString();
-                $new->_body = json_decode($streamed, true);
-                if ($new->_body === null && $streamed !== '') {
-                    $new->_body = $streamed;
+            if ($serverRequest->getHeaderLine('Content-Type') === 'application/json') {
+                if (! $new->_body) {
+                    $streamed = $new->_bodyStream->__toString();
+                    $new->_body = json_decode($streamed, true);
+                    if ($new->_body === null && $streamed !== '') {
+                        $new->_body = $streamed;
+                    }
                 }
-            }
-            if ($new->_body === null) {
-                $new->_body = $streamed ?? $new->_bodyStream->__toString();
+            } elseif ($new->_body === null) {
+                $new->_body = $new->_bodyStream->__toString();
             }
             $acceptBody = $new::acceptBody();
-            $acceptBody = $acceptBody instanceof ParametersAccessInterface
-                ? $acceptBody->parameters()
-                : arrayp();
-            $new->_bodyParsed = arguments(
-                $acceptBody,
-                is_array($new->_body)
-                    ? $new->_body
-                    : ($parsedBody ?? [])
-            );
+            $new->_bodyParsed = arguments(parameters(), []);
+            if ($acceptBody instanceof UnionParameterInterface) {
+                $acceptBody->__invoke($new->_body);
+            } else {
+                if ($acceptBody instanceof ParametersAccessInterface) {
+                    $new->_bodyParsed = arguments(
+                        $acceptBody,
+                        is_array($new->_body)
+                            ? $new->_body
+                            : ($parsedBody ?? [])
+                    );
+                }
+            }
         } catch (Throwable $e) {
             throw new ControllerException(
                 '[HTTP body] ' . $e->getMessage(),
