@@ -75,6 +75,8 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     private ?StreamInterface $_bodyStream = null;
 
+    private ?ServerRequestInterface $_serverRequest = null;
+
     public static function acceptHeaders(): ArrayStringParameterInterface
     {
         return arrayString();
@@ -188,6 +190,7 @@ abstract class Controller extends BaseController implements ControllerInterface
                 controller: static::class
             );
         }
+        $new->_serverRequest = $serverRequest;
         $new->_serverParams = new Map(...$serverRequest->getServerParams());
         $new->_attributes = new Map(...$serverRequest->getAttributes());
         $new->_cookieParams = new Map(...$serverRequest->getCookieParams());
@@ -234,6 +237,12 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function files(): ArgumentsInterface
     {
         return $this->_files
+            ?? throw new BadMethodCallException();
+    }
+
+    final public function serverRequest(): ServerRequestInterface
+    {
+        return $this->_serverRequest
             ?? throw new BadMethodCallException();
     }
 
