@@ -27,16 +27,6 @@ use ReflectionParameter;
 use ReflectionProperty;
 
 /**
- * Create a MiddlewareNameInterface instance without setup assertion.
- *
- * @param class-string<MiddlewareInterface> $name The middleware class name.
- */
-function middlewareNameOnly(string $name): MiddlewareNameInterface
-{
-    return new MiddlewareNameOnly($name);
-}
-
-/**
  * Create a MiddlewaresInterface instance.
  *
  * String arguments are converted to `MiddlewareName`, which asserts setup.
@@ -53,6 +43,22 @@ function middlewares(string|MiddlewareNameInterface ...$middleware): Middlewares
     }
 
     /** @var array<MiddlewareNameInterface> $middleware */
+    return new Middlewares(...$middleware);
+}
+
+/**
+ * Create a MiddlewaresInterface instance for filtering purposes.
+ *
+ * String arguments are converted to `MiddlewareNameOnly` without setup assertion.
+ *
+ * @param class-string<MiddlewareInterface> ...$middleware Middleware class name
+ */
+function middlewareNames(string ...$middleware): MiddlewaresInterface
+{
+    foreach ($middleware as &$item) {
+        $item = new MiddlewareNameOnly($item);
+    }
+
     return new Middlewares(...$middleware);
 }
 
