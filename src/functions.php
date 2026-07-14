@@ -55,11 +55,12 @@ function middlewares(string|MiddlewareNameInterface ...$middleware): Middlewares
  */
 function middlewareNames(string ...$middleware): MiddlewaresInterface
 {
-    foreach ($middleware as &$item) {
-        $item = new MiddlewareNameOnly($item);
+    $resolved = [];
+    foreach ($middleware as $item) {
+        $resolved[] = new MiddlewareNameOnly($item);
     }
 
-    return new Middlewares(...$middleware);
+    return new Middlewares(...$resolved);
 }
 
 /**
