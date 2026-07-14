@@ -169,7 +169,7 @@ final class ControllerTest extends TestCase
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage(
             <<<PLAIN
-            [HTTP headers] Missing required argument(s): `Content-Type, X-Custom-Header`
+            [HTTP headers] Missing required argument(s): `Content-Type`, `X-Custom-Header`
             PLAIN
         );
         $controller->withServerRequest(
