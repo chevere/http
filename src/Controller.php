@@ -31,7 +31,6 @@ use Chevere\Parameter\Interfaces\ParametersAccessInterface;
 use Chevere\Parameter\Interfaces\TypedInterface;
 use Chevere\Parameter\Interfaces\UnionParameterInterface;
 use LogicException;
-use PhpParser\Builder\Param;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -194,7 +193,7 @@ abstract class Controller extends BaseController implements ControllerInterface
         $new->_serverParams = new Map(...$serverRequest->getServerParams());
         $new->_attributes = new Map(...$serverRequest->getAttributes());
         $new->_cookieParams = new Map(...$serverRequest->getCookieParams());
-        $new->setFiles($serverRequest->getUploadedFiles());
+        $new->setFiles(...$serverRequest->getUploadedFiles());
 
         return $new;
     }
@@ -278,16 +277,15 @@ abstract class Controller extends BaseController implements ControllerInterface
         }
     }
 
-    /**
-     * @param array<string, UploadedFileInterface> $files
-     */
-    protected function setFiles(array $files): void
+    protected function setFiles(UploadedFileInterface ...$files): void
     {
         $arguments = [];
         $parameters = $this->acceptFiles()->parameters();
         foreach ($files as $key => $file) {
             $key = strval($key);
-            $parameters->assertHas($key);
+            if (! $parameters->has($key)) {
+                continue;
+            }
             $array = [
                 'error' => $file->getError(),
                 'name' => $file->getClientFilename(),
