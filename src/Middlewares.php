@@ -22,12 +22,10 @@ use Psr\Http\Server\MiddlewareInterface;
 
 final class Middlewares implements MiddlewaresInterface
 {
-    use VectorTrait;
-
     /**
-     * @var VectorInterface<MiddlewareNameInterface>
+     * @template-use VectorTrait<MiddlewareNameInterface>
      */
-    private VectorInterface $vector;
+    use VectorTrait;
 
     /**
      * @var VectorInterface<class-string<MiddlewareInterface>>

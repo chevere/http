@@ -19,6 +19,9 @@ use Chevere\Http\Interfaces\HeadersInterface;
 
 final class Headers implements HeadersInterface
 {
+    /**
+     * @template-use VectorTrait<Header>
+     */
     use VectorTrait;
 
     public function __construct(Header ...$header)

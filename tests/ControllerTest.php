@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Chevere\Tests;
 
-use ArgumentCountError;
 use BadMethodCallException;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\Exceptions\ControllerException;
@@ -29,12 +28,10 @@ use Chevere\Tests\src\JsonBodyController;
 use Chevere\Tests\src\NullController;
 use Chevere\Tests\src\WithoutResponseAttributeStatusController;
 use Chevere\Tests\src\WithResponseAttributeStatusController;
-use Error;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Stream;
 use Nyholm\Psr7\UploadedFile;
-use OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\mixed;
@@ -99,6 +96,13 @@ final class ControllerTest extends TestCase
         $controller->{$method}();
     }
 
+    public function testWithServerRequest(): void
+    {
+        $serverRequest = new ServerRequest('GET', '/');
+        $controller = (new NullController())->withServerRequest($serverRequest);
+        $this->assertSame($serverRequest, $controller->serverRequest());
+    }
+
     public function testWithServerParams(): void
     {
         $serverParams = [
@@ -108,7 +112,8 @@ final class ControllerTest extends TestCase
         $controller = (new NullController())->withServerRequest($serverRequest);
         $this->assertSame(
             $serverParams,
-            $controller->serverParams()->toArray()
+            $controller->serverParams()
+                ->toArray()
         );
     }
 
@@ -154,15 +159,18 @@ final class ControllerTest extends TestCase
                 'Content-Type' => 'application/json',
                 'X-Custom-Header' => 'value',
             ],
-            $controllerWith->headers()->toArray()
+            $controllerWith->headers()
+                ->toArray()
         );
         $this->assertSame(
             'application/json',
-            $controllerWith->headers()->required('Content-Type')
+            $controllerWith->headers()
+                ->required('Content-Type')
         );
         $this->assertSame(
             'value',
-            $controllerWith->headers()->required('X-Custom-Header')
+            $controllerWith->headers()
+                ->required('X-Custom-Header')
         );
         $this->assertNotSame($controller, $controllerWith);
         $this->expectException(ControllerException::class);
@@ -317,12 +325,14 @@ final class ControllerTest extends TestCase
             ->withServerRequest(
                 $serverRequest->withAttribute('foo', 'bar')
             );
-        $controller->attributes()->get('foo');
+        $controller->attributes()
+            ->get('foo');
         $this->assertSame(
             [
                 'foo' => 'bar',
             ],
-            $controller->attributes()->toArray()
+            $controller->attributes()
+                ->toArray()
         );
     }
 
@@ -357,20 +367,32 @@ final class ControllerTest extends TestCase
                 ->withUploadedFiles([
                     'myFile' => $myFile,
                     'myImage' => $myImage,
+                    'ignore' => $myImage,
                 ])
         );
-
+        $this->assertSame(
+            [
+                'myFile',
+                'myImage',
+            ],
+            $controllerWith->files()
+                ->parameters()
+                ->keys()
+        );
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
-        $theFile = $controllerWith->files()->required('myFile');
-        $theImage = $controllerWith->files()->optional('myImage');
+        $theFile = $controllerWith->files()
+            ->required('myFile');
+        $theImage = $controllerWith->files()
+            ->optional('myImage');
         $this->assertSame(
             [
                 'error' => $myFile->getError(),
                 'name' => $myFile->getClientFilename(),
                 'type' => $myFile->getClientMediaType(),
                 'size' => $myFile->getSize(),
-                'tmp_name' => $myFile->getStream()->getMetadata('uri'),
+                'tmp_name' => $myFile->getStream()
+                    ->getMetadata('uri'),
             ],
             $theFile->array()
         );
@@ -380,39 +402,12 @@ final class ControllerTest extends TestCase
                 'name' => $myImage->getClientFilename(),
                 'type' => $myImage->getClientMediaType(),
                 'size' => $myImage->getSize(),
-                'tmp_name' => $myImage->getStream()->getMetadata('uri'),
+                'tmp_name' => $myImage->getStream()
+                    ->getMetadata('uri'),
             ],
             $theImage->array()
         );
     }
-
-    // public function testAcceptFileInvalidArgument(): void
-    // {
-    //     $controller = new AcceptController();
-    //     $this->expectException(ArgumentCountError::class);
-    //     $this->expectExceptionMessage('Missing required argument(s): `error, name, size, type, tmp_name`');
-    //     $controller->withFiles([
-    //         'myFile' => [],
-    //     ]);
-    // }
-
-    // public function testAcceptFileMissingKey(): void
-    // {
-    //     $serverRequest = new ServerRequest('GET', '/');
-    //     $controller = new AcceptController();
-    //     // $this->expectException(OutOfBoundsException::class);
-    //     // $this->expectExceptionMessage('Missing key(s) `404`');
-    //     $controller->withServerRequest(
-    //         $serverRequest
-    //             ->withQueryParams([
-    //                 'foo' => 'abc',
-    //             ])
-    //             ->withParsedBody([
-    //                 'bar' => '123',
-    //             ])
-    //             ->withUploadedFiles([])
-    //     );
-    // }
 
     public function testTerminate(): void
     {
@@ -443,7 +438,8 @@ final class ControllerTest extends TestCase
         $controller = (new NullController())->withServerRequest($serverRequest);
         $this->assertSame(
             $expected,
-            $controller->headers()->toArray()
+            $controller->headers()
+                ->toArray()
         );
     }
 
@@ -457,11 +453,13 @@ final class ControllerTest extends TestCase
         $controller = (new AcceptHeadersController())->withServerRequest($serverRequest);
         $this->assertSame(
             $headers['foo'],
-            $controller->headers()->required('Foo')
+            $controller->headers()
+                ->required('Foo')
         );
         $this->assertSame(
             $headers['bar'],
-            $controller->headers()->required('Bar')
+            $controller->headers()
+                ->required('Bar')
         );
     }
 
@@ -476,7 +474,8 @@ final class ControllerTest extends TestCase
         $controller = (new NullController())->withServerRequest($serverRequest);
         $this->assertSame(
             $cookieParams,
-            $controller->cookieParams()->toArray()
+            $controller->cookieParams()
+                ->toArray()
         );
     }
 

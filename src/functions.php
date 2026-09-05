@@ -49,7 +49,7 @@ function middlewares(string|MiddlewareNameInterface ...$middleware): Middlewares
 /**
  * Create a MiddlewaresInterface instance for filtering purposes.
  *
- * String arguments are converted to `MiddlewareNameOnly` without setup assertion.
+ * String arguments are converted to `MiddlewareNameWithoutSetup`.
  *
  * @param class-string<MiddlewareInterface> ...$middleware Middleware class name
  */
@@ -57,7 +57,7 @@ function middlewareNames(string ...$middleware): MiddlewaresInterface
 {
     $resolved = [];
     foreach ($middleware as $item) {
-        $resolved[] = new MiddlewareNameOnly($item);
+        $resolved[] = new MiddlewareNameWithoutSetup($item);
     }
 
     return new Middlewares(...$resolved);

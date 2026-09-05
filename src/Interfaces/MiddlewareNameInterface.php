@@ -21,8 +21,4 @@ use Stringable;
  */
 interface MiddlewareNameInterface extends ActionNameInterface, Stringable
 {
-    /**
-     * @return array<string, mixed>
-     */
-    public function arguments(): array;
 }
