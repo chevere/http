@@ -79,8 +79,8 @@ class Status implements StatusInterface
         }
     }
 
-    public function toArray(): array
+    public function count(): int
     {
-        return iterator_to_array($this->getIterator());
+        return 1 + count($this->codes);
     }
 }

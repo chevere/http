@@ -13,14 +13,11 @@ declare(strict_types=1);
 
 namespace Chevere\Http;
 
-use Chevere\DataStructure\Interfaces\VectoredInterface;
 use Chevere\DataStructure\Traits\VectorTrait;
 use Chevere\DataStructure\Vector;
+use Chevere\Http\Interfaces\HeadersInterface;
 
-/**
- * @implements VectoredInterface<Header>
- */
-final class Headers implements VectoredInterface
+final class Headers implements HeadersInterface
 {
     use VectorTrait;
 
@@ -35,7 +32,7 @@ final class Headers implements VectoredInterface
     public function toLines(): array
     {
         $return = [];
-        foreach ($this->getIterator() as $header) {
+        foreach ($this as $header) {
             $return[] = $header->line;
         }
 
@@ -48,7 +45,7 @@ final class Headers implements VectoredInterface
     public function toArray(): array
     {
         $return = [];
-        foreach ($this->getIterator() as $header) {
+        foreach ($this as $header) {
             $return[$header->name] = $header->value;
         }
 

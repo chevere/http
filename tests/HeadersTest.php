@@ -23,6 +23,9 @@ final class HeadersTest extends TestCase
     {
         $headers = new Headers();
         $this->assertCount(0, $headers);
+        $this->assertSame([], $headers->toLines());
+        $this->assertSame([], $headers->toArray());
+        $this->assertSame([], [...$headers]);
     }
 
     public function testHeaders(): void
@@ -31,13 +34,25 @@ final class HeadersTest extends TestCase
         $header2 = new Header('foo', 'baz');
         $headers = new Headers($header1, $header2);
         $this->assertCount(2, $headers);
-        $this->assertSame([
-            'foo: bar',
-            'foo: baz',
-        ], $headers->toLines());
-        $this->assertSame([
-            'foo' => 'bar',
-            'foo' => 'baz',
-        ], $headers->toArray());
+        $this->assertSame(
+            [
+                'foo: bar',
+                'foo: baz',
+            ],
+            $headers->toLines()
+        );
+        $this->assertSame(
+            [
+                'foo' => 'baz',
+            ],
+            $headers->toArray()
+        );
+        $this->assertSame(
+            [
+                $header1,
+                $header2,
+            ],
+            [...$headers]
+        );
     }
 }

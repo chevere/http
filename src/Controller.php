@@ -280,7 +280,8 @@ abstract class Controller extends BaseController implements ControllerInterface
     protected function setFiles(UploadedFileInterface ...$files): void
     {
         $arguments = [];
-        $parameters = $this->acceptFiles()->parameters();
+        $parameters = $this->acceptFiles()
+            ->parameters();
         foreach ($files as $key => $file) {
             $key = strval($key);
             if (! $parameters->has($key)) {
@@ -291,7 +292,8 @@ abstract class Controller extends BaseController implements ControllerInterface
                 'name' => $file->getClientFilename(),
                 'type' => $file->getClientMediaType(),
                 'size' => $file->getSize(),
-                'tmp_name' => $file->getStream()->getMetadata('uri'),
+                'tmp_name' => $file->getStream()
+                    ->getMetadata('uri'),
             ];
             $arguments[$key] = $array;
         }

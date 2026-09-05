@@ -24,7 +24,7 @@ final class StatusTest extends TestCase
         $status = new Status();
         $this->assertSame(200, $status->success()->int());
         $this->assertSame([], $status->codes());
-        $this->assertSame([200], $status->toArray());
+        $this->assertSame([200], [...$status]);
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
@@ -39,7 +39,7 @@ final class StatusTest extends TestCase
         $status = new Status(200);
         $this->assertSame(200, $status->success()->int());
         $this->assertSame([], $status->codes());
-        $this->assertSame([200], $status->toArray());
+        $this->assertSame([200], [...$status]);
     }
 
     public function testPrimaryOverride(): void
@@ -47,7 +47,7 @@ final class StatusTest extends TestCase
         $status = new Status(200, 200);
         $this->assertSame(200, $status->success()->int());
         $this->assertSame([], $status->codes());
-        $this->assertSame([200], $status->toArray());
+        $this->assertSame([200], [...$status]);
     }
 
     public function testOther(): void
@@ -55,7 +55,7 @@ final class StatusTest extends TestCase
         $status = new Status(201, 400);
         $this->assertSame(201, $status->success()->int());
         $this->assertSame([400], $status->codes());
-        $this->assertSame([201, 400], $status->toArray());
+        $this->assertSame([201, 400], [...$status]);
     }
 
     public function testOtherOverride(): void
@@ -64,7 +64,7 @@ final class StatusTest extends TestCase
         $this->assertSame(200, $status->success()->int());
         $this->assertSame(400, $status->code('0')->int());
         $this->assertSame([400], $status->codes());
-        $this->assertSame([200, 400], $status->toArray());
+        $this->assertSame([200, 400], [...$status]);
     }
 
     public function testOtherNamed(): void
@@ -78,7 +78,7 @@ final class StatusTest extends TestCase
             ],
             $status->codes()
         );
-        $this->assertSame([200, 400, 404], $status->toArray());
+        $this->assertSame([200, 400, 404], [...$status]);
         $this->assertSame(400, $status->code('bad')->int());
         $this->assertSame(404, $status->code('notFound')->int());
     }

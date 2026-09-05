@@ -104,7 +104,7 @@ public static function acceptBody(): ArrayParameterInterface
 
 ### Accept Files
 
-Define accepted parameters for FILES using the `acceptFiles` method.
+Define accepted parameters for `$_FILES` using the `acceptFiles` method.
 
 ```php
 

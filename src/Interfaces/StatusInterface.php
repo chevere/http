@@ -14,12 +14,13 @@ declare(strict_types=1);
 namespace Chevere\Http\Interfaces;
 
 use Chevere\Parameter\Interfaces\TypedInterface;
+use Countable;
 use IteratorAggregate;
 
 /**
  * @extends IteratorAggregate<int|string>
  */
-interface StatusInterface extends IteratorAggregate
+interface StatusInterface extends IteratorAggregate, Countable
 {
     /**
      * Provides access to the success status code.
@@ -35,9 +36,4 @@ interface StatusInterface extends IteratorAggregate
      * @return array<int|string>
      */
     public function codes(): array;
-
-    /**
-     * @return array<int|string>
-     */
-    public function toArray(): array;
 }

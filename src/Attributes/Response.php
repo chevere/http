@@ -16,16 +16,13 @@ namespace Chevere\Http\Attributes;
 use Attribute;
 use Chevere\Http\Header;
 use Chevere\Http\Headers;
+use Chevere\Http\Interfaces\ResponseInterface;
 use Chevere\Http\Interfaces\StatusInterface;
 use Chevere\Http\Status;
 use Iterator;
-use IteratorAggregate;
 
-/**
- * @implements IteratorAggregate<string, StatusInterface|Header>
- */
 #[Attribute(Attribute::TARGET_CLASS)]
-final class Response implements IteratorAggregate
+final class Response implements ResponseInterface
 {
     public readonly Headers $headers;
 
@@ -47,11 +44,8 @@ final class Response implements IteratorAggregate
         }
     }
 
-    /**
-     * @return array<string, StatusInterface|Header>
-     */
-    public function toArray(): array
+    public function count(): int
     {
-        return iterator_to_array($this->getIterator());
+        return count($this->status) + count($this->headers);
     }
 }

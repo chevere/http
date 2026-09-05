@@ -80,7 +80,7 @@ class ControllerException extends Exception
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         $file = $backtrace[0]['file'] ?? __FILE__;
         $line = $backtrace[0]['line'] ?? __LINE__;
-        $controller = $controller ?? $backtrace[1]['class'] ?? '';
+        $controller ??= $backtrace[1]['class'] ?? '';
 
         try {
             $controllerClass = (new ControllerName($controller))->__toString();

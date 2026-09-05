@@ -39,14 +39,17 @@ final class RequestTest extends TestCase
         }
         $request = new Request(...$objects);
         $this->assertCount(count($headers), $request->headers);
-        $array =
+        $this->assertSame(
+            $expectLines,
+            $request->headers->toLines()
+        );
         $this->assertSame(
             $headers,
             $request->headers->toArray()
         );
         $this->assertSame(
-            $expectLines,
-            $request->headers->toLines()
+            $objects,
+            [...$request->headers]
         );
     }
 

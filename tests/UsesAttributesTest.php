@@ -56,14 +56,16 @@ final class UsesAttributesTest extends TestCase
             new Response($status, $headerDisposition, $headerType),
             $response
         );
-        $this->assertCount(3, $response);
+        $this->assertCount(4, $response);
+        $this->assertCount(2, $response->status);
+        $this->assertCount(2, $response->headers);
         $this->assertEquals(
             [
                 'status' => $status,
                 'Content-Disposition' => $headerDisposition,
                 'Content-Type' => $headerType,
             ],
-            $response->toArray()
+            [...$response]
         );
     }
 }

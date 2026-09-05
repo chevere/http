@@ -11,4 +11,15 @@
 
 declare(strict_types=1);
 
-return require __DIR__ . '/ecs-chevere.php';
+namespace Chevere\Http\Interfaces;
+
+use Chevere\Http\Header;
+use Countable;
+use IteratorAggregate;
+
+/**
+ * @extends IteratorAggregate<Header>
+ */
+interface HeadersInterface extends IteratorAggregate, Countable
+{
+}
