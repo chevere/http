@@ -104,6 +104,32 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function withServerRequest(ServerRequestInterface $serverRequest): static
     {
         $new = clone $this;
+        $errors = [];
+
+        try {
+            $acceptHeaders = $new::acceptHeaders()->parameters();
+            $parameterKeys = $acceptHeaders->keys();
+            $headerIndex = new Vector(...$parameterKeys);
+            $headerIndexLowercase = new Vector(
+                ...array_map('mb_strtolower', $parameterKeys)
+            );
+            $headers = [];
+            foreach (array_keys($serverRequest->getHeaders()) as $key) {
+                $lowercased = mb_strtolower($key);
+                $pos = $headerIndexLowercase->find($lowercased) ?? null;
+                if ($pos !== null) {
+                    /** @var string $key */
+                    $key = $headerIndex->get($pos);
+                }
+                $headers[$key] = $serverRequest->getHeaderLine($key);
+            }
+            $new->_headers = new ArgumentsString(
+                $acceptHeaders,
+                $headers
+            );
+        } catch (Throwable $e) {
+            $errors[] = $this->getHttpErrorMessage('headers', $e);
+        }
 
         try {
             $new->_query = new ArgumentsString(
@@ -111,12 +137,7 @@ abstract class Controller extends BaseController implements ControllerInterface
                 $serverRequest->getQueryParams()
             );
         } catch (Throwable $e) {
-            throw new ControllerException(
-                '[HTTP query] ' . $e->getMessage(),
-                400,
-                $e,
-                controller: static::class,
-            );
+            $errors[] = $this->getHttpErrorMessage('query', $e);
         }
 
         try {
@@ -152,40 +173,18 @@ abstract class Controller extends BaseController implements ControllerInterface
                 }
             }
         } catch (Throwable $e) {
-            throw new ControllerException(
-                '[HTTP body] ' . $e->getMessage(),
-                400,
-                $e,
-                controller: static::class
-            );
+            $errors[] = $this->getHttpErrorMessage('body', $e);
         }
 
         try {
-            $acceptHeaders = $new::acceptHeaders()->parameters();
-            $parameterKeys = $acceptHeaders->keys();
-            $headerIndex = new Vector(...$parameterKeys);
-            $headerIndexLowercase = new Vector(
-                ...array_map('mb_strtolower', $parameterKeys)
-            );
-            $headers = [];
-            foreach (array_keys($serverRequest->getHeaders()) as $key) {
-                $lowercased = mb_strtolower($key);
-                $pos = $headerIndexLowercase->find($lowercased) ?? null;
-                if ($pos !== null) {
-                    /** @var string $key */
-                    $key = $headerIndex->get($pos);
-                }
-                $headers[$key] = $serverRequest->getHeaderLine($key);
-            }
-            $new->_headers = new ArgumentsString(
-                $acceptHeaders,
-                $headers
-            );
+            $new->setFiles(...$serverRequest->getUploadedFiles());
         } catch (Throwable $e) {
+            $errors[] = $this->getHttpErrorMessage('files', $e);
+        }
+        if ($errors !== []) {
             throw new ControllerException(
-                '[HTTP headers] ' . $e->getMessage(),
-                400,
-                $e,
+                message: implode("\n", $errors),
+                code: 400,
                 controller: static::class
             );
         }
@@ -193,7 +192,6 @@ abstract class Controller extends BaseController implements ControllerInterface
         $new->_serverParams = new Map(...$serverRequest->getServerParams());
         $new->_attributes = new Map(...$serverRequest->getAttributes());
         $new->_cookieParams = new Map(...$serverRequest->getCookieParams());
-        $new->setFiles(...$serverRequest->getUploadedFiles());
 
         return $new;
     }
@@ -298,5 +296,21 @@ abstract class Controller extends BaseController implements ControllerInterface
             $arguments[$key] = $array;
         }
         $this->_files = arguments($parameters, $arguments);
+    }
+
+    private function getHttpErrorMessage(string $context, Throwable $e): string
+    {
+        $message = $e->getMessage();
+        $httpContext = "[http.{$context}]";
+        $errorMessage = preg_replace(
+            '/\[([^\]]+)\]:/',
+            $httpContext . ' [$1]:',
+            $message
+        ) ?? '';
+        if ($errorMessage === $message) {
+            $errorMessage = "{$httpContext} {$errorMessage}";
+        }
+
+        return $errorMessage;
     }
 }

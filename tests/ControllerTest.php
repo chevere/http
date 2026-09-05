@@ -177,7 +177,7 @@ final class ControllerTest extends TestCase
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage(
             <<<PLAIN
-            [HTTP headers] Missing required argument(s): `Content-Type`, `X-Custom-Header`
+            [http.headers] Missing required argument(s): `Content-Type`, `X-Custom-Header`
             PLAIN
         );
         $controller->withServerRequest(
@@ -202,7 +202,7 @@ final class ControllerTest extends TestCase
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage(
             <<<PLAIN
-            [HTTP query] [foo]: Argument value provided `123` doesn't match the regex `/^[a-z]+$/`
+            [http.query] [foo]: Argument value provided `123` doesn't match the regex `/^[a-z]+$/`
             PLAIN
         );
         $controller->withServerRequest(
@@ -230,7 +230,7 @@ final class ControllerTest extends TestCase
         $this->expectExceptionCode(400);
         $this->expectExceptionMessage(
             <<<PLAIN
-            [HTTP body] [bar]: Argument value provided `error` doesn't match the regex `/^[1-9]+$/`
+            [http.body] [bar]: Argument value provided `error` doesn't match the regex `/^[1-9]+$/`
             PLAIN
         );
         $controller->withServerRequest(
