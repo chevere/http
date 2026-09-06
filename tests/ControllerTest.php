@@ -16,7 +16,6 @@ namespace Chevere\Tests;
 use BadMethodCallException;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\Exceptions\ControllerException;
-use Chevere\Http\Status;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Tests\src\AcceptBodyController;
 use Chevere\Tests\src\AcceptBodyUnionController;
@@ -26,8 +25,6 @@ use Chevere\Tests\src\AcceptOptionalController;
 use Chevere\Tests\src\AcceptQueryController;
 use Chevere\Tests\src\JsonBodyController;
 use Chevere\Tests\src\NullController;
-use Chevere\Tests\src\WithoutResponseAttributeStatusController;
-use Chevere\Tests\src\WithResponseAttributeStatusController;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Stream;
@@ -72,7 +69,6 @@ final class ControllerTest extends TestCase
         $this->assertCount(0, $controller->acceptQuery()->parameters());
         $this->assertEquals(mixed(), $controller->acceptBody());
         $this->assertCount(0, $controller->acceptFiles()->parameters());
-        $this->assertEquals(new Status(), $controller->status());
     }
 
     public static function dataProviderDefaultsNull(): array
@@ -117,21 +113,6 @@ final class ControllerTest extends TestCase
             $controller->serverParams()
                 ->toArray()
         );
-    }
-
-    public function testStatus(): void
-    {
-        $controller = new AcceptController();
-        $status = new Status(200, 400);
-        $this->assertEquals(
-            $status,
-            $controller->status()
-        );
-        $this->assertEquals($status, $controller->status());
-        $controllerWithStatus = new WithResponseAttributeStatusController();
-        $this->assertSame(666, $controllerWithStatus->status()->code(0));
-        $controllerWithoutStatus = new WithoutResponseAttributeStatusController();
-        $this->assertSame(200, $controllerWithoutStatus->status()->code(0));
     }
 
     public function testAcceptHeaders(): void

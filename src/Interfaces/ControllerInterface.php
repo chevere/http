@@ -131,12 +131,6 @@ interface ControllerInterface extends BaseControllerInterface
     public function attributes(): MapInterface;
 
     /**
-     * Provides access to the response attribute (ResponseAttr)
-     * StatusInterface codes for the controller.
-     */
-    public function status(): StatusInterface;
-
-    /**
      * Define a method to handle terminated responses (e.g. set headers, redirects)
      * This method will be called at the end of the request lifecycle.
      */

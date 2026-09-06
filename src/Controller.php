@@ -20,7 +20,6 @@ use Chevere\DataStructure\Map;
 use Chevere\DataStructure\Vector;
 use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Http\Interfaces\ControllerInterface;
-use Chevere\Http\Interfaces\StatusInterface;
 use Chevere\Parameter\ArgumentsString;
 use Chevere\Parameter\Interfaces\ArgumentsInterface;
 use Chevere\Parameter\Interfaces\ArgumentsStringInterface;
@@ -67,8 +66,6 @@ abstract class Controller extends BaseController implements ControllerInterface
     private ?ArgumentsInterface $_bodyParsed = null;
 
     private ?ArgumentsInterface $_files = null;
-
-    private ?StatusInterface $_status = null;
 
     private mixed $_body = null;
 
@@ -253,16 +250,6 @@ abstract class Controller extends BaseController implements ControllerInterface
     {
         return $this->_attributes
             ?? throw new BadMethodCallException();
-    }
-
-    /**
-     * @infection-ignore-all False positive
-     */
-    final public function status(): StatusInterface
-    {
-        return $this->_status
-            ??= responseAttribute(static::class)?->status()
-            ?? new Status();
     }
 
     /**
