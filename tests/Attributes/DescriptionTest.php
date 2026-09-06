@@ -23,6 +23,7 @@ final class DescriptionTest extends TestCase
         $description = 'Test description';
         $attribute = new Description($description);
         $this->assertSame($description, $attribute->description);
+        $this->assertSame($description, $attribute->__toString());
     }
 
     public function testConstructDefault(): void

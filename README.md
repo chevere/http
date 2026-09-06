@@ -15,7 +15,6 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=chevere_http&metric=coverage)](https://sonarcloud.io/dashboard?id=chevere_http)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=chevere_http&metric=sqale_index)](https://sonarcloud.io/dashboard?id=chevere_http)
 [![CodeFactor](https://www.codefactor.io/repository/github/chevere/http/badge)](https://www.codefactor.io/repository/github/chevere/http)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b956754f8ff04aaa9ca24a6e4cc21661)](https://app.codacy.com/gh/chevere/http/dashboard)
 
 ## Summary
 
@@ -249,7 +248,7 @@ class AllowListMiddleware implements MiddlewareInterface
 }
 ```
 
-This allows to pass MiddlewareName with constructor arguments (as in when defining [routes](https://chevere.org/packages/router)):
+This allows to pass MiddlewareName with constructor arguments, as when defining [routes](https://chevere.org/packages/router):
 
 ```php
 $middlewareName = AllowListMiddleware::with('192.168.1.1');
@@ -257,11 +256,30 @@ $middlewareName = AllowListMiddleware::with('192.168.1.1');
 
 ## Attributes
 
-Use [attributes](https://www.php.net/manual/en/language.attributes.overview.php) to add context for [Controller](#controller) and [Middleware](#middleware).
+Use [attributes](https://www.php.net/manual/en/language.attributes.overview.php) to add context for [Controller](#controller) and [Middleware](#middleware). The context defined by the attributes is understood by the [Router](https://chevere.org/packages/router) and [Schwager](https://chevere.org/packages/schwager) packages, to hint status codes, headers and to generate HTTP API documentation.
+
+### Description
+
+Use the `Description` attribute to add a description explaining the purpose of a Controller or Middleware.
+
+```php
+use Chevere\Http\Attributes\Description;
+
+#[Description('This is a description')]
+class ResourceGetController extends Controller
+```
+
+Use function `descriptionAttribute` to read the `Description` attribute.
+
+```php
+use function Chevere\Http\descriptionAttribute;
+
+descriptionAttribute(ResourceGetController::class);
+```
 
 ### Request
 
-Request metadata can be defined using the `Request` attribute. It supports to define multiple Header arguments.
+Use the `Request` attribute to define request metadata for a Controller or Middleware. It supports to define multiple Header arguments.
 
 ```php
 use Chevere\Http\Attributes\Request;
@@ -275,17 +293,17 @@ use Chevere\Http\Controller;
 class ResourceGetController extends Controller
 ```
 
-Use function `getRequest` to read the `Request` attribute.
+Use function `requestAttribute` to read the `Request` attribute.
 
 ```php
-use function Chevere\Http\getRequest;
+use function Chevere\Http\requestAttribute;
 
-getRequest(ResourceGetController::class);
+requestAttribute(ResourceGetController::class);
 ```
 
 ### Response
 
-Response metadata can be defined using the `Response` attribute. It supports to define Status and multiple Header arguments.
+Use the `Response` attribute to define response metadata for a Controller or Middleware. It supports to define Status and multiple Header arguments.
 
 ```php
 use Chevere\Http\Attributes\Response;
@@ -293,24 +311,24 @@ use Chevere\Http\Header;
 use Chevere\Http\Controller;
 
 #[Response(
-    new Status(200),
+    new Status(200, error: 400),
     new Header('Content-Disposition', 'attachment'),
     new Header('Content-Type', 'application/json')
 )]
 class ResourceGetController extends Controller
 ```
 
-Use function `getResponse` to read the `Response` attribute.
+Use function `responseAttribute` to read the `Response` attribute.
 
 ```php
-use function Chevere\Http\getResponse;
+use function Chevere\Http\responseAttribute;
 
-getResponse(ResourceGetController::class);
+responseAttribute(ResourceGetController::class);
 ```
 
 ## Documentation
 
-Documentation is available at [chevere.org](https://chevere.org/packages/http).
+Documentation is available at [chevere.org/packages/http](https://chevere.org/packages/http).
 
 ## License
 

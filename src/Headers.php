@@ -15,6 +15,7 @@ namespace Chevere\Http;
 
 use Chevere\DataStructure\Traits\VectorTrait;
 use Chevere\DataStructure\Vector;
+use Chevere\Http\Interfaces\HeaderInterface;
 use Chevere\Http\Interfaces\HeadersInterface;
 
 final class Headers implements HeadersInterface
@@ -24,7 +25,7 @@ final class Headers implements HeadersInterface
      */
     use VectorTrait;
 
-    public function __construct(Header ...$header)
+    public function __construct(HeaderInterface ...$header)
     {
         $this->vector = new Vector(...$header);
     }
@@ -33,7 +34,7 @@ final class Headers implements HeadersInterface
     {
         $return = [];
         foreach ($this as $header) {
-            $return[] = $header->line;
+            $return[] = $header->__toString();
         }
 
         return $return;
@@ -43,7 +44,7 @@ final class Headers implements HeadersInterface
     {
         $return = [];
         foreach ($this as $header) {
-            $return[$header->name] = $header->value;
+            $return[$header->name()] = $header->value();
         }
 
         return $return;

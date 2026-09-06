@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Chevere\Http\Attributes;
 
 use Attribute;
-use Stringable;
+use Chevere\Http\Interfaces\DescriptionInterface;
 
 #[Attribute]
-class Description implements Stringable
+class Description implements DescriptionInterface
 {
     public function __construct(
         public readonly string $description = '',

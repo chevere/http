@@ -23,12 +23,12 @@ final class ResponseTest extends TestCase
     public function testConstructEmpty(): void
     {
         $response = new Response();
-        $this->assertSame(200, $response->status->success()->int());
+        $this->assertSame(200, $response->status()->success()->int());
         $status = new Status();
         $this->assertCount(1, $response);
-        $this->assertCount(1, $response->status);
-        $this->assertCount(0, $response->headers);
-        $this->assertEquals($status, $response->status);
+        $this->assertCount(1, $response->status());
+        $this->assertCount(0, $response->headers());
+        $this->assertEquals($status, $response->status());
         $this->assertEquals(
             [
                 'status' => $status,
@@ -43,9 +43,9 @@ final class ResponseTest extends TestCase
         $headerDisposition = new Header('Content-Disposition', 'attachment');
         $response = new Response($status, $headerDisposition);
         $this->assertCount(2, $response);
-        $this->assertCount(1, $response->status);
-        $this->assertCount(1, $response->headers);
-        $this->assertEquals($status, $response->status);
+        $this->assertCount(1, $response->status());
+        $this->assertCount(1, $response->headers());
+        $this->assertEquals($status, $response->status());
         $this->assertEquals(
             [
                 'status' => $status,

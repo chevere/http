@@ -261,7 +261,7 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function status(): StatusInterface
     {
         return $this->_status
-            ??= responseAttribute(static::class)->status
+            ??= responseAttribute(static::class)?->status()
             ?? new Status();
     }
 

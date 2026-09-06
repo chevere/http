@@ -17,6 +17,8 @@ use Chevere\Http\Attributes\Description;
 use Chevere\Http\Attributes\Request;
 use Chevere\Http\Attributes\Response;
 use Chevere\Http\Header;
+use Chevere\Http\Interfaces\RequestInterface;
+use Chevere\Http\Interfaces\ResponseInterface;
 use Chevere\Http\MiddlewareName;
 use Chevere\Http\MiddlewareNameWithoutSetup;
 use Chevere\Http\Middlewares;
@@ -69,7 +71,7 @@ final class FunctionsTest extends TestCase
     public function testRequestAttribute(): void
     {
         $object = new #[Request(new Header('foo', 'bar'))] class() {
-            public function __invoke(): Request
+            public function __invoke(): RequestInterface
             {
                 return requestAttribute();
             }
@@ -77,7 +79,8 @@ final class FunctionsTest extends TestCase
         $this->assertSame(
             ['foo: bar'],
             $object->__invoke()
-                ->headers->toLines()
+                ->headers()
+                ->toLines()
         );
         $request = requestAttribute(NullController::class);
         $this->assertNull($request);
@@ -85,16 +88,17 @@ final class FunctionsTest extends TestCase
         $header = new Header('foo', 'bar');
         $this->assertEquals(
             [
-                $header->line,
+                $header->__toString(),
             ],
-            $request->headers->toLines()
+            $request->headers()
+                ->toLines()
         );
     }
 
     public function testResponseAttribute(): void
     {
         $object = new #[Response(new Status(204))] class() {
-            public function __invoke(): Response
+            public function __invoke(): ResponseInterface
             {
                 return responseAttribute();
             }
@@ -102,7 +106,8 @@ final class FunctionsTest extends TestCase
         $this->assertSame(
             204,
             $object->__invoke()
-                ->status->success()
+                ->status()
+                ->success()
                 ->int()
         );
         $response = responseAttribute(NullController::class);
@@ -115,11 +120,12 @@ final class FunctionsTest extends TestCase
         $contentType2 = new Header('Content-Type', 'multipart/form-data; boundary=something');
         $this->assertEquals(
             [
-                $contentDisposition->line,
-                $contentType->line,
-                $contentType2->line,
+                $contentDisposition->__toString(),
+                $contentType->__toString(),
+                $contentType2->__toString(),
             ],
-            $response->headers->toLines()
+            $response->headers()
+                ->toLines()
         );
     }
 

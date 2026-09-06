@@ -13,16 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Http\Interfaces;
 
-use Chevere\Http\Header;
-use Countable;
-use IteratorAggregate;
-
-/**
- * @extends IteratorAggregate<string, StatusInterface|Header>
- */
-interface ResponseInterface extends IteratorAggregate, Countable
+interface RequestInterface
 {
-    public function status(): StatusInterface;
-
     public function headers(): HeadersInterface;
 }

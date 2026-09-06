@@ -17,15 +17,21 @@ use Attribute;
 use Chevere\Http\Header;
 use Chevere\Http\Headers;
 use Chevere\Http\Interfaces\HeadersInterface;
+use Chevere\Http\Interfaces\RequestInterface;
 
 #[Attribute(Attribute::TARGET_CLASS)]
-final class Request
+final class Request implements RequestInterface
 {
-    public readonly HeadersInterface $headers;
+    private HeadersInterface $headers;
 
     public function __construct(
         Header ...$attribute,
     ) {
         $this->headers = new Headers(...$attribute);
+    }
+
+    public function headers(): HeadersInterface
+    {
+        return $this->headers;
     }
 }

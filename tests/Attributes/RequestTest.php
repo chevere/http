@@ -15,7 +15,6 @@ namespace Chevere\Tests\Attributes;
 
 use Chevere\Http\Attributes\Request;
 use Chevere\Http\Header;
-use Chevere\Http\Headers;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +23,7 @@ final class RequestTest extends TestCase
     public function testConstructEmpty(): void
     {
         $request = new Request();
-        $this->assertCount(0, $request->headers);
+        $this->assertCount(0, $request->headers());
     }
 
     #[DataProvider('provideConstructWithHeaders')]
@@ -37,18 +36,20 @@ final class RequestTest extends TestCase
             $objects[] = new Header($name, $header);
         }
         $request = new Request(...$objects);
-        $this->assertCount(count($headers), $request->headers);
+        $this->assertCount(count($headers), $request->headers());
         $this->assertSame(
             $expectLines,
-            $request->headers->toLines()
+            $request->headers()
+                ->toLines()
         );
         $this->assertSame(
             $headers,
-            $request->headers->toArray()
+            $request->headers()
+                ->toArray()
         );
         $this->assertSame(
             $objects,
-            [...$request->headers]
+            [...$request->headers()]
         );
     }
 
@@ -66,11 +67,5 @@ final class RequestTest extends TestCase
                 ],
             ],
         ];
-    }
-
-    public function testHeadersInstance(): void
-    {
-        $request = new Request();
-        $this->assertInstanceOf(Headers::class, $request->headers);
     }
 }

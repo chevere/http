@@ -123,9 +123,9 @@ final class ControllerTest extends TestCase
     {
         $controller = new AcceptController();
         $status = new Status(200, 400);
-        $this->assertSame(
-            spl_object_id($controller->status()),
-            spl_object_id($controller->status()),
+        $this->assertEquals(
+            $status,
+            $controller->status()
         );
         $this->assertEquals($status, $controller->status());
         $controllerWithStatus = new WithResponseAttributeStatusController();

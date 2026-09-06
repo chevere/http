@@ -15,6 +15,7 @@ namespace Chevere\Tests;
 
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\Exceptions\ControllerException;
+use Chevere\Tests\src\AcceptBodyController;
 use Chevere\Tests\src\ControllerThrowsControllerException;
 use Chevere\Tests\src\ControllerThrowsControllerExceptionAcceptReturn;
 use Chevere\Tests\src\ControllerThrowsControllerExceptionDefault;
@@ -37,7 +38,8 @@ final class ControllerExceptionTest extends TestCase
             $this->assertSame(
                 <<<PLAIN
                 Exception `{$class}` must be thrown from a class implementing `{$interface}`
-                PLAIN,
+                PLAIN
+                ,
                 $e->getMessage()
             );
             $this->assertSame(InvalidArgumentException::class, $e->getPrevious()::class);
@@ -86,5 +88,16 @@ final class ControllerExceptionTest extends TestCase
             );
             $e->assertReturn();
         }
+    }
+
+    public function testInvalidStatusCode(): void
+    {
+        $this->expectException(ActionException::class);
+        $this->expectExceptionMessage(
+            <<<PLAIN
+            Status code `900` is not a valid HTTP status code
+            PLAIN
+        );
+        new ControllerException('test', 900, null, null, AcceptBodyController::class);
     }
 }

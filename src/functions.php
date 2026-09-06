@@ -16,8 +16,11 @@ namespace Chevere\Http;
 use Chevere\Http\Attributes\Description;
 use Chevere\Http\Attributes\Request;
 use Chevere\Http\Attributes\Response;
+use Chevere\Http\Interfaces\DescriptionInterface;
 use Chevere\Http\Interfaces\MiddlewareNameInterface;
 use Chevere\Http\Interfaces\MiddlewaresInterface;
+use Chevere\Http\Interfaces\RequestInterface;
+use Chevere\Http\Interfaces\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use ReflectionClass;
 use ReflectionClassConstant;
@@ -64,11 +67,13 @@ function middlewareNames(string ...$middleware): MiddlewaresInterface
 }
 
 /**
- * Retrieves the Request attribute from the provided class name or the calling class.
+ * Retrieves the Request attribute from the provided class name or calling class.
+ *
+ * @param class-string|null $className The class to inspect, or null to use the calling class
  */
-function requestAttribute(string $className = ''): ?Request
+function requestAttribute(?string $className = null): ?RequestInterface
 {
-    if ($className === '') {
+    if ($className === null) {
         $className = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? '';
     }
     // @phpstan-ignore-next-line
@@ -79,11 +84,13 @@ function requestAttribute(string $className = ''): ?Request
 }
 
 /**
- * Retrieves the Response attribute from the provided class name or the calling class.
+ * Retrieves the Response attribute from the provided class name or calling class.
+ *
+ * @param class-string|null $className The class to inspect, or null to use the calling class
  */
-function responseAttribute(string $className = ''): ?Response
+function responseAttribute(?string $className = null): ?ResponseInterface
 {
-    if ($className === '') {
+    if ($className === null) {
         $className = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? '';
     }
     // @phpstan-ignore-next-line
@@ -94,11 +101,13 @@ function responseAttribute(string $className = ''): ?Response
 }
 
 /**
- * Retrieves the Description attribute from the provided class name or the calling class.
+ * Retrieves the Description attribute from the provided class name or calling class.
+ *
+ * @param class-string|null $className The class to inspect, or null to use the calling class
  */
-function descriptionAttribute(string $className = ''): ?Description
+function descriptionAttribute(?string $className = null): ?DescriptionInterface
 {
-    if ($className === '') {
+    if ($className === null) {
         $className = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? '';
     }
     // @phpstan-ignore-next-line

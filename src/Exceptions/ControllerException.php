@@ -29,10 +29,6 @@ use function Chevere\Message\message;
  * It provides a mechanism to return structured responses with appropriate HTTP
  * status codes and optional return data.
  *
- * Dependencies should throw domain-specific exceptions. Controllers should
- * translate them to ControllerException with appropriate HTTP status codes
- * and optional response data.
- *
  * @example Basic usage with status code
  * ```php
  * try {
@@ -48,10 +44,9 @@ use function Chevere\Message\message;
  *     $this->validator->validate($data);
  * } catch (ValidationException $e) {
  *     throw new ControllerException(
- *         'Validation failed',
- *         422,
- *         $e,
- *         ['errors' => $e->getErrors()]
+ *         message: 'Validation failed',
+ *         code: 422,
+ *         return: ['errors' => $e->getErrors()]
  *     );
  * }
  * ```
@@ -63,11 +58,12 @@ class ControllerException extends Exception
     private ParameterInterface $acceptReturn;
 
     /**
+     * @throws ActionException When thrown from a class not implementing ControllerInterface
+     *
      * @param string $message Exception message describing the error
      * @param int $code HTTP status code
-     * @param mixed $return Return value compatible with Controller context return
-     * @param class-string<ControllerInterface> $controller
-     * @throws ActionException When thrown from a class not implementing ControllerInterface
+     * @param mixed $return [optional] Return value compatible with Controller context return
+     * @param class-string<ControllerInterface> $controller [internal] You should not set this manually
      */
     public function __construct(
         string $message = '',
@@ -121,7 +117,7 @@ class ControllerException extends Exception
     }
 
     /**
-     * Validates and returns the return value according to Controller context
+     * Returns asserted return value according to Controller context
      *
      * @return mixed The asserted return value
      * @throws ActionException If the return value is not compatible with the Controller context

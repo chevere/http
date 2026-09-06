@@ -13,16 +13,14 @@ declare(strict_types=1);
 
 namespace Chevere\Http\Interfaces;
 
-use Chevere\Http\Header;
-use Countable;
-use IteratorAggregate;
+use Stringable;
 
 /**
- * @extends IteratorAggregate<string, StatusInterface|Header>
+ * Describes the component in charge of defining an HTTP header according to RFC 7230.
  */
-interface ResponseInterface extends IteratorAggregate, Countable
+interface HeaderInterface extends Stringable
 {
-    public function status(): StatusInterface;
+    public function name(): string;
 
-    public function headers(): HeadersInterface;
+    public function value(): string;
 }
