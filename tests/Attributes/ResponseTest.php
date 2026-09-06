@@ -23,7 +23,7 @@ final class ResponseTest extends TestCase
     public function testConstructEmpty(): void
     {
         $response = new Response();
-        $this->assertSame(200, $response->status()->success()->int());
+        $this->assertSame(200, $response->status()->code(0));
         $status = new Status();
         $this->assertCount(1, $response);
         $this->assertCount(1, $response->status());

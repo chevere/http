@@ -14,53 +14,50 @@ declare(strict_types=1);
 namespace Chevere\Http;
 
 use Chevere\Http\Interfaces\StatusInterface;
-use Chevere\Parameter\Interfaces\TypedInterface;
-use Chevere\Parameter\Typed;
 use Iterator;
-use RuntimeException;
-use function Chevere\Message\message;
+use OutOfBoundsException;
+use OverflowException;
 
 class Status implements StatusInterface
 {
     /**
-     * Maps name => code
-     * @var array<string|int, int|string>
+     * Maps additional codes
+     *
+     * @var array<string|int, int>
      */
     private array $codes;
 
     /**
-     * @param int|string $success The success status code, e.g. `200` or `2xx`
-     * @param int|string ...$code Additional status codes
+     * @param int $code The main status code
+     * @param int ...$additional Additional status codes
      */
     public function __construct(
-        private int|string $success = 200,
-        int|string ...$code
+        private int $code = 200,
+        int ...$additional
     ) {
-        $code = array_unique($code);
-        $search = array_search($success, $code, true);
-        if ($search !== false) {
-            unset($code[$search]);
+        $this->codes[0] = $code;
+        $index = 1;
+        foreach ($additional as $name => $value) {
+            if (array_search($value, $this->codes, true) !== false) {
+                throw new OverflowException(
+                    sprintf('Status `%s` is already defined', $value)
+                );
+            }
+            if (is_int($name)) {
+                $name = $index;
+            }
+            $this->codes[$name] = $value;
+            $index++;
         }
-        $this->codes = $code;
     }
 
-    public function success(): TypedInterface
+    public function code(string|int $name): int
     {
-        return new Typed($this->success);
-    }
-
-    public function code(string $name): TypedInterface
-    {
-        $return = array_key_exists($name, $this->codes)
+        return array_key_exists($name, $this->codes)
             ? $this->codes[$name]
-            : throw new RuntimeException(
-                (string) message(
-                    'Status `{{ name }}` is not defined',
-                    name: $name
-                )
+            : throw new OutOfBoundsException(
+                sprintf('Status `%s` is not defined', $name)
             );
-
-        return new Typed($return);
     }
 
     public function codes(): array
@@ -69,11 +66,10 @@ class Status implements StatusInterface
     }
 
     /**
-     * @return Iterator<int|string>
+     * @return Iterator<int>
      */
     public function getIterator(): Iterator
     {
-        yield $this->success;
         foreach ($this->codes as $status) {
             yield $status;
         }
@@ -81,6 +77,6 @@ class Status implements StatusInterface
 
     public function count(): int
     {
-        return 1 + count($this->codes);
+        return count($this->codes);
     }
 }

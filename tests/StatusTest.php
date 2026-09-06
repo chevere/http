@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\Status;
+use OverflowException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -22,8 +23,8 @@ final class StatusTest extends TestCase
     public function testDefault(): void
     {
         $status = new Status();
-        $this->assertSame(200, $status->success()->int());
-        $this->assertSame([], $status->codes());
+        $this->assertSame(200, $status->code(0));
+        $this->assertSame([200], $status->codes());
         $this->assertSame([200], [...$status]);
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
@@ -34,52 +35,59 @@ final class StatusTest extends TestCase
         $status->code('missing');
     }
 
-    public function testPrimary(): void
+    public function testCode(): void
     {
-        $status = new Status(200);
-        $this->assertSame(200, $status->success()->int());
-        $this->assertSame([], $status->codes());
-        $this->assertSame([200], [...$status]);
+        $status = new Status(204);
+        $this->assertSame(204, $status->code(0));
+        $this->assertSame([204], $status->codes());
+        $this->assertSame([204], [...$status]);
     }
 
-    public function testPrimaryOverride(): void
+    public function testCodeOverride(): void
     {
-        $status = new Status(200, 200);
-        $this->assertSame(200, $status->success()->int());
-        $this->assertSame([], $status->codes());
-        $this->assertSame([200], [...$status]);
+        $this->expectException(OverflowException::class);
+        $this->expectExceptionMessage(
+            <<<PLAIN
+            Status `200` is already defined
+            PLAIN
+        );
+        new Status(200, 200);
     }
 
-    public function testOther(): void
+    public function testAdditional(): void
     {
         $status = new Status(201, 400);
-        $this->assertSame(201, $status->success()->int());
-        $this->assertSame([400], $status->codes());
+        $this->assertSame(201, $status->code(0));
+        $this->assertSame(400, $status->code(1));
+        $this->assertSame([201, 400], $status->codes());
         $this->assertSame([201, 400], [...$status]);
     }
 
-    public function testOtherOverride(): void
+    public function testAdditionalOverride(): void
     {
-        $status = new Status(200, 400, 400);
-        $this->assertSame(200, $status->success()->int());
-        $this->assertSame(400, $status->code('0')->int());
-        $this->assertSame([400], $status->codes());
-        $this->assertSame([200, 400], [...$status]);
+        $this->expectException(OverflowException::class);
+        $this->expectExceptionMessage(
+            <<<PLAIN
+            Status `400` is already defined
+            PLAIN
+        );
+        new Status(200, 400, 400);
     }
 
-    public function testOtherNamed(): void
+    public function testAdditionalNamed(): void
     {
         $status = new Status(200, bad: 400, notFound: 404);
-        $this->assertSame(200, $status->success()->int());
         $this->assertSame(
             [
+                0 => 200,
                 'bad' => 400,
                 'notFound' => 404,
             ],
-            $status->codes()
+            $status->codes(),
         );
         $this->assertSame([200, 400, 404], [...$status]);
-        $this->assertSame(400, $status->code('bad')->int());
-        $this->assertSame(404, $status->code('notFound')->int());
+        $this->assertSame(200, $status->code(0));
+        $this->assertSame(400, $status->code('bad'));
+        $this->assertSame(404, $status->code('notFound'));
     }
 }

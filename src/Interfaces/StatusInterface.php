@@ -13,27 +13,24 @@ declare(strict_types=1);
 
 namespace Chevere\Http\Interfaces;
 
-use Chevere\Parameter\Interfaces\TypedInterface;
 use Countable;
 use IteratorAggregate;
+use OutOfBoundsException;
 
 /**
- * @extends IteratorAggregate<int|string>
+ * @extends IteratorAggregate<int>
  */
 interface StatusInterface extends IteratorAggregate, Countable
 {
     /**
-     * Provides access to the success status code.
+     * Provides access to named code.
+     *
+     * @throws OutOfBoundsException If the name is not defined
      */
-    public function success(): TypedInterface;
+    public function code(string|int $name): int;
 
     /**
-     * Provides access to named codes.
-     */
-    public function code(string $name): TypedInterface;
-
-    /**
-     * @return array<int|string>
+     * @return array<string|int, int>
      */
     public function codes(): array;
 }
