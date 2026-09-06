@@ -41,7 +41,7 @@ The Controller in Http is a special Controller meant to be used in the context o
 ```php
 use Chevere\Http\Controller;
 
-class UsersPostController extends Controller
+class ResourceGet extends Controller
 {
     // ...
 }
@@ -163,18 +163,96 @@ Use method `bodyStream` to return the body stream.
 $stream = $controller->bodyStream();
 ```
 
-Use method `body` to return the body casted.
+Use method `body` to return the body typed.
 
 ```php
-$cast = $controller->body();
+$string = $controller->body()->string();
 ```
 
 ### Files
 
-Use method `files` to read the files parameters.
+Use method `files` to access the files parameters, in the format of `$_FILES` arguments.
 
 ```php
 $files = $controller->files();
+$files->required('myFile')->array(); // $_FILES['myFile']
+```
+
+### Uploaded Files
+
+Use method `uploadedFiles` to read the files as a map of [PSR-7 UploadedFile](https://www.php-fig.org/psr/psr-7/#16-uploaded-files) instances.
+
+```php
+$uploadedFiles = $controller->uploadedFiles();
+$myFile = $uploadedFiles->get('myFile');
+```
+
+## ControllerException
+
+Use `ControllerException` to throw errors at the controller layer.
+
+```php
+use Chevere\Http\Controller;
+use Chevere\Http\Exceptions\ControllerException;
+
+class ResourceGet extends Controller
+{
+    public function __invoke(): void
+    {
+        throw new ControllerException('Invalid request', 400);
+    }
+}
+```
+
+With `ControllerException` you can define a `return` property matching the controller `acceptReturn` context. This will enable to return a structured response to the client, while still throwing an exception.
+
+```php
+use Chevere\Http\Attributes\Response;
+use Chevere\Http\Controller;
+use Chevere\Http\Exceptions\ControllerException;
+use Chevere\Http\Header;
+use Chevere\Http\Status;
+use Chevere\Parameter\Interfaces\ArrayParameterInterface;
+use function Chevere\Parameter\arrayp;
+use function Chevere\Parameter\string;
+
+class ResourceGet extends Controller
+{
+    public function __invoke(): array
+    {
+        if($happyPath) {
+            return [
+                'message' => 'Your account is confirmed. You can now continue.',
+                'link' => [
+                    'href' => '/apps',
+                    'text' => 'Go to Apps ->',
+                ],
+            ];
+        }
+        throw new ControllerException(
+            'Verification link not found',
+            404,
+            return: [
+                'message' => 'The verification link may have expired, been already used, or is invalid.',
+                'link' => [
+                    'href' => '/signup',
+                    'text' => 'Return to Signup',
+                ],
+            ]
+        );
+    }
+
+    public static function acceptReturn(): ArrayParameterInterface
+    {
+        return arrayp(
+            message: string(),
+            link: arrayp(
+                href: string(),
+                text: string()
+            )
+        );
+    }
+}
 ```
 
 ## Middleware
@@ -266,7 +344,7 @@ Use the `Description` attribute to add a description explaining the purpose of a
 use Chevere\Http\Attributes\Description;
 
 #[Description('This is a description')]
-class ResourceGetController extends Controller
+class ResourceGet extends Controller
 ```
 
 Use function `descriptionAttribute` to read the `Description` attribute.
@@ -274,7 +352,7 @@ Use function `descriptionAttribute` to read the `Description` attribute.
 ```php
 use function Chevere\Http\descriptionAttribute;
 
-descriptionAttribute(ResourceGetController::class);
+descriptionAttribute(ResourceGet::class);
 ```
 
 ### Request
@@ -290,7 +368,7 @@ use Chevere\Http\Controller;
     new Header('Accept', 'application/json'),
     new Header('Connection', 'keep-alive')
 )]
-class ResourceGetController extends Controller
+class ResourceGet extends Controller
 ```
 
 Use function `requestAttribute` to read the `Request` attribute.
@@ -298,7 +376,7 @@ Use function `requestAttribute` to read the `Request` attribute.
 ```php
 use function Chevere\Http\requestAttribute;
 
-requestAttribute(ResourceGetController::class);
+requestAttribute(ResourceGet::class);
 ```
 
 ### Response
@@ -315,7 +393,7 @@ use Chevere\Http\Controller;
     new Header('Content-Disposition', 'attachment'),
     new Header('Content-Type', 'application/json')
 )]
-class ResourceGetController extends Controller
+class ResourceGet extends Controller
 ```
 
 Use function `responseAttribute` to read the `Response` attribute.
@@ -323,7 +401,7 @@ Use function `responseAttribute` to read the `Response` attribute.
 ```php
 use function Chevere\Http\responseAttribute;
 
-responseAttribute(ResourceGetController::class);
+responseAttribute(ResourceGet::class);
 ```
 
 ## Documentation
