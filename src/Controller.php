@@ -275,7 +275,7 @@ abstract class Controller extends BaseController implements ControllerInterface
         }
     }
 
-    protected function setFiles(UploadedFileInterface ...$files): void
+    private function setFiles(UploadedFileInterface ...$files): void
     {
         $arguments = [];
         $parameters = $this->acceptFiles()

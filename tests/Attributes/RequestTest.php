@@ -16,6 +16,7 @@ namespace Chevere\Tests\Attributes;
 use Chevere\Http\Attributes\Request;
 use Chevere\Http\Header;
 use Chevere\Http\Headers;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class RequestTest extends TestCase
@@ -26,9 +27,7 @@ final class RequestTest extends TestCase
         $this->assertCount(0, $request->headers);
     }
 
-    /**
-     * @dataProvider provideConstructWithHeaders
-     */
+    #[DataProvider('provideConstructWithHeaders')]
     public function testConstructWithHeaders(
         array $headers,
         array $expectLines

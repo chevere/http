@@ -16,11 +16,12 @@ namespace Chevere\Http\Attributes;
 use Attribute;
 use Chevere\Http\Header;
 use Chevere\Http\Headers;
+use Chevere\Http\Interfaces\HeadersInterface;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Request
 {
-    public readonly Headers $headers;
+    public readonly HeadersInterface $headers;
 
     public function __construct(
         Header ...$attribute,

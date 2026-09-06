@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Chevere\Tests\src;
 
-final class MiddlewareAlt extends Middleware
+final class MiddlewareWithSetup extends Middleware
 {
     private string $test;
 

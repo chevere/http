@@ -22,4 +22,13 @@ use IteratorAggregate;
  */
 interface HeadersInterface extends IteratorAggregate, Countable
 {
+    /**
+     * @return array<string>
+     */
+    public function toLines(): array;
+
+    /**
+     * @return array<string, string>
+     */
+    public function toArray(): array;
 }

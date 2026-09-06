@@ -14,26 +14,21 @@ declare(strict_types=1);
 namespace Chevere\Tests;
 
 use Chevere\Http\MiddlewareName;
+use Chevere\Http\MiddlewareNameWithoutSetup;
 use Chevere\Tests\src\Middleware;
-use Chevere\Tests\src\MiddlewareAlt;
+use Chevere\Tests\src\MiddlewareWithSetup;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\MiddlewareInterface;
 use Throwable;
 
 final class MiddlewareNameTest extends TestCase
 {
-    public function testInvalid(): void
+    #[DataProvider('provideClasses')]
+    public function testInvalid(string $className): void
     {
         $this->expectException(Throwable::class);
-        new MiddlewareName('');
-    }
-
-    public function testConstruct(): void
-    {
-        $middleware = Middleware::class;
-        $name = new MiddlewareName($middleware);
-        $this->assertSame($middleware, $name->__toString());
-        $this->assertSame([], $name->arguments());
+        new $className($className);
     }
 
     public function testConstructArgumentsNoSetup(): void
@@ -44,17 +39,24 @@ final class MiddlewareNameTest extends TestCase
         $this->assertSame([], $name->arguments());
     }
 
-    public function testInterface(): void
+    #[DataProvider('provideClasses')]
+    public function testInterface(string $className): void
     {
         $this->assertSame(
             MiddlewareInterface::class,
-            MiddlewareName::interface()
+            $className::interface()
         );
     }
 
-    /**
-     * @dataProvider provideConstructArguments
-     */
+    public static function provideClasses(): array
+    {
+        return [
+            [MiddlewareName::class],
+            [MiddlewareNameWithoutSetup::class],
+        ];
+    }
+
+    #[DataProvider('provideConstructArguments')]
     public function testConstructArgumentsSetup(
         string $middleware,
         array $arguments,
@@ -62,13 +64,15 @@ final class MiddlewareNameTest extends TestCase
     ): void {
         $name = new MiddlewareName($middleware, ...$arguments);
         $this->assertSame($expectedArguments, $name->arguments());
+        $withoutSetup = new MiddlewareNameWithoutSetup($middleware);
+        $this->assertSame([], $withoutSetup->arguments());
     }
 
     public static function provideConstructArguments(): array
     {
         return [
             [
-                MiddlewareAlt::class,
+                MiddlewareWithSetup::class,
                 [
                     'foo',
                     123,
@@ -79,7 +83,7 @@ final class MiddlewareNameTest extends TestCase
                 ],
             ],
             [
-                MiddlewareAlt::class,
+                MiddlewareWithSetup::class,
                 [
                     'test' => 'foo',
                     'code' => 123,

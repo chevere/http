@@ -32,6 +32,7 @@ use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Stream;
 use Nyholm\Psr7\UploadedFile;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use function Chevere\Parameter\arrayString;
 use function Chevere\Parameter\mixed;
@@ -77,18 +78,19 @@ final class ControllerTest extends TestCase
     public static function dataProviderDefaultsNull(): array
     {
         return [
-            ['query'],
+            ['attributes'],
             ['bodyParsed'],
+            ['bodyStream'],
             ['cookieParams'],
             ['files'],
+            ['headers'],
+            ['query'],
             ['serverParams'],
-            ['attributes'],
+            ['serverRequest'],
         ];
     }
 
-    /**
-     * @dataProvider dataProviderDefaultsNull
-     */
+    #[DataProvider('dataProviderDefaultsNull')]
     public function testDefaultsNull(string $method): void
     {
         $controller = new NullController();

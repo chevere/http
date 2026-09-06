@@ -29,9 +29,6 @@ final class Headers implements HeadersInterface
         $this->vector = new Vector(...$header);
     }
 
-    /**
-     * @return array<string>
-     */
     public function toLines(): array
     {
         $return = [];
@@ -42,9 +39,6 @@ final class Headers implements HeadersInterface
         return $return;
     }
 
-    /**
-     * @return array<string, string>
-     */
     public function toArray(): array
     {
         $return = [];

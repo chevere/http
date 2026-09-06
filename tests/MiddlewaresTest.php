@@ -17,7 +17,7 @@ use Chevere\Http\Interfaces\MiddlewareNameInterface;
 use Chevere\Http\MiddlewareName;
 use Chevere\Http\Middlewares;
 use Chevere\Tests\src\Middleware;
-use Chevere\Tests\src\MiddlewareAlt;
+use Chevere\Tests\src\MiddlewareWithSetup;
 use PHPUnit\Framework\TestCase;
 
 final class MiddlewaresTest extends TestCase
@@ -47,11 +47,11 @@ final class MiddlewaresTest extends TestCase
     public function testWithAppend(): void
     {
         $middlewareTest = new MiddlewareName(Middleware::class);
-        $middlewareAlt = new MiddlewareName(MiddlewareAlt::class);
+        $middlewareAlt = new MiddlewareName(MiddlewareWithSetup::class);
         $middlewares = new Middlewares();
         $middlewaresWith = $middlewares->withAppend($middlewareTest, $middlewareAlt);
         $this->assertNotSame($middlewares, $middlewaresWith);
-        $this->assertTrue($middlewaresWith->has(MiddlewareAlt::class, Middleware::class));
+        $this->assertTrue($middlewaresWith->has(MiddlewareWithSetup::class, Middleware::class));
         $this->assertCount(2, $middlewaresWith);
         $this->assertSame([0, 1], $middlewaresWith->keys());
         $array = array_map(
@@ -69,7 +69,7 @@ final class MiddlewaresTest extends TestCase
     public function testWithPrepend(): void
     {
         $middlewareTest = new MiddlewareName(Middleware::class);
-        $middlewareAlt = new MiddlewareName(MiddlewareAlt::class);
+        $middlewareAlt = new MiddlewareName(MiddlewareWithSetup::class);
         $middlewares = new Middlewares();
         $middlewaresWith = $middlewares->withPrepend($middlewareTest, $middlewareAlt);
         $this->assertNotSame($middlewares, $middlewaresWith);
