@@ -225,6 +225,24 @@ final class ControllerTest extends TestCase
         );
     }
 
+    public function testWithParsedBodyObject(): void
+    {
+        $serverRequest = new ServerRequest('GET', '/');
+        $controller = new NullController();
+        $with = $controller->withServerRequest(
+            $serverRequest->withParsedBody((object) [
+                'bar' => '123',
+            ])
+        );
+        $this->assertSame(
+            [
+                'bar' => '123',
+            ],
+            $with->body()
+                ->array()
+        );
+    }
+
     public function testAcceptBodyUnion(): void
     {
         $serverRequest = new ServerRequest('GET', '/', [
@@ -480,5 +498,16 @@ final class ControllerTest extends TestCase
             $stream,
             $controller->bodyStream()
         );
+    }
+
+    public function testJsonBodyInvalid(): void
+    {
+        $streamed = 'not-json';
+        $stream = streamTemp($streamed);
+        $serverRequest = (new ServerRequest('POST', '/'))
+            ->withHeader('Content-Type', 'application/json')
+            ->withBody($stream);
+        $controller = (new NullController())->withServerRequest($serverRequest);
+        $this->assertSame($streamed, $controller->body()->string());
     }
 }
