@@ -95,9 +95,13 @@ final class ControllerExceptionTest extends TestCase
         $this->expectException(ActionException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            Status code `900` is not a valid HTTP status code
+            Status code `900` is not valid according to RFC 9110
             PLAIN
         );
-        new ControllerException('test', 900, null, null, AcceptBodyController::class);
+        new ControllerException(
+            message: 'test',
+            code: 900,
+            controller: AcceptBodyController::class
+        );
     }
 }

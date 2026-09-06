@@ -67,6 +67,11 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     private ?ArgumentsInterface $_files = null;
 
+    /**
+     * @var Map<UploadedFileInterface>
+     */
+    private ?Map $_uploadedFiles = null;
+
     private mixed $_body = null;
 
     private ?StreamInterface $_bodyStream = null;
@@ -234,6 +239,12 @@ abstract class Controller extends BaseController implements ControllerInterface
             ?? throw new BadMethodCallException();
     }
 
+    final public function uploadedFiles(): MapInterface
+    {
+        return $this->_uploadedFiles
+            ?? throw new BadMethodCallException();
+    }
+
     final public function serverRequest(): ServerRequestInterface
     {
         return $this->_serverRequest
@@ -267,11 +278,13 @@ abstract class Controller extends BaseController implements ControllerInterface
         $arguments = [];
         $parameters = $this->acceptFiles()
             ->parameters();
+        $this->_uploadedFiles = new Map();
         foreach ($files as $key => $file) {
             $key = strval($key);
             if (! $parameters->has($key)) {
                 continue;
             }
+            $this->_uploadedFiles = $this->_uploadedFiles->withPut($key, $file);
             $array = [
                 'error' => $file->getError(),
                 'name' => $file->getClientFilename(),

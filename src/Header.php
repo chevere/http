@@ -47,7 +47,7 @@ class Header implements HeaderInterface
     }
 
     /**
-     * @see https://tools.ietf.org/html/rfc7230#section-3.2.4
+     * @see https://datatracker.ietf.org/doc/html/rfc7230#section-3.2.4
      */
     private function assertHeader(string $name, string $value): void
     {

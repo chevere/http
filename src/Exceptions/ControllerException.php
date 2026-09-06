@@ -16,7 +16,6 @@ namespace Chevere\Http\Exceptions;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\ControllerName;
 use Chevere\Http\Interfaces\ControllerInterface;
-use Chevere\Http\Interfaces\StatusCodesInterface;
 use Chevere\Parameter\Interfaces\ParameterInterface;
 use Exception;
 use Throwable;
@@ -82,21 +81,24 @@ class ControllerException extends Exception
             $controllerClass = (new ControllerName($controller))->__toString();
         } catch (Throwable $e) {
             throw new ActionException(
-                (string) message(
-                    'Exception `%self%` must be thrown from a class implementing `%interface%`',
-                    self: self::class,
-                    interface: ControllerInterface::class
+                sprintf(
+                    'Exception `%s` must be thrown from a class implementing `%s`',
+                    self::class,
+                    ControllerInterface::class
                 ),
                 $file,
                 $line,
                 $e
             );
         }
-        if (! array_key_exists($code, StatusCodesInterface::CODES)) {
+        /**
+         * @see https://datatracker.ietf.org/doc/html/rfc9110#name-status-codes
+         */
+        if ($code < 100 || $code > 599) {
             throw new ActionException(
-                (string) message(
-                    'Status code `{{ code }}` is not a valid HTTP status code',
-                    code: $code
+                sprintf(
+                    'Status code `%s` is not valid according to RFC 9110',
+                    $code
                 ),
                 $file,
                 $line,

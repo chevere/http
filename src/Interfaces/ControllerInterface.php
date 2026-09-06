@@ -24,6 +24,7 @@ use Chevere\Parameter\Interfaces\TypedInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
 
 /**
  * Describes the component in charge of defining an Http Controller
@@ -116,6 +117,14 @@ interface ControllerInterface extends BaseControllerInterface
      * Provides access to the files uploaded in the request.
      */
     public function files(): ArgumentsInterface;
+
+    /**
+     * Provides access to the files uploaded in the request
+     * as a map of UploadedFileInterface instances.
+     *
+     * @return MapInterface<UploadedFileInterface>
+     */
+    public function uploadedFiles(): MapInterface;
 
     /**
      * Retrieve attributes derived from the request.

@@ -83,6 +83,7 @@ final class ControllerTest extends TestCase
             ['query'],
             ['serverParams'],
             ['serverRequest'],
+            ['uploadedFiles'],
         ];
     }
 
@@ -362,6 +363,8 @@ final class ControllerTest extends TestCase
                 ->parameters()
                 ->keys()
         );
+        $this->assertSame($myFile, $controllerWith->uploadedFiles()->get('myFile'));
+        $this->assertSame($myImage, $controllerWith->uploadedFiles()->get('myImage'));
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
         $theFile = $controllerWith->files()
