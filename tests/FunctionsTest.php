@@ -113,8 +113,8 @@ final class FunctionsTest extends TestCase
         $response = responseAttribute(NullController::class);
         $this->assertNull($response);
         $response = responseAttribute(AcceptController::class);
-        $this->assertSame(200, $response->status->success()->int());
-        $this->assertSame([400], $response->status->codes());
+        $this->assertSame(200, $response->status()->success()->int());
+        $this->assertSame([400], $response->status()->codes());
         $contentDisposition = new Header('Content-Disposition', 'attachment');
         $contentType = new Header('Content-Type', 'text/html; charset=UTF-8');
         $contentType2 = new Header('Content-Type', 'multipart/form-data; boundary=something');

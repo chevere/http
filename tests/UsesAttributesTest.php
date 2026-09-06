@@ -57,8 +57,8 @@ final class UsesAttributesTest extends TestCase
             $response
         );
         $this->assertCount(4, $response);
-        $this->assertCount(2, $response->status);
-        $this->assertCount(2, $response->headers);
+        $this->assertCount(2, $response->status());
+        $this->assertCount(2, $response->headers());
         $this->assertEquals(
             [
                 'status' => $status,
