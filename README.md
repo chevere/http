@@ -178,8 +178,6 @@ $files = $controller->files();
 $files->required('myFile')->array(); // $_FILES['myFile']
 ```
 
-### Uploaded Files
-
 Use method `uploadedFiles` to read the files as a map of [PSR-7 UploadedFile](https://www.php-fig.org/psr/psr-7/#16-uploaded-files) instances.
 
 ```php
