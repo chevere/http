@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Chevere\Tests;
 
-use BadMethodCallException;
 use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\Exceptions\ControllerException;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
@@ -25,6 +24,7 @@ use Chevere\Tests\src\AcceptOptionalController;
 use Chevere\Tests\src\AcceptQueryController;
 use Chevere\Tests\src\JsonBodyController;
 use Chevere\Tests\src\NullController;
+use Error;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Stream;
@@ -91,7 +91,7 @@ final class ControllerTest extends TestCase
     public function testDefaultsNull(string $method): void
     {
         $controller = new NullController();
-        $this->expectException(BadMethodCallException::class);
+        $this->expectException(Error::class);
         $controller->{$method}();
     }
 
