@@ -71,11 +71,10 @@ class ControllerException extends Exception
         mixed $return = null,
         ?string $controller = null
     ) {
-        /** @infection-ignore-all */
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-        $file = $backtrace[0]['file'] ?? __FILE__;
-        $line = $backtrace[0]['line'] ?? __LINE__;
-        $controller ??= $backtrace[1]['class'] ?? '';
+        $backtrace = $this->getTraceFrame();
+        $file = $backtrace['file'] ?? __FILE__;
+        $line = $backtrace['line'] ?? __LINE__;
+        $controller ??= $backtrace['class'];
 
         try {
             $controllerClass = (new ControllerName($controller))->__toString();
@@ -127,5 +126,34 @@ class ControllerException extends Exception
     public function assertReturn(): mixed
     {
         return $this->acceptReturn->__invoke($this->return);
+    }
+
+    /**
+     * @return array{class: string, file: ?string, line: ?int}
+     */
+    private function getTraceFrame(): array
+    {
+        /** @infection-ignore-all */
+        $frame = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS | DEBUG_BACKTRACE_PROVIDE_OBJECT);
+        $file = $frame[1]['file'] ?? null;
+        $line = $frame[1]['line'] ?? null;
+        unset($frame[0], $frame[1]);
+        foreach ($frame as $frame) {
+            if (! isset($frame['object'])) {
+                continue;
+            }
+
+            return [
+                'class' => get_class($frame['object']),
+                'file' => $file,
+                'line' => $line,
+            ];
+        }
+
+        return [
+            'class' => '',
+            'file' => null,
+            'line' => null,
+        ];
     }
 }
