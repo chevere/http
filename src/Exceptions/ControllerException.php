@@ -71,10 +71,10 @@ class ControllerException extends Exception
         mixed $return = null,
         ?string $controller = null
     ) {
-        $backtrace = $this->getTraceFrame();
-        $file = $backtrace['file'] ?? __FILE__;
-        $line = $backtrace['line'] ?? __LINE__;
-        $controller ??= $backtrace['class'];
+        $frame = $this->getTraceFrame();
+        $file = $frame['file'] ?? __FILE__;
+        $line = $frame['line'] ?? __LINE__;
+        $controller ??= $frame['class'];
 
         try {
             $controllerClass = (new ControllerName($controller))->__toString();
