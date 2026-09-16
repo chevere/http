@@ -19,6 +19,7 @@ use Chevere\Tests\src\AcceptBodyController;
 use Chevere\Tests\src\ControllerThrowsControllerException;
 use Chevere\Tests\src\ControllerThrowsControllerExceptionAcceptReturn;
 use Chevere\Tests\src\ControllerThrowsControllerExceptionDefault;
+use Chevere\Tests\src\ControllerThrowsControllerExceptionWithErrors;
 use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -57,6 +58,7 @@ final class ControllerExceptionTest extends TestCase
             $this->assertSame('', $e->getMessage());
             $this->assertSame(500, $e->getCode());
             $this->assertNull($e->getPrevious());
+            $this->assertSame([], $e->errors());
         }
     }
 
@@ -103,5 +105,31 @@ final class ControllerExceptionTest extends TestCase
             code: 900,
             controller: AcceptBodyController::class
         );
+    }
+
+    public function testThrowsWithErrors(): void
+    {
+        $arguments = [
+            'username' => 'Username must not contain spaces',
+            'email' => 'Forbidden email domain',
+        ];
+
+        try {
+            new ControllerThrowsControllerExceptionWithErrors(...$arguments);
+        } catch (ControllerException $e) {
+            $this->assertSame(
+                [
+                    [
+                        'pointer' => 'username',
+                        'detail' => $arguments['username'],
+                    ],
+                    [
+                        'pointer' => 'email',
+                        'detail' => $arguments['email'],
+                    ],
+                ],
+                $e->errors()
+            );
+        }
     }
 }

@@ -53,6 +53,13 @@ interface ControllerInterface extends BaseControllerInterface
     public static function acceptFiles(): ArrayParameterInterface;
 
     /**
+     * Defines the shape of problem details for HTTP APIs (RFC 9457)
+     *
+     * @see https://www.rfc-editor.org/info/rfc9457/
+     */
+    public static function acceptProblems(): ArrayParameterInterface;
+
+    /**
      * Return an instance with the specified server request `$serverRequest` processing.
      *
      * This method MUST retain the state of the current instance, and return
@@ -144,4 +151,16 @@ interface ControllerInterface extends BaseControllerInterface
      * This method will be called at the end of the request lifecycle.
      */
     public function terminate(ResponseInterface $response): ResponseInterface;
+
+    /**
+     * Adds an error to the stack.
+     */
+    public function addError(string $pointer, string $detail): void;
+
+    /**
+     * Returns the list of errors added to the stack.
+     *
+     * @return array<int, array{pointer: string, detail: string}>
+     */
+    public function errors(): array;
 }

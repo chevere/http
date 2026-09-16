@@ -2,11 +2,11 @@
 
 ![Chevere](chevere.svg)
 
-[![Build](https://img.shields.io/github/actions/workflow/status/chevere/http/test.yml?branch=0.8&style=flat-square)](https://github.com/chevere/http/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/chevere/http/test.yml?branch=0.9&style=flat-square)](https://github.com/chevere/http/actions)
 ![Code size](https://img.shields.io/github/languages/code-size/chevere/http?style=flat-square)
 [![Apache-2.0](https://img.shields.io/github/license/chevere/http?style=flat-square)](LICENSE)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%209-blueviolet?style=flat-square)](https://phpstan.org/)
-[![Mutation testing badge](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fchevere%2Fhttp%2F0.8)](https://dashboard.stryker-mutator.io/reports/github.com/chevere/http/0.8)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fchevere%2Fhttp%2F0.9)](https://dashboard.stryker-mutator.io/reports/github.com/chevere/http/0.9)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=chevere_http&metric=alert_status)](https://sonarcloud.io/dashboard?id=chevere_http)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=chevere_http&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=chevere_http)
@@ -197,10 +197,32 @@ class ResourceGet extends Controller
 {
     public function __invoke(): void
     {
-        throw new ControllerException('Invalid request', 400);
+        throw new ControllerException('Resource not found', 404);
     }
 }
 ```
+
+### Problem details for HTTP APIs (RFC 9457)
+
+Problem details for HTTP APIs [RFC 9457](https://www.rfc-editor.org/info/rfc9457/) provide a standardized way to convey machine-readable details of errors in HTTP responses. You can use `ControllerException` to return problem details in a structured format.
+
+```php
+use Chevere\Http\Controller;
+use Chevere\Http\Exceptions\ControllerException;
+
+class ResourcePatch extends Controller
+{
+    public function __invoke(): void
+    {
+        $this->addError('email', 'Disposable email addresses are not permitted');
+        throw new ControllerException(code: 422, errors: $this->errors());
+    }
+}
+```
+
+Both `ControllerInterface` and `ControllerException` provide the public `errors` method to access the errors associated with the controller or exception.
+
+### Exception with Return
 
 With `ControllerException` you can define a `return` property matching the controller `acceptReturn` context. This will enable to return a structured response to the client, while still throwing an exception.
 

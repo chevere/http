@@ -37,8 +37,11 @@ use Throwable;
 use function Chevere\Parameter\arguments;
 use function Chevere\Parameter\arrayp;
 use function Chevere\Parameter\arrayString;
+use function Chevere\Parameter\int;
+use function Chevere\Parameter\iterable;
 use function Chevere\Parameter\mixed;
 use function Chevere\Parameter\parameters;
+use function Chevere\Parameter\string;
 use function Chevere\Parameter\typed;
 
 abstract class Controller extends BaseController implements ControllerInterface
@@ -77,6 +80,11 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     private ServerRequestInterface $_serverRequest;
 
+    /**
+     * @var array<int, array{pointer: string, detail: string}>
+     */
+    private array $errors = [];
+
     public static function acceptHeaders(): ArrayStringParameterInterface
     {
         return arrayString();
@@ -97,9 +105,40 @@ abstract class Controller extends BaseController implements ControllerInterface
         return arrayp();
     }
 
+    public static function acceptProblems(): ArrayParameterInterface
+    {
+        return arrayp(
+            title: string(),
+            status: int(),
+        )->withOptional(
+            type: string(),
+            detail: string(),
+            instance: string(),
+            errors: iterable(
+                arrayp(
+                    detail: string(),
+                    pointer: string(),
+                )
+            )
+        );
+    }
+
     public function terminate(ResponseInterface $response): ResponseInterface
     {
         return $response;
+    }
+
+    final public function addError(string $pointer, string $detail): void
+    {
+        $this->errors[] = [
+            'pointer' => $pointer,
+            'detail' => $detail,
+        ];
+    }
+
+    final public function errors(): array
+    {
+        return $this->errors;
     }
 
     final public function withServerRequest(ServerRequestInterface $serverRequest): static

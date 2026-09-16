@@ -63,13 +63,15 @@ class ControllerException extends Exception
      * @param int $code HTTP status code
      * @param mixed $return [optional] Return value compatible with Controller context return
      * @param class-string<ControllerInterface> $controller [internal] You should not set this manually
+     * @param array<int, array{pointer: string, detail: string}> $errors [optional] List of errors associated with the exception
      */
     public function __construct(
         string $message = '',
         int $code = 500,
         ?Throwable $previous = null,
         mixed $return = null,
-        ?string $controller = null
+        ?string $controller = null,
+        private array $errors = []
     ) {
         $frame = $this->getTraceFrame();
         $file = $frame['file'] ?? __FILE__;
@@ -115,6 +117,14 @@ class ControllerException extends Exception
     public function return(): mixed
     {
         return $this->return;
+    }
+
+    /**
+     * @return array<int, array{pointer: string, detail: string}>
+     */
+    public function errors(): array
+    {
+        return $this->errors;
     }
 
     /**
