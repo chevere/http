@@ -27,7 +27,7 @@ final class AcceptQueryController extends Controller
     public static function acceptQuery(): ArrayStringParameterInterface
     {
         return arrayString(
-            foo: string('/^[a-z]+$/')
+            foo: string('/^[a-z]+$/'),
         );
     }
 }

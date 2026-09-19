@@ -54,13 +54,34 @@ final class ControllerTest extends TestCase
     {
         $controller = new AcceptController();
 
-        $this->expectException(ControllerException::class);
-        $this->expectExceptionMessage(<<<PLAIN
-        Missing required argument(s): `foo`
-        PLAIN);
-        $controller->withServerRequest(
-            new ServerRequest('GET', '/')
-        );
+        try {
+            $controller->withServerRequest(
+                new ServerRequest('GET', '/')
+            );
+        } catch (ControllerException $e) {
+            $this->assertSame('', $e->getMessage());
+            $this->assertSame(400, $e->getCode());
+            $this->assertSame(
+                [
+                    [
+                        'pointer' => '/foo',
+                        'detail' => 'Missing required argument',
+                        'context' => 'http.query',
+                    ],
+                    [
+                        'pointer' => '/bar',
+                        'detail' => 'Missing required argument',
+                        'context' => 'http.body',
+                    ],
+                    [
+                        'pointer' => '/myFile',
+                        'detail' => 'Missing required argument',
+                        'context' => 'http.files',
+                    ],
+                ],
+                $e->errors()
+            );
+        }
     }
 
     public function testDefaults(): void
@@ -157,16 +178,30 @@ final class ControllerTest extends TestCase
                 ->required('X-Custom-Header')
         );
         $this->assertNotSame($controller, $controllerWith);
-        $this->expectException(ControllerException::class);
-        $this->expectExceptionCode(400);
-        $this->expectExceptionMessage(
-            <<<PLAIN
-            [http.headers] Missing required argument(s): `Content-Type`, `X-Custom-Header`
-            PLAIN
-        );
-        $controller->withServerRequest(
-            new ServerRequest('GET', '/')
-        );
+
+        try {
+            $controller->withServerRequest(
+                new ServerRequest('GET', '/')
+            );
+        } catch (ControllerException $e) {
+            $this->assertSame('', $e->getMessage());
+            $this->assertSame(400, $e->getCode());
+            $this->assertSame(
+                [
+                    [
+                        'pointer' => '/Content-Type',
+                        'detail' => 'Missing required argument',
+                        'context' => 'http.headers',
+                    ],
+                    [
+                        'pointer' => '/X-Custom-Header',
+                        'detail' => 'Missing required argument',
+                        'context' => 'http.headers',
+                    ],
+                ],
+                $e->errors()
+            );
+        }
     }
 
     public function testAcceptQuery(): void
@@ -182,19 +217,28 @@ final class ControllerTest extends TestCase
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
         $this->assertSame('abc', $controllerWith->query()->required('foo'));
-        $this->expectException(ControllerException::class);
-        $this->expectExceptionCode(400);
-        $this->expectExceptionMessage(
-            <<<PLAIN
-            [http.query] [foo]: Argument value provided `123` doesn't match the regex `/^[a-z]+$/`
-            PLAIN
-        );
-        $controller->withServerRequest(
-            $serverRequest
-                ->withQueryParams([
-                    'foo' => '123',
-                ])
-        );
+
+        try {
+            $controller->withServerRequest(
+                $serverRequest
+                    ->withQueryParams([
+                        'foo' => '123',
+                    ])
+            );
+        } catch (ControllerException $e) {
+            $this->assertSame('', $e->getMessage());
+            $this->assertSame(400, $e->getCode());
+            $this->assertSame(
+                [
+                    [
+                        'pointer' => '/foo',
+                        'detail' => 'Argument value provided `123` doesn\'t match the regex `/^[a-z]+$/`',
+                        'context' => 'http.query',
+                    ],
+                ],
+                $e->errors(),
+            );
+        }
     }
 
     public function testAcceptBody(): void
@@ -203,26 +247,54 @@ final class ControllerTest extends TestCase
         $controller = new AcceptBodyController();
         $controllerWith = $controller->withServerRequest(
             $serverRequest
-                ->withParsedBody([
-                    'bar' => '123',
-                ])
+                ->withParsedBody(
+                    [
+                        'foo' => [
+                            'baz' => [
+                                'nested' => 'abc',
+                            ],
+                        ],
+                        'bar' => '123',
+                    ]
+                )
         );
         $this->assertNotSame($controller, $controllerWith);
         $this->assertNotEquals($controller, $controllerWith);
         $this->assertSame('123', $controllerWith->bodyParsed()->required('bar')->string());
-        $this->expectException(ControllerException::class);
-        $this->expectExceptionCode(400);
-        $this->expectExceptionMessage(
-            <<<PLAIN
-            [http.body] [bar]: Argument value provided `error` doesn't match the regex `/^[1-9]+$/`
-            PLAIN
-        );
-        $controller->withServerRequest(
-            $serverRequest
-                ->withParsedBody([
-                    'bar' => 'error',
-                ])
-        );
+
+        try {
+            $controller->withServerRequest(
+                $serverRequest
+                    ->withParsedBody(
+                        [
+                            'foo' => [
+                                'baz' => [
+                                    'nested' => null,
+                                ],
+                            ],
+                            'bar' => 'error',
+                        ]
+                    )
+            );
+        } catch (ControllerException $e) {
+            $this->assertSame('', $e->getMessage());
+            $this->assertSame(400, $e->getCode());
+            $this->assertSame(
+                [
+                    [
+                        'pointer' => '/foo/baz/nested',
+                        'detail' => 'Argument must be of type Stringable|string, null given',
+                        'context' => 'http.body',
+                    ],
+                    [
+                        'pointer' => '/bar',
+                        'detail' => 'Argument value provided `error` doesn\'t match the regex `/^[1-9]+$/`',
+                        'context' => 'http.body',
+                    ],
+                ],
+                $e->errors()
+            );
+        }
     }
 
     public function testWithParsedBodyObject(): void

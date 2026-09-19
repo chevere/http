@@ -128,11 +128,12 @@ abstract class Controller extends BaseController implements ControllerInterface
         return $response;
     }
 
-    final public function addError(string $pointer, string $detail): void
+    final public function addError(string $pointer, string $detail, string ...$extra): void
     {
         $this->errors[] = [
             'pointer' => $pointer,
             'detail' => $detail,
+            ...$extra,
         ];
     }
 
@@ -168,7 +169,7 @@ abstract class Controller extends BaseController implements ControllerInterface
                 $headers
             );
         } catch (Throwable $e) {
-            $errors[] = $this->getHttpErrorMessage('headers', $e);
+            $this->addHttpErrorMessage('headers', $e);
         }
 
         try {
@@ -177,7 +178,7 @@ abstract class Controller extends BaseController implements ControllerInterface
                 $serverRequest->getQueryParams()
             );
         } catch (Throwable $e) {
-            $errors[] = $this->getHttpErrorMessage('query', $e);
+            $this->addHttpErrorMessage('query', $e);
         }
 
         try {
@@ -213,19 +214,19 @@ abstract class Controller extends BaseController implements ControllerInterface
                 }
             }
         } catch (Throwable $e) {
-            $errors[] = $this->getHttpErrorMessage('body', $e);
+            $this->addHttpErrorMessage('body', $e);
         }
 
         try {
             $new->setFiles(...$serverRequest->getUploadedFiles());
         } catch (Throwable $e) {
-            $errors[] = $this->getHttpErrorMessage('files', $e);
+            $this->addHttpErrorMessage('files', $e);
         }
-        if ($errors !== []) {
+        if ($this->errors !== []) {
             throw new ControllerException(
-                message: implode("\n", $errors),
                 code: 400,
-                controller: static::class
+                controller: static::class,
+                errors: $this->errors
             );
         }
         $new->_serverRequest = $serverRequest;
@@ -326,19 +327,16 @@ abstract class Controller extends BaseController implements ControllerInterface
         $this->_files = arguments($parameters, $arguments);
     }
 
-    private function getHttpErrorMessage(string $context, Throwable $e): string
+    private function addHttpErrorMessage(string $context, Throwable $e): void
     {
-        $message = $e->getMessage();
-        $httpContext = "[http.{$context}]";
-        $errorMessage = preg_replace(
-            '/\[([^\]]+)\]:/',
-            $httpContext . ' [$1]:',
-            $message
-        ) ?? '';
-        if ($errorMessage === $message) {
-            $errorMessage = "{$httpContext} {$errorMessage}";
+        $context = "http.{$context}";
+        $lines = preg_split('/\R/', $e->getMessage()) ?: [];
+        foreach ($lines as $line) {
+            if (preg_match('/^\[(?<pointer>[^\]]+)\]:\s*(?<detail>.+)$/s', $line, $m)) {
+                $this->addError($m['pointer'], $m['detail'], context: $context);
+            } else {
+                $this->addError($context, $line);
+            }
         }
-
-        return $errorMessage;
     }
 }

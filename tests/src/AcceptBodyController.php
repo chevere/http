@@ -27,7 +27,12 @@ final class AcceptBodyController extends Controller
     public static function acceptBody(): ArrayParameterInterface
     {
         return arrayp(
-            bar: string('/^[1-9]+$/')
+            foo: arrayp(
+                baz: arrayp(
+                    nested: string(),
+                ),
+            ),
+            bar: string('/^[1-9]+$/'),
         );
     }
 }
