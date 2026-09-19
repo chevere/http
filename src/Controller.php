@@ -81,7 +81,11 @@ abstract class Controller extends BaseController implements ControllerInterface
     private ServerRequestInterface $_serverRequest;
 
     /**
-     * @var array<int, array{pointer: string, detail: string}>
+     * @var array<int, array{
+     *     pointer: string,
+     *     detail: string,
+     *     ...<string, string>
+     * }>
      */
     private array $errors = [];
 
@@ -145,7 +149,6 @@ abstract class Controller extends BaseController implements ControllerInterface
     final public function withServerRequest(ServerRequestInterface $serverRequest): static
     {
         $new = clone $this;
-        $errors = [];
 
         try {
             $acceptHeaders = $new::acceptHeaders()->parameters();

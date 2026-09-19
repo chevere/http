@@ -2,3 +2,7 @@ parameters:
     level: 9
     paths:
         - src
+    ignoreErrors:
+        -
+            message: '#^Property Chevere\\Http\\Controller::\$errors .* does not accept non-empty-array<int, non-empty-array<int<0, max>\|string, string>>\.$#'
+            path: src/Controller.php

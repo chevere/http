@@ -154,13 +154,19 @@ interface ControllerInterface extends BaseControllerInterface
 
     /**
      * Adds an error to the stack.
+     *
+     * @param string $pointer The pointer to the location of the error (RFC 6901)
+     * @param string $detail The detail message describing the error
+     * @param string ...$extra Additional context or information about the error (name: value)
+     *
+     * @see https://www.rfc-editor.org/info/rfc6901/
      */
-    public function addError(string $pointer, string $detail): void;
+    public function addError(string $pointer, string $detail, string ...$extra): void;
 
     /**
      * Returns the list of errors added to the stack.
      *
-     * @return array<int, array{pointer: string, detail: string}>
+     * @return array<int, array{pointer: string, detail: string, ...<string, string>}>
      */
     public function errors(): array;
 }
