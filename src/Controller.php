@@ -338,7 +338,7 @@ abstract class Controller extends BaseController implements ControllerInterface
             if (preg_match('/^\[(?<pointer>[^\]]+)\]:\s*(?<detail>.+)$/s', $line, $m)) {
                 $this->addError($m['pointer'], $m['detail'], context: $context);
             } else {
-                $this->addError($context, $line);
+                $this->addError('', $line, context: $context);
             }
         }
     }
