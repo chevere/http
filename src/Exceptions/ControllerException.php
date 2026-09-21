@@ -63,7 +63,7 @@ class ControllerException extends Exception
      * @param int $code HTTP status code
      * @param mixed $return [optional] Return value compatible with Controller context return
      * @param class-string<ControllerInterface> $controller [internal] You should not set this manually
-     * @param array<int, array{pointer: string, detail: string}> $errors [optional] List of errors associated with the exception
+     * @param array<int, array{pointer: string, detail: string, ...<string, string>}> $errors [optional] List of errors associated with the exception
      */
     public function __construct(
         string $message = '',
@@ -120,7 +120,7 @@ class ControllerException extends Exception
     }
 
     /**
-     * @return array<int, array{pointer: string, detail: string}>
+     * @return array<int, array{pointer: string, detail: string, ...<string, string>}>
      */
     public function errors(): array
     {
