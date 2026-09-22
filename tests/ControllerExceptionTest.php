@@ -58,7 +58,7 @@ final class ControllerExceptionTest extends TestCase
             $this->assertSame('', $e->getMessage());
             $this->assertSame(500, $e->getCode());
             $this->assertNull($e->getPrevious());
-            $this->assertSame([], $e->errors());
+            $this->assertCount(0, $e->errors());
         }
     }
 
@@ -128,7 +128,7 @@ final class ControllerExceptionTest extends TestCase
                         'detail' => $arguments['email'],
                     ],
                 ],
-                $e->errors()
+                [...$e->errors()]
             );
         }
     }

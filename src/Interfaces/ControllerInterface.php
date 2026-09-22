@@ -21,10 +21,12 @@ use Chevere\Parameter\Interfaces\ArrayParameterInterface;
 use Chevere\Parameter\Interfaces\ArrayStringParameterInterface;
 use Chevere\Parameter\Interfaces\ParameterInterface;
 use Chevere\Parameter\Interfaces\TypedInterface;
+use Chevere\Standard\Interfaces\ErrorsInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use Throwable;
 
 /**
  * Describes the component in charge of defining an Http Controller
@@ -156,17 +158,15 @@ interface ControllerInterface extends BaseControllerInterface
      * Adds an error to the stack.
      *
      * @param string $pointer The pointer to the location of the error (RFC 6901)
-     * @param string $detail The detail message describing the error
+     * @param string|Throwable $detail The detail message describing the error
      * @param string ...$extra Additional context or information about the error (name: value)
      *
      * @see https://www.rfc-editor.org/info/rfc6901/
      */
-    public function addError(string $pointer, string $detail, string ...$extra): void;
+    public function addError(string $pointer, string|Throwable $detail, string ...$extra): void;
 
     /**
-     * Returns the list of errors added to the stack.
-     *
-     * @return array<int, array{pointer: string, detail: string, ...<string, string>}>
+     * Returns the collection of errors added to the stack.
      */
-    public function errors(): array;
+    public function errors(): ErrorsInterface;
 }

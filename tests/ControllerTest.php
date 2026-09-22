@@ -79,7 +79,7 @@ final class ControllerTest extends TestCase
                         'context' => 'http.files',
                     ],
                 ],
-                $e->errors()
+                [...$e->errors()]
             );
         }
     }
@@ -199,7 +199,7 @@ final class ControllerTest extends TestCase
                         'context' => 'http.headers',
                     ],
                 ],
-                $e->errors()
+                [...$e->errors()]
             );
         }
     }
@@ -236,7 +236,7 @@ final class ControllerTest extends TestCase
                         'context' => 'http.query',
                     ],
                 ],
-                $e->errors(),
+                [...$e->errors()],
             );
         }
     }
@@ -292,7 +292,7 @@ final class ControllerTest extends TestCase
                         'context' => 'http.body',
                     ],
                 ],
-                $e->errors()
+                [...$e->errors()]
             );
         }
     }

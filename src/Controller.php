@@ -28,6 +28,8 @@ use Chevere\Parameter\Interfaces\ParameterInterface;
 use Chevere\Parameter\Interfaces\ParametersAccessInterface;
 use Chevere\Parameter\Interfaces\TypedInterface;
 use Chevere\Parameter\Interfaces\UnionParameterInterface;
+use Chevere\Standard\Errors;
+use Chevere\Standard\Interfaces\ErrorsInterface;
 use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -80,14 +82,7 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     private ServerRequestInterface $_serverRequest;
 
-    /**
-     * @var array<int, array{
-     *     pointer: string,
-     *     detail: string,
-     *     ...<string, string>
-     * }>
-     */
-    private array $errors = [];
+    private ErrorsInterface $errors;
 
     public static function acceptHeaders(): ArrayStringParameterInterface
     {
@@ -132,18 +127,21 @@ abstract class Controller extends BaseController implements ControllerInterface
         return $response;
     }
 
-    final public function addError(string $pointer, string $detail, string ...$extra): void
+    final public function addError(string $pointer, string|Throwable $detail, string ...$extra): void
     {
-        $this->errors[] = [
-            'pointer' => $pointer,
-            'detail' => $detail,
+        $this->errors ??= new Errors();
+        $this->errors = $this->errors->with(
+            $pointer,
+            $detail instanceof Throwable
+                ? $detail->getMessage()
+                : $detail,
             ...$extra,
-        ];
+        );
     }
 
-    final public function errors(): array
+    final public function errors(): ErrorsInterface
     {
-        return $this->errors;
+        return $this->errors ??= new Errors();
     }
 
     final public function withServerRequest(ServerRequestInterface $serverRequest): static
@@ -225,11 +223,11 @@ abstract class Controller extends BaseController implements ControllerInterface
         } catch (Throwable $e) {
             $this->addHttpErrorMessage('files', $e);
         }
-        if ($this->errors !== []) {
+        if (count($this->errors()) > 0) {
             throw new ControllerException(
                 code: 400,
                 controller: static::class,
-                errors: $this->errors
+                errors: $this->errors()
             );
         }
         $new->_serverRequest = $serverRequest;
@@ -338,7 +336,7 @@ abstract class Controller extends BaseController implements ControllerInterface
             if (preg_match('/^\[(?<pointer>[^\]]+)\]:\s*(?<detail>.+)$/s', $line, $m)) {
                 $this->addError($m['pointer'], $m['detail'], context: $context);
             } else {
-                $this->addError('', $line, context: $context);
+                $this->addError($context, $line);
             }
         }
     }

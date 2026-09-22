@@ -17,9 +17,10 @@ use Chevere\Action\Exceptions\ActionException;
 use Chevere\Http\ControllerName;
 use Chevere\Http\Interfaces\ControllerInterface;
 use Chevere\Parameter\Interfaces\ParameterInterface;
-use Exception;
+use Chevere\Standard\Errors;
+use Chevere\Standard\Exception;
+use Chevere\Standard\Interfaces\ErrorsInterface;
 use Throwable;
-use function Chevere\Message\message;
 
 /**
  * Exception thrown at HTTP Controller layer.
@@ -63,7 +64,7 @@ class ControllerException extends Exception
      * @param int $code HTTP status code
      * @param mixed $return [optional] Return value compatible with Controller context return
      * @param class-string<ControllerInterface> $controller [internal] You should not set this manually
-     * @param array<int, array{pointer: string, detail: string, ...<string, string>}> $errors [optional] List of errors associated with the exception
+     * @param ErrorsInterface $errors [optional] Collection of errors associated with the exception
      */
     public function __construct(
         string $message = '',
@@ -71,7 +72,7 @@ class ControllerException extends Exception
         ?Throwable $previous = null,
         mixed $return = null,
         ?string $controller = null,
-        private array $errors = []
+        ErrorsInterface $errors = new Errors()
     ) {
         $frame = $this->getTraceFrame();
         $file = $frame['file'] ?? __FILE__;
@@ -108,7 +109,7 @@ class ControllerException extends Exception
         }
         $this->return = $return;
         $this->acceptReturn = $controllerClass::reflection()->return();
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $previous, errors: $errors);
     }
 
     /**
@@ -117,14 +118,6 @@ class ControllerException extends Exception
     public function return(): mixed
     {
         return $this->return;
-    }
-
-    /**
-     * @return array<int, array{pointer: string, detail: string, ...<string, string>}>
-     */
-    public function errors(): array
-    {
-        return $this->errors;
     }
 
     /**
