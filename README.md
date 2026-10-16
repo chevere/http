@@ -119,15 +119,15 @@ public static function acceptFiles(): ArrayParameterInterface
 }
 ```
 
-### With Server Request
+### With Request
 
-Use method `withServerRequest` to inject a [PSR-7 ServerRequest](https://www.php-fig.org/psr/psr-7/#31-psrhttpmessageserverrequestinterface) instance. This will assert the request against the defined `accept*` methods.
+Use method `withRequest` to inject a [PSR-7 ServerRequest](https://www.php-fig.org/psr/psr-7/#31-psrhttpmessageserverrequestinterface) instance. This will assert the request against the defined `accept*` methods.
 
 ```php
 use Psr\Http\Message\ServerRequestInterface;
 
 $controller = $controller
-    ->withServerRequest($request);
+    ->withRequest($request);
 ```
 
 ### Headers

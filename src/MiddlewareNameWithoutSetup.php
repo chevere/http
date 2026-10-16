@@ -25,9 +25,6 @@ final class MiddlewareNameWithoutSetup implements MiddlewareNameInterface
     use ActionNameTrait;
 
     public function __construct(
-        /**
-         * @phpstan-ignore-next-line
-         */
         private string $name,
     ) {
         $this->onConstruct();

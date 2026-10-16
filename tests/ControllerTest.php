@@ -44,7 +44,7 @@ final class ControllerTest extends TestCase
         $this->expectException(ActionException::class);
         $this->expectExceptionMessage(
             <<<PLAIN
-            `Chevere\Tests\src\AcceptController` LogicException → Server request not set. Did you forget to call withServerRequest() method?
+            `Chevere\Tests\src\AcceptController` LogicException → Server request not set. Did you forget to call withRequest() method?
             PLAIN
         );
         $controller->__invoke();
@@ -55,7 +55,7 @@ final class ControllerTest extends TestCase
         $controller = new AcceptController();
 
         try {
-            $controller->withServerRequest(
+            $controller->withRequest(
                 new ServerRequest('GET', '/')
             );
         } catch (ControllerException $e) {
@@ -116,10 +116,10 @@ final class ControllerTest extends TestCase
         $controller->{$method}();
     }
 
-    public function testWithServerRequest(): void
+    public function testWithRequest(): void
     {
         $serverRequest = new ServerRequest('GET', '/');
-        $controller = (new NullController())->withServerRequest($serverRequest);
+        $controller = (new NullController())->withRequest($serverRequest);
         $this->assertSame($serverRequest, $controller->serverRequest());
     }
 
@@ -129,7 +129,7 @@ final class ControllerTest extends TestCase
             'super' => 'taldo',
         ];
         $serverRequest = new ServerRequest('GET', '/', serverParams: $serverParams);
-        $controller = (new NullController())->withServerRequest($serverRequest);
+        $controller = (new NullController())->withRequest($serverRequest);
         $this->assertSame(
             $serverParams,
             $controller->serverParams()
@@ -158,7 +158,7 @@ final class ControllerTest extends TestCase
                 );
             }
         };
-        $controllerWith = $controller->withServerRequest($serverRequest);
+        $controllerWith = $controller->withRequest($serverRequest);
         $this->assertSame(
             [
                 'Content-Type' => 'application/json',
@@ -180,7 +180,7 @@ final class ControllerTest extends TestCase
         $this->assertNotSame($controller, $controllerWith);
 
         try {
-            $controller->withServerRequest(
+            $controller->withRequest(
                 new ServerRequest('GET', '/')
             );
         } catch (ControllerException $e) {
@@ -208,7 +208,7 @@ final class ControllerTest extends TestCase
     {
         $serverRequest = new ServerRequest('GET', '/');
         $controller = new AcceptQueryController();
-        $controllerWith = $controller->withServerRequest(
+        $controllerWith = $controller->withRequest(
             $serverRequest
                 ->withQueryParams([
                     'foo' => 'abc',
@@ -219,7 +219,7 @@ final class ControllerTest extends TestCase
         $this->assertSame('abc', $controllerWith->query()->required('foo'));
 
         try {
-            $controller->withServerRequest(
+            $controller->withRequest(
                 $serverRequest
                     ->withQueryParams([
                         'foo' => '123',
@@ -245,7 +245,7 @@ final class ControllerTest extends TestCase
     {
         $serverRequest = new ServerRequest('GET', '/');
         $controller = new AcceptBodyController();
-        $controllerWith = $controller->withServerRequest(
+        $controllerWith = $controller->withRequest(
             $serverRequest
                 ->withParsedBody(
                     [
@@ -263,7 +263,7 @@ final class ControllerTest extends TestCase
         $this->assertSame('123', $controllerWith->bodyParsed()->required('bar')->string());
 
         try {
-            $controller->withServerRequest(
+            $controller->withRequest(
                 $serverRequest
                     ->withParsedBody(
                         [
@@ -301,7 +301,7 @@ final class ControllerTest extends TestCase
     {
         $serverRequest = new ServerRequest('GET', '/');
         $controller = new NullController();
-        $with = $controller->withServerRequest(
+        $with = $controller->withRequest(
             $serverRequest->withParsedBody((object) [
                 'bar' => '123',
             ])
@@ -321,13 +321,13 @@ final class ControllerTest extends TestCase
             'Content-Type' => 'application/json',
         ]);
         $controller = new AcceptBodyUnionController();
-        $with = $controller->withServerRequest(
+        $with = $controller->withRequest(
             $serverRequest
         );
         $this->assertSame(null, $with->__invoke());
         $streamString = (new Stream(fopen('php://temp', 'r+')));
         $streamString->write(json_encode('123'));
-        $with = $controller->withServerRequest(
+        $with = $controller->withRequest(
             $serverRequest
                 ->withBody($streamString)
         );
@@ -349,7 +349,7 @@ final class ControllerTest extends TestCase
             clientFilename: 'test.txt',
             clientMediaType: 'text/plain'
         );
-        $controllerWith = $controller->withServerRequest(
+        $controllerWith = $controller->withRequest(
             $serverRequest
                 ->withQueryParams([
                     'foo' => 'abc',
@@ -366,7 +366,7 @@ final class ControllerTest extends TestCase
         $this->assertSame('abc', $controllerWith->query()->required('foo'));
         $this->expectException(ControllerException::class);
         $this->expectExceptionCode(400);
-        $controller->withServerRequest(
+        $controller->withRequest(
             $serverRequest
                 ->withQueryParams([
                     'foo' => '123',
@@ -378,7 +378,7 @@ final class ControllerTest extends TestCase
     {
         $serverRequest = new ServerRequest('GET', '/');
         $controller = new AcceptOptionalController();
-        $controllerWith = $controller->withServerRequest(
+        $controllerWith = $controller->withRequest(
             $serverRequest
                 ->withQueryParams([
                     'foo' => 'abc',
@@ -396,7 +396,7 @@ final class ControllerTest extends TestCase
     {
         $serverRequest = new ServerRequest('GET', '/');
         $controller = (new NullController())
-            ->withServerRequest(
+            ->withRequest(
                 $serverRequest->withAttribute('foo', 'bar')
             );
         $controller->attributes()
@@ -430,7 +430,7 @@ final class ControllerTest extends TestCase
             clientFilename: 'image.png',
             clientMediaType: 'image/png'
         );
-        $controllerWith = $controller->withServerRequest(
+        $controllerWith = $controller->withRequest(
             $serverRequest
                 ->withQueryParams([
                     'foo' => 'abc',
@@ -511,7 +511,7 @@ final class ControllerTest extends TestCase
             $expected[$key] = implode(', ', (array) $value);
         }
         $serverRequest = new ServerRequest('GET', '/', headers: $headers);
-        $controller = (new NullController())->withServerRequest($serverRequest);
+        $controller = (new NullController())->withRequest($serverRequest);
         $this->assertSame(
             $expected,
             $controller->headers()
@@ -526,7 +526,7 @@ final class ControllerTest extends TestCase
             'bar' => 'taldo',
         ];
         $serverRequest = new ServerRequest('GET', '/', headers: $headers);
-        $controller = (new AcceptHeadersController())->withServerRequest($serverRequest);
+        $controller = (new AcceptHeadersController())->withRequest($serverRequest);
         $this->assertSame(
             $headers['foo'],
             $controller->headers()
@@ -547,7 +547,7 @@ final class ControllerTest extends TestCase
         ];
         $serverRequest = (new ServerRequest('GET', '/'))
             ->withCookieParams($cookieParams);
-        $controller = (new NullController())->withServerRequest($serverRequest);
+        $controller = (new NullController())->withRequest($serverRequest);
         $this->assertSame(
             $cookieParams,
             $controller->cookieParams()
@@ -563,7 +563,7 @@ final class ControllerTest extends TestCase
             ->withHeader('Content-Type', 'application/json')
             ->withBody($stream);
         $controller = (new JsonBodyController())
-            ->withServerRequest($serverRequest);
+            ->withRequest($serverRequest);
         $return = $controller->__invoke();
         $this->assertSame([[], 99], $return);
         $this->assertSame(
@@ -579,7 +579,7 @@ final class ControllerTest extends TestCase
         $serverRequest = (new ServerRequest('POST', '/'))
             ->withHeader('Content-Type', 'application/json')
             ->withBody($stream);
-        $controller = (new NullController())->withServerRequest($serverRequest);
+        $controller = (new NullController())->withRequest($serverRequest);
         $this->assertSame($streamed, $controller->body()->string());
     }
 }

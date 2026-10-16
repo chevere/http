@@ -144,7 +144,7 @@ abstract class Controller extends BaseController implements ControllerInterface
         return $this->errors ??= new Errors();
     }
 
-    final public function withServerRequest(ServerRequestInterface $serverRequest): static
+    final public function withRequest(ServerRequestInterface $request): static
     {
         $new = clone $this;
 
@@ -156,14 +156,14 @@ abstract class Controller extends BaseController implements ControllerInterface
                 ...array_map('mb_strtolower', $parameterKeys)
             );
             $headers = [];
-            foreach (array_keys($serverRequest->getHeaders()) as $key) {
+            foreach (array_keys($request->getHeaders()) as $key) {
                 $lowercased = mb_strtolower($key);
                 $pos = $headerIndexLowercase->find($lowercased) ?? null;
                 if ($pos !== null) {
                     /** @var string $key */
                     $key = $headerIndex->get($pos);
                 }
-                $headers[$key] = $serverRequest->getHeaderLine($key);
+                $headers[$key] = $request->getHeaderLine($key);
             }
             $new->_headers = new ArgumentsString(
                 $acceptHeaders,
@@ -176,20 +176,20 @@ abstract class Controller extends BaseController implements ControllerInterface
         try {
             $new->_query = new ArgumentsString(
                 $new::acceptQuery()->parameters(),
-                $serverRequest->getQueryParams()
+                $request->getQueryParams()
             );
         } catch (Throwable $e) {
             $this->addHttpErrorMessage('query', $e);
         }
 
         try {
-            $new->_bodyStream = $serverRequest->getBody();
-            $parsedBody = $serverRequest->getParsedBody();
+            $new->_bodyStream = $request->getBody();
+            $parsedBody = $request->getParsedBody();
             if (is_object($parsedBody)) {
                 $parsedBody = (array) $parsedBody;
             }
             $new->_body = $parsedBody ?? null;
-            if ($serverRequest->getHeaderLine('Content-Type') === 'application/json') {
+            if ($request->getHeaderLine('Content-Type') === 'application/json') {
                 if (! $new->_body) {
                     $streamed = $new->_bodyStream->__toString();
                     $new->_body = json_decode($streamed, true);
@@ -219,7 +219,7 @@ abstract class Controller extends BaseController implements ControllerInterface
         }
 
         try {
-            $new->setFiles(...$serverRequest->getUploadedFiles());
+            $new->setFiles(...$request->getUploadedFiles());
         } catch (Throwable $e) {
             $this->addHttpErrorMessage('files', $e);
         }
@@ -230,10 +230,10 @@ abstract class Controller extends BaseController implements ControllerInterface
                 errors: $this->errors()
             );
         }
-        $new->_serverRequest = $serverRequest;
-        $new->_serverParams = new Map(...$serverRequest->getServerParams());
-        $new->_attributes = new Map(...$serverRequest->getAttributes());
-        $new->_cookieParams = new Map(...$serverRequest->getCookieParams());
+        $new->_serverRequest = $request;
+        $new->_serverParams = new Map(...$request->getServerParams());
+        $new->_attributes = new Map(...$request->getAttributes());
+        $new->_cookieParams = new Map(...$request->getCookieParams());
 
         return $new;
     }
@@ -299,7 +299,7 @@ abstract class Controller extends BaseController implements ControllerInterface
     public function acceptRulesRuntime(): void
     {
         if (! isset($this->_query, $this->_bodyParsed, $this->_files)) {
-            throw new LogicException('Server request not set. Did you forget to call withServerRequest() method?');
+            throw new LogicException('Server request not set. Did you forget to call withRequest() method?');
         }
     }
 

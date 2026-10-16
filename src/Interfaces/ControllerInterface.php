@@ -62,15 +62,15 @@ interface ControllerInterface extends BaseControllerInterface
     public static function acceptProblems(): ArrayParameterInterface;
 
     /**
-     * Return an instance with the specified server request `$serverRequest` processing.
+     * Return an instance with the specified server request `$request` processing.
      *
      * This method MUST retain the state of the current instance, and return
-     * an instance that contains the data taken from `$serverRequest`.
+     * an instance that contains the data taken from `$request`.
      *
      * This method MUST be called before any other method that requires the server
      * request data to be processed, such as `serverParams()`, `headers()`, etc.
      */
-    public function withServerRequest(ServerRequestInterface $serverRequest): static;
+    public function withRequest(ServerRequestInterface $request): static;
 
     /**
      * Retrieve server parameters.
