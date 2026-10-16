@@ -73,6 +73,11 @@ interface ControllerInterface extends BaseControllerInterface
     public function withRequest(ServerRequestInterface $request): static;
 
     /**
+     * Provides access to the server request.
+     */
+    public function request(): ServerRequestInterface;
+
+    /**
      * Retrieve server parameters.
      *
      * Retrieves data related to the incoming request environment,

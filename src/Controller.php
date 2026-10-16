@@ -80,7 +80,7 @@ abstract class Controller extends BaseController implements ControllerInterface
 
     private StreamInterface $_bodyStream;
 
-    private ServerRequestInterface $_serverRequest;
+    private ServerRequestInterface $_request;
 
     private ErrorsInterface $errors;
 
@@ -230,7 +230,7 @@ abstract class Controller extends BaseController implements ControllerInterface
                 errors: $this->errors()
             );
         }
-        $new->_serverRequest = $request;
+        $new->_request = $request;
         $new->_serverParams = new Map(...$request->getServerParams());
         $new->_attributes = new Map(...$request->getAttributes());
         $new->_cookieParams = new Map(...$request->getCookieParams());
@@ -278,9 +278,9 @@ abstract class Controller extends BaseController implements ControllerInterface
         return $this->_uploadedFiles;
     }
 
-    final public function serverRequest(): ServerRequestInterface
+    final public function request(): ServerRequestInterface
     {
-        return $this->_serverRequest;
+        return $this->_request;
     }
 
     final public function serverParams(): MapInterface

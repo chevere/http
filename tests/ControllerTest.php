@@ -38,7 +38,7 @@ use function Chevere\Writer\streamTemp;
 
 final class ControllerTest extends TestCase
 {
-    public function testAssertWithoutServerRequest(): void
+    public function testAssertWithoutRequest(): void
     {
         $controller = new AcceptController();
         $this->expectException(ActionException::class);
@@ -120,7 +120,7 @@ final class ControllerTest extends TestCase
     {
         $serverRequest = new ServerRequest('GET', '/');
         $controller = (new NullController())->withRequest($serverRequest);
-        $this->assertSame($serverRequest, $controller->serverRequest());
+        $this->assertSame($serverRequest, $controller->request());
     }
 
     public function testWithServerParams(): void
